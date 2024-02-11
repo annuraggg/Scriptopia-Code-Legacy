@@ -1,6 +1,10 @@
 import passport from "passport";
 import GoogleStrategy from "passport-google-oauth20";
 const Strategy = GoogleStrategy.Strategy;
+import dotenv from "dotenv";
+dotenv.config();
+
+console.log(process.env.GOOGLE_CALLBACK_URL)
 
 passport.use(
   new Strategy(
