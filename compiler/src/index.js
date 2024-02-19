@@ -48,4 +48,4 @@ app.get("/", (req, res) => {
     sendResponse(res, 200, {message: "Please use POST method to send code to this endpoint"})
 })
 
-app.listen(port);
+app.listen(port, () => console.log(`Server is running on port ${port}`));

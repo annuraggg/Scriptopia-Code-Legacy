@@ -1,8 +1,6 @@
 import { Navbar } from "@/components/ui/navbar";
 import StatementComponent from "./StatementComponent";
 import SolutionComponent from "./SolutionComponent";
-import { useEffect } from "react";
-
 const CreateProblem = () => {
 
   return (

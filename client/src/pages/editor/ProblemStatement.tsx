@@ -1,14 +1,17 @@
 import { Badge } from "@/components/ui/badge";
-import Quill from "quill";
 import { useEffect } from "react";
 import ReportButton from "./ReportButton";
-import { Delta } from "quill/core";
 import Meta from "@/types/ProblemMeta";
 import EditorJS from "@editorjs/editorjs";
+// @ts-expect-error
 import Header from "@editorjs/header";
+// @ts-expect-error
 import List from "@editorjs/list";
+// @ts-expect-error
 import CodeTool from "@editorjs/code";
+// @ts-expect-error
 import Table from "@editorjs/table";
+// @ts-expect-error
 import Warning from "@editorjs/warning";
 
 const glassFrost = {

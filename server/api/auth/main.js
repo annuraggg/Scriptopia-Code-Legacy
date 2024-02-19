@@ -15,7 +15,25 @@ router.post("/login", async (req, res) => {
     } else {
       bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (result) {
-          res.status(200).send();
+          const jwtObj = {
+            id: user._id,
+            email: user.email,
+            accountType: user.accountType,
+            fName: user.firstName,
+            lName: user.lastName,
+            username: user.username,
+          };
+          res
+            .status(200)
+            .cookie(
+              "jwt",
+              jwt.sign(jwtObj, process.env.JWT_SECRET, { expiresIn: "12h" })
+            )
+            .json({
+              token: jwt.sign(jwtObj, process.env.JWT_SECRET, {
+                expiresIn: "12h",
+              }),
+            });
         } else {
           res.status(401).send();
         }
@@ -76,8 +94,12 @@ router.get(
             username: user.username,
           };
 
-          const token = jwt.sign(jwtObj, process.env.JWT_SECRET, {});
-          res.cookie("jwt", token).redirect(process.env.FRONTEND_URL);
+          const token = jwt.sign(jwtObj, process.env.JWT_SECRET, {
+            expiresIn: "12h",
+          });
+          res
+            .cookie("jwt", token)
+            .redirect(process.env.FRONTEND_URL + "/google/success");
         }
       } else if (auth_type === "signup") {
         const user = await User.findOne({ email: req.user.emails[0].value });

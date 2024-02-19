@@ -8,6 +8,7 @@ import { Delta } from "quill/core";
 import Meta from "@/types/ProblemMeta";
 import { Case } from "@/types/TestCase";
 
+/*
 const statementSample = {
   ops: [
     { insert: "You are given an array of strings " },
@@ -133,7 +134,7 @@ const statementSample = {
     { attributes: { list: "bullet" }, insert: "\n" },
     { insert: "\n" },
   ],
-};
+};*/
 
 const metaSample: Meta = {
   id: 1239,
@@ -157,6 +158,8 @@ var maxLength = function(arr) {
 
 const casesSample: Case[] = [
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -164,10 +167,12 @@ const casesSample: Case[] = [
         value: '["un", "iq", "ue"]',
       },
     ],
-    output: 2,
+    output: "2",
     expected: 4,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -175,10 +180,12 @@ const casesSample: Case[] = [
         value: '["a", "b", "c"]',
       },
     ],
-    output: 3,
+    output: "3",
     expected: 3,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -186,10 +193,12 @@ const casesSample: Case[] = [
         value: '["a", "a", "a"]',
       },
     ],
-    output: 1,
+    output: "1",
     expected: 1,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -197,10 +206,12 @@ const casesSample: Case[] = [
         value: '["a", "b", "c", "d", "a", "b", "c", "d"]',
       },
     ],
-    output: 8,
+    output: "8",
     expected: 8,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -208,10 +219,12 @@ const casesSample: Case[] = [
         value: '["a", "b", "c", "d", "a", "b", "c", "d", "e"]',
       },
     ],
-    output: 8,
+    output: "8",
     expected: 8,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -219,10 +232,12 @@ const casesSample: Case[] = [
         value: '["a", "b", "c", "d", "a", "b", "c", "d", "e", "f"]',
       },
     ],
-    output: 10,
+    output: "10",
     expected: 10,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -230,10 +245,12 @@ const casesSample: Case[] = [
         value: '["a", "b", "c", "d", "a", "b", "c", "d", "e", "f", "g"]',
       },
     ],
-    output: 10,
+    output: "10",
     expected: 10,
   },
   {
+    // @ts-ignore
+    // ! SOLVE ERROR OF TYPE MISMATCH
     var: [
       {
         name: "arr",
@@ -241,7 +258,7 @@ const casesSample: Case[] = [
         value: '["a", "b", "c", "d", "a", "b", "c", "d", "e", "f", "g", "h"]',
       },
     ],
-    output: 10,
+    output: "10",
     expected: 10,
   },
 ];
@@ -281,6 +298,7 @@ function App() {
     setConsoleOutput(consoleOutputSample);
   }, []);
 
+  // @ts-ignore
   const runCode = (code: string) => {
     setRunning(true);
     return new Promise((resolve) => {
