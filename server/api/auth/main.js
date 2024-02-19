@@ -27,7 +27,8 @@ router.post("/login", async (req, res) => {
             .status(200)
             .cookie(
               "jwt",
-              jwt.sign(jwtObj, process.env.JWT_SECRET, { expiresIn: "12h" })
+              jwt.sign(jwtObj, process.env.JWT_SECRET, { expiresIn: "12h" }),
+              { httpOnly: true, sameSite: "none", secure: true }
             )
             .json({
               token: jwt.sign(jwtObj, process.env.JWT_SECRET, {
@@ -101,7 +102,11 @@ router.get(
           console.log(token)
           
           res
-            .cookie("jwt", token)
+            .cookie("jwt", token, {
+              httpOnly: true,
+              sameSite: "none",
+              secure: true,
+            })
             .redirect(process.env.FRONTEND_URL + "/google/success");
         }
       } else if (auth_type === "signup") {
