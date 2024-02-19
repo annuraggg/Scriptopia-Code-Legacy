@@ -72,7 +72,7 @@ router.post("/register", async (req, res) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000/auth/google/failed",
+    failureRedirect: `${process.env.FRONTEND_URL}/auth/google/failed`,
   }),
   async (req, res) => {
     try {
