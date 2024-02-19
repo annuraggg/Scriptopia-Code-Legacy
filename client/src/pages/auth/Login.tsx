@@ -53,7 +53,7 @@ const Login = () => {
 
   const handleGoogleLogin = (): void => {
     setGoogleSignInLoading(true);
-    window.open("http://localhost:3000/auth/google?auth_type=login", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google?auth_type=login`, "_self");
   };
 
   return (

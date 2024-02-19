@@ -36,7 +36,7 @@ const Signup = () => {
 
   const fetchGoogle = () => {
     setGoogleSignUpLoading(true);
-    window.open("http://localhost:3000/auth/google?auth_type=signup", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google?auth_type=signup`, "_self");
   };
 
   useEffect(() => {

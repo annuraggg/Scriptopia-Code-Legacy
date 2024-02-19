@@ -276,7 +276,7 @@ function App() {
   const [runs, setRuns] = useState<number>(0);
 
   useEffect(() => {
-    fetch("http://localhost:3000/get", {
+    fetch(`${import.meta.env.VITE_BACKEND_ADDRESS}/get`, {
       method: "POST",
     })
       .then(async (res) => {
