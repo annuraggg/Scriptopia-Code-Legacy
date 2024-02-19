@@ -97,6 +97,9 @@ router.get(
           const token = jwt.sign(jwtObj, process.env.JWT_SECRET, {
             expiresIn: "12h",
           });
+
+          console.log(token)
+          
           res
             .cookie("jwt", token)
             .redirect(process.env.FRONTEND_URL + "/google/success");
