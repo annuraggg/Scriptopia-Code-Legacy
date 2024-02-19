@@ -8,7 +8,7 @@ export const Navbar = () => {
     <div className="px-10 flex justify-between items-center py-3">
       <img
         className=" cursor-pointer"
-        srcSet="/assets/img/logo.png"
+        srcSet="/assets/img/logo-icon.svg"
         style={{ height: "25px" }}
         onClick={() => navigate("/")}
       />

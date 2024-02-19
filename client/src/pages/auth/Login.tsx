@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const divStyle = {
   backgroundImage: "url(/assets/wave-bg.png)",
@@ -12,6 +13,7 @@ const divStyle = {
 };
 
 const Login = () => {
+  const navigate = useNavigate();
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [googleSignInLoading, setGoogleSignInLoading] =
     useState<boolean>(false);
@@ -34,7 +36,8 @@ const Login = () => {
         password,
       })
       .then((res) => {
-        console.log(res);
+        localStorage.setItem("token", res.data.token);
+        navigate("/");
       })
       .catch((err) => {
         if (err.response.status === 401 || err.response.status === 400) {

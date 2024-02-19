@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import Quill from "quill";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import EditorJS from "@editorjs/editorjs";
+// @ts-expect-error
 import Header from "@editorjs/header";
+// @ts-expect-error
 import List from "@editorjs/list";
+// @ts-expect-error
 import CodeTool from "@editorjs/code";
+// @ts-expect-error
 import Table from "@editorjs/table";
+// @ts-expect-error
 import Warning from "@editorjs/warning";
 
 const StatementComponent = () => {
-  const [title, setTitle] = useState<string>("");
-  const [quillInstance, setQuillInstance] = useState<Quill | null>(null);
 
   const tools = {
     header: {

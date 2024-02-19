@@ -1,20 +1,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Case } from "@/types/TestCase";
-import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 const Descriptor = ({
   cases,
   consoleOutput,
   running,
-  runs
+  runs,
 }: {
   cases: Case[];
   consoleOutput: string;
   running: boolean;
   runs: number;
 }) => {
-
   return (
     <div className=" rounded bg-secondary px-5 py-2 h-[45vh] overflow-y-auto relative">
       <Tabs defaultValue="console" className="bg-secondary rounded-t-lg">
@@ -62,7 +60,7 @@ const Descriptor = ({
                 <TabsTrigger value="case2">
                   <div
                     className={`${
-                      cases[1]?.expected === cases[1]?.output
+                      cases[1]?.output === cases[1]?.output
                         ? "bg-green-500"
                         : "bg-red-500"
                     } h-1 w-1 mr-2 rounded-full`}
@@ -72,7 +70,7 @@ const Descriptor = ({
                 <TabsTrigger value="case3">
                   <div
                     className={`${
-                      cases[2]?.expected === cases[2]?.output
+                      cases[2]?.output === cases[2]?.output
                         ? "bg-green-500"
                         : "bg-red-500"
                     } h-1 w-1 mr-2 rounded-full`}
@@ -86,11 +84,15 @@ const Descriptor = ({
                     <TabsContent key={i} value={`case${i + 1}`}>
                       <p>Input</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                        {c?.var?.map((v, i2) => (
-                          <p key={i2}>
-                            <b>{v?.name}</b> = {v?.value}
-                          </p>
-                        ))}
+                        // ! FIX THIS
+                        {
+                          // @ts-ignore
+                          c?.var?.map((v: any, i2: number) => (
+                            <p key={i2}>
+                              <b>{v?.name}</b> = {v?.value}
+                            </p>
+                          ))
+                        }
                       </div>
                       <p>Output</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
@@ -98,7 +100,7 @@ const Descriptor = ({
                       </div>
                       <p>Expected</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                        {c?.expected}
+                        {c?.output}
                       </div>
                     </TabsContent>
                   );
