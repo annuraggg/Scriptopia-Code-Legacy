@@ -99,6 +99,7 @@ router.get(
             expiresIn: "12h",
           });
 
+          console.log("TOKEN")
           console.log(token)
           
           res
