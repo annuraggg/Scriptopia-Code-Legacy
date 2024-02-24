@@ -8,6 +8,7 @@ import { toast } from "sonner";
 const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);
+  const language = "javascript";
 
   useEffect(() => {
     // fetch data
@@ -20,7 +21,7 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
 
   const runOnParent = async () => {
     setRunning(true);
-    runCode(value)
+    runCode(value, language) 
       .catch(() => {
         toast.error("Something went wrong!");
       })

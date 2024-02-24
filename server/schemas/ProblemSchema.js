@@ -7,7 +7,7 @@ const problemSchema = new Schema({
     required: true
   },
   description: {
-    type: String,
+    type: Object,
     required: true
   },
   category: {
@@ -23,9 +23,17 @@ const problemSchema = new Schema({
     type: Number,
     default: 0
   },
+  starterFunction: {
+    type: String,
+    required: true
+  },
+  starterVarArgs: {
+    type: [],
+    required: true
+  },
   testCases: [{
     input: {
-      type: String,
+      type: [String],
       required: true
     },
     output: {
@@ -40,4 +48,4 @@ const problemSchema = new Schema({
 });
 
 const Problem = mongoose.model('Problem', problemSchema);
-module.exports = Problem;
+export default Problem;

@@ -1,21 +1,42 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Case } from "@/types/TestCase";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useEffect, useRef, useState } from "react";
 
 const Descriptor = ({
   cases,
   consoleOutput,
   running,
   runs,
+  vars,
+  output,
 }: {
   cases: Case[];
   consoleOutput: string;
   running: boolean;
   runs: number;
+  vars: any;
+  output: string[];
 }) => {
+  const [currTab, setCurrTab] = useState("console");
+
+  useEffect(() => {
+    if (runs > 0) {
+      setCurrTab("tests");
+    }
+  }, [runs]);
+
   return (
-    <div className=" rounded bg-secondary px-5 py-2 h-[45vh] overflow-y-auto relative">
-      <Tabs defaultValue="console" className="bg-secondary rounded-t-lg">
+    <div
+      className={`rounded bg-secondary px-5 py-2 h-[45vh] overflow-y-auto relative`}
+    >
+      <Tabs
+        value={currTab}
+        onValueChange={(value) => {
+          setCurrTab(value);
+        }}
+        className="bg-secondary rounded-t-lg"
+      >
         <TabsList className="bg-secondary sticky top-0 w-full justify-start">
           <TabsTrigger value="console">Console</TabsTrigger>
           <TabsTrigger value="tests">Test Cases</TabsTrigger>
@@ -50,7 +71,7 @@ const Descriptor = ({
                   {" "}
                   <div
                     className={`${
-                      cases[0]?.output === cases[0]?.output
+                      cases[0]?.output === output[0]
                         ? "bg-green-500"
                         : "bg-red-500"
                     } h-1 w-1 mr-2 rounded-full`}
@@ -60,7 +81,7 @@ const Descriptor = ({
                 <TabsTrigger value="case2">
                   <div
                     className={`${
-                      cases[1]?.output === cases[1]?.output
+                      cases[1]?.output === output[1]
                         ? "bg-green-500"
                         : "bg-red-500"
                     } h-1 w-1 mr-2 rounded-full`}
@@ -70,7 +91,7 @@ const Descriptor = ({
                 <TabsTrigger value="case3">
                   <div
                     className={`${
-                      cases[2]?.output === cases[2]?.output
+                      cases[2]?.output === output[2]
                         ? "bg-green-500"
                         : "bg-red-500"
                     } h-1 w-1 mr-2 rounded-full`}
@@ -84,19 +105,13 @@ const Descriptor = ({
                     <TabsContent key={i} value={`case${i + 1}`}>
                       <p>Input</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                        // ! FIX THIS
-                        {
-                          // @ts-ignore
-                          c?.var?.map((v: any, i2: number) => (
-                            <p key={i2}>
-                              <b>{v?.name}</b> = {v?.value}
-                            </p>
-                          ))
-                        }
+                        {c?.input?.map((ci, i2) => {
+                          return vars[i2] + " = " + ci;
+                        })}
                       </div>
                       <p>Output</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                        {c?.output}
+                        {output[i]}
                       </div>
                       <p>Expected</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">

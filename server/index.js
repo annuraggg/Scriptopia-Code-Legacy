@@ -4,8 +4,12 @@ import app from "./config/init.js";
 // imports for APIS
 import runJS from "./languageTemplates/js.js";
 import auth from "./api/auth/main.js";
+import problems from "./api/problems/main.js";
+import compiler from "./api/compiler/main.js";
 
 app.use("/auth", auth);
+app.use("/problems", problems);
+app.use("/compiler", compiler);
 
 app.post("/", async (req, res) => {
   const language = "js";
@@ -125,7 +129,7 @@ app.post("/get", async (req, res) => {
 });
 
 app.get("/version", (req, res) => {
-  res.json({ version: "1.0.0" });
+  res.json({ version: "0.1.2" });
 });
 
 app.listen(3000);

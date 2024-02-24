@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
             .cookie(
               "jwt",
               jwt.sign(jwtObj, process.env.JWT_SECRET, { expiresIn: "12h" }),
-              { httpOnly: true, sameSite: "none", secure: true }
+              { httpOnly: false, sameSite: "none", secure: true }
             )
             .json({
               token: jwt.sign(jwtObj, process.env.JWT_SECRET, {
@@ -98,13 +98,10 @@ router.get(
           const token = jwt.sign(jwtObj, process.env.JWT_SECRET, {
             expiresIn: "12h",
           });
-
-          console.log("TOKEN")
-          console.log(token)
           
           res
             .cookie("jwt", token, {
-              httpOnly: true,
+              httpOnly: false,
               sameSite: "none",
               secure: true,
             })
