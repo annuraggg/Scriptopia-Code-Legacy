@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Case } from "@/types/TestCase";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Descriptor = ({
   cases,
@@ -12,7 +12,7 @@ const Descriptor = ({
   output,
 }: {
   cases: Case[];
-  consoleOutput: string;
+  consoleOutput: string[];
   running: boolean;
   runs: number;
   vars: any;
@@ -27,9 +27,7 @@ const Descriptor = ({
   }, [runs]);
 
   return (
-    <div
-      className={`rounded bg-secondary px-5 py-2 h-[45vh] overflow-y-auto relative`}
-    >
+    <div className={`rounded bg-secondary h-[45vh] overflow-y-auto relative`}>
       <Tabs
         value={currTab}
         onValueChange={(value) => {
@@ -37,12 +35,12 @@ const Descriptor = ({
         }}
         className="bg-secondary rounded-t-lg"
       >
-        <TabsList className="bg-secondary sticky top-0 w-full justify-start">
+        <TabsList className="bg-secondary sticky top-0 w-full justify-start px-5 pt-7 pb-5">
           <TabsTrigger value="console">Console</TabsTrigger>
           <TabsTrigger value="tests">Test Cases</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="console">
+        <TabsContent value="console" className="px-5 py-2 bg-black mx-5 my-2 rounded h-[35vh]">
           {running ? (
             <div className="flex items-center justify-center">
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -52,10 +50,16 @@ const Descriptor = ({
               Run the code atleast once to see Console Output
             </p>
           ) : (
-            <pre>{consoleOutput}</pre>
+            consoleOutput.map((c, i) => {
+              return (
+                <p key={i} className="text-gray-400">
+                  {c}
+                </p>
+              );
+            })
           )}
         </TabsContent>
-        <TabsContent value="tests">
+        <TabsContent value="tests" className="px-5 py-2">
           {running ? (
             <div className="flex items-center justify-center">
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />

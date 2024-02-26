@@ -5,7 +5,15 @@ import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 
-const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
+const CodeEditor = ({
+  runCode,
+  code,
+  submitCode,
+}: {
+  runCode: Function;
+  code: string;
+  submitCode: Function;
+}) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);
   const language = "javascript";
@@ -21,7 +29,18 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
 
   const runOnParent = async () => {
     setRunning(true);
-    runCode(value, language) 
+    runCode(value, language)
+      .catch(() => {
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setRunning(false);
+      });
+  };
+
+  const submitOnParent = async () => {
+    setRunning(true);
+    submitCode(value, language)
       .catch(() => {
         toast.error("Something went wrong!");
       })
@@ -47,7 +66,7 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
             ) : null}
             Run
           </Button>
-          <Button variant="default" disabled={running ? true : false}>
+          <Button variant="default" disabled={running ? true : false} onClick={submitOnParent}>
             Submit
           </Button>
         </div>

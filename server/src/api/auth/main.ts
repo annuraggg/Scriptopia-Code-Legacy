@@ -1,7 +1,7 @@
 import express from "express";
 import User from "../../schemas/UserSchema.js";
 import logger from "../../config/logger.js";
-import passport from "./google.js";
+import passport from "./google";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
     if (!user) {
       res.status(404).send();
     } else {
-      bcrypt.compare(req.body.password, user.password, (err, result) => {
+      bcrypt.compare(req.body.password, user.password!, (_err, result) => {
         if (result) {
           const jwtObj = {
             id: user._id,
@@ -27,11 +27,11 @@ router.post("/login", async (req, res) => {
             .status(200)
             .cookie(
               "jwt",
-              jwt.sign(jwtObj, process.env.JWT_SECRET, { expiresIn: "12h" }),
+              jwt.sign(jwtObj, process.env.JWT_SECRET!, { expiresIn: "12h" }),
               { httpOnly: false, sameSite: "none", secure: true }
             )
             .json({
-              token: jwt.sign(jwtObj, process.env.JWT_SECRET, {
+              token: jwt.sign(jwtObj, process.env.JWT_SECRET!, {
                 expiresIn: "12h",
               }),
             });
@@ -77,10 +77,14 @@ router.get(
   }),
   async (req, res) => {
     try {
-      const auth_type = JSON.parse(req.query.state).auth_type;
+      const auth_type = JSON.parse(req.query.state as string).auth_type;
 
       if (auth_type === "login") {
-        const user = await User.findOne({ email: req.user.emails[0].value });
+        // @ts-ignore
+        const user = await User.findOne({
+          // @ts-ignore
+          email: req?.user && req?.user?.emails[0].value,
+        });
         if (!user) {
           res.redirect(
             `${process.env.FRONTEND_URL}/signin?error=google-auth-failed`
@@ -95,10 +99,10 @@ router.get(
             username: user.username,
           };
 
-          const token = jwt.sign(jwtObj, process.env.JWT_SECRET, {
+          const token = jwt.sign(jwtObj, process.env.JWT_SECRET!, {
             expiresIn: "12h",
           });
-          
+
           res
             .cookie("jwt", token, {
               httpOnly: false,
@@ -108,12 +112,23 @@ router.get(
             .redirect(process.env.FRONTEND_URL + "/google/success");
         }
       } else if (auth_type === "signup") {
+        // @ts-ignore
         const user = await User.findOne({ email: req.user.emails[0].value });
-        if (!user) {
-          const userObj = {
+        if (!user && req.user) {
+          const userObj: {
+            firstName: string;
+            lastName: string;
+            email: string;
+            googleId: string;
+            accountType: string;
+          } = {
+            // @ts-ignore
             firstName: req.user.name.givenName,
+            // @ts-ignore
             lastName: req.user.name.familyName,
+            // @ts-ignore
             email: req.user.emails[0].value,
+            // @ts-ignore
             googleId: req.user.id,
             accountType: "google",
           };
@@ -155,6 +170,7 @@ router.get("/google", (req, res, next) => {
 
 router.get("/logout", (req, res) => {
   try {
+    // @ts-ignore
     req.logout();
     res.status(200).send();
   } catch (error) {

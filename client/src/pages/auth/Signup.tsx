@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { toast } from "sonner";
+import { toast } from "sonner"
 import axios from "axios";
 
 const glassFrost = {

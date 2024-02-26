@@ -4,18 +4,19 @@ import ProblemStatement from "./ProblemStatement";
 import CodeEditor from "./CodeEditor";
 import Descriptor from "./Descriptor";
 import { useEffect, useState } from "react";
-import { Delta } from "quill/core";
 import Meta from "@/types/ProblemMeta";
 import { Case } from "@/types/TestCase";
 import axios from "axios";
 import returnStarter from "@/components/StarterGenerator";
+import JSConfetti from "js-confetti";
+import SuccessDrawer from "./successDrawer";
 
 function App() {
-  const [statement, setStatement] = useState<Delta>({} as Delta);
+  const [statement, setStatement] = useState<any>({});
   const [meta, setMeta] = useState<Meta>({} as Meta);
   const [code, setCode] = useState<string>("");
   const [cases, setCases] = useState<Case[]>([]);
-  const [consoleOutput, setConsoleOutput] = useState<string>("");
+  const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [vars, setVars] = useState<any>({});
   const [fn, setFn] = useState<string>("");
   const [output, setOutput] = useState<any>("" as any);
@@ -24,6 +25,9 @@ function App() {
   const [runs, setRuns] = useState<number>(0);
 
   const [bgOverlay, setBgOverlay] = useState(0);
+  const jsConfetti = new JSConfetti();
+
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   useEffect(() => {
     const probId = window.location.pathname.split("/").pop();
@@ -52,16 +56,64 @@ function App() {
     setRunning(true);
     let err = false;
     await axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`, {
-        code,
-        language,
-        cases,
-        fn,
-      })
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`,
+        {
+          code,
+          language,
+          cases,
+          fn,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
-        setConsoleOutput(res.data.console);
+        setConsoleOutput(res.data.output.consoleOP);
         setOutput(res.data.output);
         setRuns((prev) => prev + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        err = true;
+      })
+      .finally(() => {
+        setRunning(false);
+      });
+
+    return new Promise((_resolve, reject) => {
+      if (err) {
+        reject("Something went wrong!");
+      } else {
+        _resolve("");
+      }
+    });
+  };
+
+  const submitCode = async (code: string, language: string) => {
+    setRunning(true);
+    let err = false;
+    await axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/submit`,
+        {
+          code,
+          language,
+          cases,
+          fn,
+          probID: meta.id,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        setConsoleOutput(res.data.output.consoleOP);
+        setOutput(res.data.output);
+        setRuns((prev) => prev + 1);
+        if (
+          res.data.output.internalStatus === "PASSED" &&
+          res.data.output.failedCaseNumber === -1
+        ) {
+          setSubmitSuccess(true);
+          jsConfetti.addConfetti();
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -103,10 +155,10 @@ function App() {
   }, [output, runs, running, cases]);
 
   return (
-    <div>
+    <div vaul-drawer-wrapper="">
       <div
         className={` ${
-         !running ? "opacity-100" : "opacity-0"
+          !running ? "opacity-100" : "opacity-0"
         } flex items-center justify-center text-white text-2xl font-bold transition-all duration-500 ease-in-out h-[100vh] absolute w-full`}
         style={{
           background:
@@ -123,8 +175,11 @@ function App() {
         className={`flex gap-5 px-5 h-[90vh] overflow-y-auto flex-col md:flex-row`}
       >
         <ProblemStatement statement={statement} meta={meta} />
-        <Split className="md:w-[50%] w-[100%] h-[90vh]" direction="vertical">
-          <CodeEditor runCode={runCode} code={code} />
+        <Split
+          className="md:w-[50%] w-[100%] h-[90vh] split"
+          direction="vertical"
+        >
+          <CodeEditor runCode={runCode} code={code} submitCode={submitCode} />
           <Descriptor
             cases={cases}
             consoleOutput={consoleOutput}
@@ -135,6 +190,7 @@ function App() {
           />
         </Split>
       </div>
+      {submitSuccess && <SuccessDrawer />}
     </div>
   );
 }

@@ -9,7 +9,10 @@ import PageLoading from "./components/PageLoading";
 
 function App() {
   const [user, setUser] = useState<null | Object>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    setLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -19,16 +22,21 @@ function App() {
         setUser(decodedToken);
       }
     }
+    setLoading(false);
   }, []);
+
 
   return (
     <BrowserRouter>
       <Routes>
-        {user ? ProtectedRoutes() : <Route path="*" element={<PageLoading />} />}
+        {user && !loading ? (
+          ProtectedRoutes()
+        ) : (
+          <Route path="*" element={<Login />} />
+        )}
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/google/success" element={<GoogleSuccess />} />
-
 
         <Route path="*" element={"404 Not Found"} />
       </Routes>
