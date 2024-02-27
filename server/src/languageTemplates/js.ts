@@ -1,4 +1,4 @@
-import Case from "@/types/Case";
+import Case from "@/Interfaces/Case";
 
 const runJS = async (code: string, fnName: string, cases: Case[]) => {
   const jsCode = createJSFunction(code, fnName, cases);

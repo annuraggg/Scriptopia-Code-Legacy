@@ -4,6 +4,7 @@ import expressSession from "express-session";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import useragent from "express-useragent";
 
 const app = express();
 
@@ -12,6 +13,7 @@ import "./mongoose.js";
 
 dotenv.config();
 app.use(express.json());
+app.use(useragent.express());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());

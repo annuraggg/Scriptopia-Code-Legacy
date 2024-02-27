@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const divStyle = {
   backgroundImage: "url(/assets/wave-bg.png)",
@@ -51,9 +52,28 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = (): void => {
-    setGoogleSignInLoading(true);
-    window.open(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google?auth_type=login`, "_self");
+  const continueGoogle = (creds: GoogleCredentialResponse) => {
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google`, {
+        creds,
+        auth_type: "signin",
+      })
+      .then((res) => {
+        // SET COOKIE
+        const token = res.data.token;
+        document.cookie = `token=${token}; secure; samesite=none;`;
+        window.location.href = "/";
+        localStorage.setItem("token", token);
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          toast.error("Account does not exist. Please sign up.")
+          return;
+        }
+        console.log(err);
+        toast.error("Something went wrong");
+      })
+      .finally(() => {});
   };
 
   return (
@@ -94,25 +114,20 @@ const Login = () => {
         )}
       </Button>
 
-      <Button
-        className="w-[250px]"
-        variant="outline"
-        onClick={handleGoogleLogin}
-        disabled={signInLoading || googleSignInLoading}
-      >
-        {googleSignInLoading ? (
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <>
-            <img
-              srcSet="assets/img/google.webp"
-              width="15px"
-              className="mr-4"
-            />
-            Login with Google
-          </>
-        )}
-      </Button>
+      <div>
+        <GoogleLogin
+          onSuccess={continueGoogle}
+          onError={() => toast.error("Something went wrong")}
+          type="standard"
+          theme="filled_black"
+          useOneTap={true}
+          text="continue_with"
+          shape="pill"
+          logo_alignment="left"
+          context="signup"
+          itp_support={true}
+        />
+      </div>
 
       <a href="/forgot" className=" text-gray-400 mt-5">
         Forgot Password?

@@ -1,6 +1,6 @@
 import express from "express";
 import runJS from "@/languageTemplates/js.js";
-import Case from "@/types/Case.js";
+import Case from "@/Interfaces/Case.js";
 const router = express.Router();
 
 const selectLangAndRun = async (code: string, fn: string, cases: Case[] , language: string) => {

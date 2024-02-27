@@ -1,4 +1,4 @@
-type Case = {
+interface Case {
   input: string;
   output: string;
 };

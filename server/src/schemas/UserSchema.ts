@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
+import { generateUsername } from "unique-username-generator";
 
 const userSchema = new Schema({
   firstName: {
@@ -8,12 +9,13 @@ const userSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: true,
+    required: false,
   },
   username: {
     type: String,
     required: true,
-    default: Math.random().toString(36).substring(7),
+    default: generateUsername("-", 5),
+    unique: true,
   },
   email: {
     type: String,
@@ -111,6 +113,8 @@ const userSchema = new Schema({
       location: String,
       device: String,
       sessionID: String,
+      ip: String,
+      valid: Boolean,
     },
   ],
 });

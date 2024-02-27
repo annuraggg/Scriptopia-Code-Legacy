@@ -37,3 +37,11 @@
 {"code":"ETIMEOUT","hostname":"_mongodb._tcp.mainserver.js8thqj.mongodb.net","level":"error","message":"Could not connect to MongoDB querySrv ETIMEOUT _mongodb._tcp.mainserver.js8thqj.mongodb.net","stack":"Error: querySrv ETIMEOUT _mongodb._tcp.mainserver.js8thqj.mongodb.net\n    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:275:17)","syscall":"querySrv"}
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"445\" (type string) at path \"_id\" for model \"Problem\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"445\"","value":"445","valueType":"string"}
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"445\" (type string) at path \"_id\" for model \"Problem\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"445\"","value":"445","valueType":"string"}
+{"code":11000,"index":0,"keyPattern":{"email":1},"keyValue":{"email":"anuragsawant1701@gmail.com"},"level":"error"}
+{"code":11000,"index":0,"keyPattern":{"email":1},"keyValue":{"email":"annuragggg@gmail.com"},"level":"error"}
+{"code":11000,"index":0,"keyPattern":{"email":1},"keyValue":{"email":"anuragsawant1701@gmail.com"},"level":"error"}
+{"code":11000,"index":0,"keyPattern":{"email":1},"keyValue":{"email":"annuraggggg@gmail.com"},"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

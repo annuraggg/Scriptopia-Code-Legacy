@@ -10,8 +10,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import axios from "axios";
+import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",
@@ -34,9 +35,32 @@ const Signup = () => {
   const [googleSignUpLoading, setGoogleSignUpLoading] =
     useState<boolean>(false);
 
-  const fetchGoogle = () => {
+  const continueGoogle = (creds: GoogleCredentialResponse) => {
     setGoogleSignUpLoading(true);
-    window.open(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google?auth_type=signup`, "_self");
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google`, {
+        creds,
+        auth_type: "signup",
+      })
+      .then((res) => {
+        // SET COOKIE
+        const token = res.data.token;
+        document.cookie = `token=${token}; secure; samesite=none;`;
+        toast.success("Account created successfully");
+        window.location.href = "/profile/new/username?data=signup-successful";
+        localStorage.setItem("token", token);
+      })
+      .catch((err) => {
+        if (err.response.status === 409) {
+          toast.error("Account already exists. Please sign in.");
+          return;
+        }
+        console.log(err);
+        toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setGoogleSignUpLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -63,7 +87,12 @@ const Signup = () => {
             password,
           })
           .then((res) => {
-            console.log(res);
+            if (res.status === 200) {
+              console.log(res.data);
+              return;
+              toast.success("Account created successfully");
+              window.location.href = "/username?data=signup-successful";
+            }
           })
           .catch((err) => {
             if (err.response.status === 409) {
@@ -85,17 +114,21 @@ const Signup = () => {
     }
   };
 
+  console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
   return (
     <div
       className="flex items-center justify-center h-[100vh] p-5 gap-20"
       style={bg}
     >
       <div className="h-[90vh] w-[40%] p-10 rounded-xl" style={glassFrost}>
-        <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5">
+        <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5 flex items-center gap-2">
           Sign Up<span className="text-blue-500">.</span>
+          {googleSignUpLoading && (
+            <ReloadIcon className="h-6 w-6 animate-spin" />
+          )}
         </h2>
 
-        <div className="flex gap-5 mb-5">
+        <div className="flex gap-5 mb-2">
           <div>
             <small className="text-sm font-medium leading-none">
               First Name
@@ -119,7 +152,7 @@ const Signup = () => {
           </div>
         </div>
 
-        <div className=" mb-5">
+        <div className=" mb-2">
           <small className="text-sm font-medium leading-none">
             Email Address
           </small>
@@ -127,14 +160,27 @@ const Signup = () => {
             className="p-6 mt-2 w-[100%] border-gray-700"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            placeholder="john.doe@example.com"
           />
         </div>
 
-        <div className=" mb-5">
+        <div className=" mb-2">
           <small className="text-sm font-medium leading-none">Password</small>
           <Input
             className="p-6 mt-2 w-[100%] border-gray-700"
             placeholder="Minimum 8 Characters, Including Alphanumeric Characters"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+        </div>
+
+        <div className=" mb-2">
+          <small className="text-sm font-medium leading-none">
+            Confirm Password
+          </small>
+          <Input
+            className="p-6 mt-2 w-[100%] border-gray-700"
+            placeholder=""
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
@@ -149,35 +195,41 @@ const Signup = () => {
           <p>I agree to the terms and conditions</p>
         </div>
 
-        <Button className="mt-10 w-[100%]" disabled={!terms} onClick={signUp}>
-          {signUpLoading ? (
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <div>Sign Up</div>
-          )}
-        </Button>
-        <Button
-          disabled={!terms || googleSignUpLoading || signUpLoading}
-          onClick={fetchGoogle}
-          className="mt-2 mb-5 w-[100%] bg-white flex items-center justify-center"
-        >
-          {googleSignUpLoading ? (
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <>
-              <img src="assets/img/google.webp" width="20px" className="mr-3" />
-              Sign up with Google
-            </>
-          )}
-        </Button>
-        <a href="/signin">Sign in</a>
+        <div className="flex items-center justify-center gap-2 my-4">
+          <Button className="w-[100%]" disabled={!terms} onClick={signUp}>
+            {signUpLoading ? (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <div>Sign Up</div>
+            )}
+          </Button>
+
+          <div>
+            <GoogleLogin
+              onSuccess={continueGoogle}
+              onError={() => toast.error("Something went wrong")}
+              type="icon"
+              theme="filled_black"
+              useOneTap={true}
+              text="continue_with"
+              shape="pill"
+              logo_alignment="left"
+              context="signup"
+              itp_support={true}
+            />
+          </div>
+        </div>
+
+        <a href="/signin" className="mt-2">
+          Sign in Instead
+        </a>
       </div>
       <div className=" bg-red h-[90vh] w-[40%]">
         <Carousel>
           <CarouselContent>
             <CarouselItem>
-              <div className="flex justify-center items-center h-[90vh]">
-                <img src="assets/img/logo.svg" width="50px" />
+              <div className="flex justify-center items-center h-[90vh] bg-gray-900 rounded-lg">
+                <img src="assets/img/logo.svg" width="250px" />
               </div>
             </CarouselItem>
             <CarouselItem>

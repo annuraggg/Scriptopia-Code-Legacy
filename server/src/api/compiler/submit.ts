@@ -3,7 +3,7 @@ import runJS from "@/languageTemplates/js.js";
 import Problem from "@/schemas/ProblemSchema.js";
 import verifyJWT from "@/middlewares/verifyJWT.js";
 import Submission from "@/schemas/SubmissionSchema.js";
-import Case from "@/types/Case";
+import Case from "@/Interfaces/Case";
 const router = express.Router();
 
 interface User {
