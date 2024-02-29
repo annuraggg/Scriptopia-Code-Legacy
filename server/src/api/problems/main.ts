@@ -23,7 +23,7 @@ router.get("/:probID", (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error({ code: "PROBLEMS-GET-001", message: err });
       res.status(404).json(err);
     });
 });

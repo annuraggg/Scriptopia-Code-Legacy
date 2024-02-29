@@ -37,6 +37,23 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  tfa: {
+    enabled: Boolean,
+    secret: String,
+    createdAt: Date,
+    recoveryCodes: [
+      {
+        code: {
+          type: Number,
+          required: true,
+        },
+        used: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+  },
   achievements: [
     {
       achievementId: {
@@ -115,6 +132,7 @@ const userSchema = new Schema({
       sessionID: String,
       ip: String,
       valid: Boolean,
+      expires: Date,
     },
   ],
 });

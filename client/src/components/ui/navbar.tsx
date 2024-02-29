@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import expireSession from "@/functions/expireSession";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={expireSession}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </Avatar>

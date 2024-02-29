@@ -5,6 +5,8 @@ import Home from "./pages/home/Home";
 import Username from "./pages/auth/Username";
 import Settings from "./pages/settings/Settings";
 import RecentLogins from "./pages/settings/recent_logins/RecentLogins";
+import ChangePassword from "./pages/settings/change_password/ChangePassword";
+import TFA from "./pages/settings/tfa/TFA";
 
 function ProtectedRoutes() {
   return (
@@ -16,6 +18,8 @@ function ProtectedRoutes() {
 
       <Route path="/settings" element={<Settings />} />
       <Route path="/settings/logins" element={<RecentLogins />} />
+      <Route path="/settings/password" element={<ChangePassword />} />
+      <Route path="/settings/two-factor" element={<TFA />} />
 
       <Route path="/" element={<Home />} />
 

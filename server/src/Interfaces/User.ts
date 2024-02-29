@@ -36,6 +36,19 @@ interface LoginHistory {
   sessionID?: string;
   ip: string;
   valid: boolean;
+  expires?: Date;
+}
+
+interface tfa {
+  enabled: boolean;
+  secret: string;
+  createdAt: Date;
+  recoveryCodes: [
+    {
+      code: Number;
+      used: boolean;
+    }
+  ];
 }
 
 interface User extends Document {
@@ -45,6 +58,7 @@ interface User extends Document {
   email: string;
   password?: string;
   accountType: string;
+  tfa: tfa;
   googleId?: string;
   achievements: AchievementReceivables[];
   solvedProblems: SolvedProblem[];

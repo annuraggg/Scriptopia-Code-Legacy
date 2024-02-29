@@ -13,7 +13,7 @@ app.use("/compiler", compiler);
 app.use("/settings", settings);
 
 app.get("/version", (req, res) => {
-  res.json({ version: "0.1.2" });
+  res.json({ version: "0.1.4" });
 });
 
 app.listen(3000);

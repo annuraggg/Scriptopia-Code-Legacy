@@ -13,6 +13,10 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import axios from "axios";
 import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",
@@ -26,14 +30,19 @@ const bg = {
 };
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [fName, setFName] = useState<string>("");
   const [lName, setLName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [terms, setTerms] = useState<boolean>(false);
   const [signUpLoading, setSignUpLoading] = useState<boolean>(false);
   const [googleSignUpLoading, setGoogleSignUpLoading] =
     useState<boolean>(false);
+
+  const [show, setShow] = useState<boolean>(false);
 
   const continueGoogle = (creds: GoogleCredentialResponse) => {
     setGoogleSignUpLoading(true);
@@ -47,7 +56,7 @@ const Signup = () => {
         const token = res.data.token;
         document.cookie = `token=${token}; secure; samesite=none;`;
         toast.success("Account created successfully");
-        window.location.href = "/profile/new/username?data=signup-successful";
+        window.location.href = "/?new=true";
         localStorage.setItem("token", token);
       })
       .catch((err) => {
@@ -76,8 +85,49 @@ const Signup = () => {
   }, []);
 
   const signUp = () => {
+    const nameSchema = z.string().nonempty().min(2).max(50);
+    const emailSchema = z.string().email();
+    const passwordSchema = z
+      .string()
+      .min(8)
+      .regex(/[a-zA-Z]/)
+      .regex(/[0-9]/);
+
     setSignUpLoading(true);
     if (fName && lName && email && password) {
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        setSignUpLoading(false);
+        return;
+      }
+
+      try {
+        nameSchema.parse(fName);
+        nameSchema.parse(lName);
+      } catch (err) {
+        toast.error("Invalid Name");
+        setSignUpLoading(false);
+        return;
+      }
+
+      try {
+        emailSchema.parse(email);
+      } catch (err) {
+        toast.error("Invalid Email");
+        setSignUpLoading(false);
+        return;
+      }
+
+      try {
+        passwordSchema.parse(password);
+      } catch (err) {
+        toast.error(
+          "Invalid Password. Password must be at least 8 characters long and contain at least one letter and one number."
+        );
+        setSignUpLoading(false);
+        return;
+      }
+
       if (terms) {
         axios
           .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/register`, {
@@ -88,10 +138,13 @@ const Signup = () => {
           })
           .then((res) => {
             if (res.status === 200) {
-              console.log(res.data);
-              return;
               toast.success("Account created successfully");
-              window.location.href = "/username?data=signup-successful";
+              Cookies.set("token", res.data.token, {
+                secure: true,
+                sameSite: "none",
+              });
+              localStorage.setItem("token", res.data.token);
+              window.location.href = "/?new=true";
             }
           })
           .catch((err) => {
@@ -166,12 +219,21 @@ const Signup = () => {
 
         <div className=" mb-2">
           <small className="text-sm font-medium leading-none">Password</small>
-          <Input
-            className="p-6 mt-2 w-[100%] border-gray-700"
-            placeholder="Minimum 8 Characters, Including Alphanumeric Characters"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
+          <div className="flex items-center justify-center gap-2">
+            <Input
+              type={show ? "text" : "password"}
+              className="p-6 mt-2 w-[100%] border-gray-700"
+              placeholder="Minimum 8 Characters, Including Alphanumeric Characters"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+            <div
+              className="border border-blue-500 p-4 rounded-lg mt-2 cursor-pointer"
+              onClick={() => setShow(!show)}
+            >
+              {show ? <FaEye /> : <FaEyeSlash />}
+            </div>
+          </div>
         </div>
 
         <div className=" mb-2">
@@ -179,10 +241,11 @@ const Signup = () => {
             Confirm Password
           </small>
           <Input
+            type={show ? "text" : "password"}
             className="p-6 mt-2 w-[100%] border-gray-700"
             placeholder=""
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
           />
         </div>
 
@@ -192,7 +255,15 @@ const Signup = () => {
             checked={terms}
             onCheckedChange={(e: boolean) => setTerms(e)}
           />
-          <p>I agree to the terms and conditions</p>
+          <p>
+            I agree to the{" "}
+            <span
+              className="underline cursor-pointer"
+              onClick={() => navigate("/terms")}
+            >
+              terms and conditions
+            </span>
+          </p>
         </div>
 
         <div className="flex items-center justify-center gap-2 my-4">
@@ -215,7 +286,6 @@ const Signup = () => {
               shape="pill"
               logo_alignment="left"
               context="signup"
-              itp_support={true}
             />
           </div>
         </div>

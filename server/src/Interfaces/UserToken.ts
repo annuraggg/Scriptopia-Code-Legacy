@@ -5,7 +5,7 @@ interface UserToken {
   username: string;
   email: string;
   accountType: string;
-  googleId?: string;
+  sessionID: string;
 };
 
 export default UserToken;

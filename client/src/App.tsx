@@ -5,31 +5,36 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import GoogleSuccess from "./pages/auth/GoogleSuccess";
-import PageLoading from "./components/PageLoading";
+import Cookies from "js-cookie";
+import expireSession from "./functions/expireSession";
+import { useDispatch } from "react-redux";
+import User from "./types/User";
+import { clearUser, setUser } from "./states/user/UserSlice";
+import axios from "axios";
 
 function App() {
-  const [user, setUser] = useState<null | Object>(null);
+  const [userLocal, setUserLocal] = useState<null | Object>(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
-    const token = localStorage.getItem("token");
+    axios.defaults.withCredentials = true;
+    const token = Cookies.get("token");
     if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken?.exp && decodedToken?.exp * 1000 < Date.now()) {
-        localStorage.removeItem("token");
-      } else {
-        setUser(decodedToken);
-      }
+      const decodedToken: User = jwtDecode(token);
+      setUserLocal(decodedToken);
+      dispatch(setUser(decodedToken));
+    } else {
+      dispatch(clearUser());
     }
     setLoading(false);
   }, []);
 
-
   return (
     <BrowserRouter>
       <Routes>
-        {user && !loading ? (
+        {userLocal && !loading ? (
           ProtectedRoutes()
         ) : (
           <Route path="*" element={<Login />} />
