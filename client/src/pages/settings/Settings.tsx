@@ -1,13 +1,9 @@
 import { Navbar } from "@/components/ui/navbar";
-import { Separator } from "@radix-ui/react-dropdown-menu";
-import React from "react";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { IoLogIn } from "react-icons/io5";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Tb2Fa } from "react-icons/tb";
-
-
 
 const Settings = () => {
   const navigate = useNavigate();

@@ -9,7 +9,8 @@ import { Case } from "@/types/TestCase";
 import axios from "axios";
 import returnStarter from "@/components/StarterGenerator";
 import JSConfetti from "js-confetti";
-import SuccessDrawer from "./successDrawer";
+import SuccessDrawer from "./SuccessDrawer";
+import { toast } from "sonner";
 
 function App() {
   const [statement, setStatement] = useState<any>({});
@@ -49,6 +50,7 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Something went wrong!");
       });
   }, []);
 
@@ -117,6 +119,7 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Something went wrong!");
         err = true;
       })
       .finally(() => {

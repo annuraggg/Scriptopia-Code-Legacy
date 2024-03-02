@@ -167,7 +167,6 @@ const Signup = () => {
     }
   };
 
-  console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID);
   return (
     <div
       className="flex items-center justify-center h-[100vh] p-5 gap-20"

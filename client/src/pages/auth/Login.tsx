@@ -12,7 +12,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import Cookies from "js-cookie";
 
@@ -25,17 +24,12 @@ const divStyle = {
 const Login = () => {
   const navigate = useNavigate();
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
-  const [googleSignInLoading, setGoogleSignInLoading] =
-    useState<boolean>(false);
-
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
   const [id, setId] = useState<string>("");
   const [isTfa, setIsTfa] = useState<boolean>(false);
-  const [googleCreds, setGoogleCreds] = useState<GoogleCredentialResponse>();
-  const [loginType, setLoginType] = useState<"local" | "google">("local");
   const [tfaToken, setTfaToken] = useState<string>("");
 
   useEffect(() => {
@@ -47,7 +41,6 @@ const Login = () => {
 
   const handleLogin = (): void => {
     setSignInLoading(true);
-    setLoginType("local");
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/login`, {
         username: username,
@@ -77,8 +70,6 @@ const Login = () => {
   };
 
   const continueGoogle = (creds: GoogleCredentialResponse) => {
-    setGoogleCreds(creds);
-    setLoginType("google");
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/google`, {
         creds,
@@ -158,7 +149,7 @@ const Login = () => {
       <Button
         className="mt-5 w-[250px]"
         variant="default"
-        disabled={signInLoading || googleSignInLoading}
+        disabled={signInLoading}
         onClick={handleLogin}
       >
         {signInLoading ? (

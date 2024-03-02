@@ -13,7 +13,6 @@ import CodeTool from "@editorjs/code";
 import Table from "@editorjs/table";
 // @ts-expect-error
 import Warning from "@editorjs/warning";
-import SuccessDrawer from "./successDrawer";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",

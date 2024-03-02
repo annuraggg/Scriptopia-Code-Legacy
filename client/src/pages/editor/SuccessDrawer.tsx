@@ -9,9 +9,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { MdMemory, MdAccessTime } from "react-icons/md";
-import { AxisOptions, Chart } from "react-charts";
+
+/*import { AxisOptions, Chart } from "react-charts";
 
 import {
   Chart as ChartJS,
@@ -23,6 +24,7 @@ import {
   BarElement,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+*/
 
 const SuccessDrawer = () => {
   const dateAndTime = new Date().toLocaleString();
@@ -30,7 +32,8 @@ const SuccessDrawer = () => {
   useEffect(() => {
     document.getElementById("trig")?.click();
   }, []);
-
+  // ! UNCOMMENT THIS TO USE CHARTJS
+  /* 
   ChartJS.register(
     ArcElement,
     Tooltip,
@@ -40,8 +43,7 @@ const SuccessDrawer = () => {
     BarElement
   );
 
-  // ! UNCOMMENT THIS TO USE CHARTJS
-  /* 
+ 
   const options = {
     responsive: true,
     plugins: {

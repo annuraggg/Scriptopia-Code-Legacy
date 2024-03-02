@@ -86,9 +86,7 @@ const performSecurityLogs = async (
 ) => {
   try {
     const agent = `${req.useragent?.browser} ${req.useragent?.version} on ${req.useragent?.os}`;
-    // @ts-ignore
     const ipInfo: IpInfo = await getIP(req)!;
-    // @ts-ignore
     await pushIP(ipInfo, user._id.toString(), sessID, agent);
   } catch (error) {
     logger.error({ code: "AUTH-PERFORMSECURITYLOGS", message: error });
@@ -160,7 +158,7 @@ router.post("/login", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send();
-    logger.error({ code: "AUTH-LOGIN", message: error })
+    logger.error({ code: "AUTH-LOGIN", message: error });
   }
 });
 
@@ -187,11 +185,11 @@ router.post("/register", async (req, res) => {
       res.status(200).json({ success: true, token });
     } catch (error) {
       res.status(409).send();
-      logger.error({ code: "AUTH-REGISTER-001", message: error })
+      logger.error({ code: "AUTH-REGISTER-001", message: error });
     }
   } catch (error) {
     res.status(500).send();
-    logger.error({ code: "AUTH-REGISTER-002", message: error })
+    logger.error({ code: "AUTH-REGISTER-002", message: error });
   }
 });
 
@@ -251,14 +249,14 @@ router.post("/google", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send();
-    logger.error({ code: "AUTH-GOOGLE", message: error })
+    logger.error({ code: "AUTH-GOOGLE", message: error });
   }
 });
 
 router.post("/username", verifyJWT, async (req, res) => {
   try {
     const { username } = req.body;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById((req.user as UserToken).id);
     if (!user) {
       res.status(404).send();
       return;
@@ -277,7 +275,7 @@ router.post("/username", verifyJWT, async (req, res) => {
       return;
     }
     res.status(500).send();
-    logger.error({ code: "AUTH-USERNAME", message: error })
+    logger.error({ code: "AUTH-USERNAME", message: error });
   }
 });
 
@@ -322,7 +320,7 @@ router.post("/tfa/verify", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send();
-    logger.error({ code: "AUTH-TFA-VERIFY", message: error })
+    logger.error({ code: "AUTH-TFA-VERIFY", message: error });
   }
 });
 

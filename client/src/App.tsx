@@ -4,9 +4,7 @@ import Signup from "./pages/auth/Signup";
 import ProtectedRoutes from "./ProtectedRoutes";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import GoogleSuccess from "./pages/auth/GoogleSuccess";
 import Cookies from "js-cookie";
-import expireSession from "./functions/expireSession";
 import { useDispatch } from "react-redux";
 import User from "./types/User";
 import { clearUser, setUser } from "./states/user/UserSlice";
@@ -41,7 +39,6 @@ function App() {
         )}
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/google/success" element={<GoogleSuccess />} />
 
         <Route path="*" element={"404 Not Found"} />
       </Routes>

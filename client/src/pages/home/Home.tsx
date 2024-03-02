@@ -35,7 +35,7 @@ const Home = () => {
           <CodeFlow />
         </div>
       </div>
-      {modal && <SetUsername open={modal} setOpen={setOpen} />}
+      {modal && <SetUsername setOpen={setOpen} />}
     </>
   );
 };

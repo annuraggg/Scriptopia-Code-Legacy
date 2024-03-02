@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const SetUsername = ({open, setOpen}: {open: boolean, setOpen: Function}) => {
+const SetUsername = ({ setOpen }: { setOpen: Function }) => {
   const navigate = useNavigate();
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [newUsername, setNewUsername] = useState<string>("");

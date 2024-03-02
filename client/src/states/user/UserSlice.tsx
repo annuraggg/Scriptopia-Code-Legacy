@@ -27,17 +27,15 @@ export const UserSlice = createSlice({
       state.exp = action.payload.exp;
     },
     clearUser: (state) => {
-      state = {
-        id: "",
-        firstName: "",
-        lastName: "",
-        username: "",
-        email: "",
-        accountType: "",
-        sessionID: "",
-        iat: 0,
-        exp: 0,
-      };
+      state.id = "";
+      state.firstName = "";
+      state.lastName = "";
+      state.username = "";
+      state.email = "";
+      state.accountType = "";
+      state.sessionID = "";
+      state.iat = 0;
+      state.exp = 0;
     },
   },
 });
