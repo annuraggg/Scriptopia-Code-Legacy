@@ -60,6 +60,7 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.3",
     "react-split": "^2.0.14",
+    "reactflow": "^11.10.4",
     "sonner": "^1.4.1",
     "split.js": "^1.6.5",
     "tailwind-merge": "^2.2.1",

@@ -26,7 +26,7 @@ import {
 import { Bar } from "react-chartjs-2";
 */
 
-const SuccessDrawer = () => {
+const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: number}) => {
   const dateAndTime = new Date().toLocaleString();
 
   useEffect(() => {
@@ -108,14 +108,14 @@ const SuccessDrawer = () => {
                   <MdMemory size="40px" />
                   <div>
                     <h5>Memory Usage</h5>
-                    <p>2.4MB</p>
+                    <p>{parseFloat(memoryUsed.toFixed(2))} MB</p>
                   </div>
                 </div>
                 <div className="flex gap-5 items-center justify-center border p-5 rounded-lg w-[230px]">
                   <MdAccessTime size="40px" />
                   <div>
                     <h5>Time Taken</h5>
-                    <p>0.4s</p>
+                    <p>{parseFloat(timeTaken.toFixed(2))}ms</p>
                   </div>
                 </div>
               </div>

@@ -36,12 +36,22 @@ export const Navbar = () => {
 
   return (
     <div className="px-10 flex justify-between items-center py-3">
-      <img
-        className=" cursor-pointer z-50"
-        srcSet="/assets/img/logo-icon.svg"
-        style={{ height: "25px" }}
-        onClick={() => navigate("/")}
-      />
+      <div className="flex items-center">
+        <img
+          className=" cursor-pointer z-50"
+          srcSet="/assets/img/logo-icon.svg"
+          style={{ height: "25px" }}
+          onClick={() => navigate("/")}
+        />
+        <div className="flex items-center">
+          <p
+            onClick={() => navigate("/assessments")}
+            className=" cursor-pointer hover:text-primary hover:underline duration-100"
+          >
+            Assesments
+          </p>
+        </div>
+      </div>
       <Avatar
         className=" cursor-pointer"
         style={{ height: "30px", width: "30px" }}
@@ -62,7 +72,9 @@ export const Navbar = () => {
               <DropdownMenuShortcut>⌘ + ⇧ + L</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={expireSession}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -6,10 +6,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "baseUrl": "./",
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "paths": {
-        "@/*": ["./src/*"]
+        "@/*": ["src/*"]
       }
   },
   "include": ["src/**/*.ts"],

@@ -14,6 +14,11 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.react-flow__node {
+  background-color: #09265555;
+  color: white;
+  border: 1px solid #3c83f59e;
+}
 
 .gutter {
   background-color: transparent;

@@ -33,3 +33,45 @@
 01/03/24 11:04 (Info): MONGOOSE-CONNECT - Connected to MongoDB
 01/03/24 17:57 (Info): MONGOOSE-CONNECT - Connected to MongoDB
 02/03/24 10:22 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+02/03/24 13:34 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+02/03/24 13:38 (Error): COMPILER-SUBMIT-SELECTLANGANDRUN - TypeError: fetch failed
+    at node:internal/deps/undici/undici:12344:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at fetchOutput (e:\Projects\NodeJS Projects\Scriptopia Code\server\src\languageTemplates\js.ts:56:22)
+    at runJS (e:\Projects\NodeJS Projects\Scriptopia Code\server\src\languageTemplates\js.ts:5:18)
+    at selectLangAndRun (e:\Projects\NodeJS Projects\Scriptopia Code\server\src\api\compiler\submit.ts:37:16)
+    at <anonymous> (e:\Projects\NodeJS Projects\Scriptopia Code\server\src\api\compiler\submit.ts:87:9)
+02/03/24 18:32 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:15 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:26 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:31 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:31 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:32 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:35 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:42 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:43 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:47 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:47 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:47 (Error): COM_EXP_001 - ReferenceError: toText is not defined
+    at <anonymous> (e:\Projects\NodeJS Projects\Scriptopia Code\server\src\api\compiler\explain.ts:73:40)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+03/03/24 11:47 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 11:55 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+03/03/24 20:49 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+05/03/24 09:40 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+06/03/24 08:53 (Error): MONGOOSE-CONNECT - Error: querySrv ECONNREFUSED _mongodb._tcp.mainserver.js8thqj.mongodb.net
+    at __node_internal_captureLargerStackTrace (node:internal/errors:563:5)
+    at __node_internal_ (node:internal/errors:782:10)
+    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:275:17)
+06/03/24 09:02 (Error): AUTH-GOOGLE - MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (E:\Projects\NodeJS Projects\Scriptopia Code\server\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:186:23)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)
+06/03/24 09:02 (Error): AUTH-GOOGLE - MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (E:\Projects\NodeJS Projects\Scriptopia Code\server\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:186:23)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)
+06/03/24 09:03 (Error): AUTH-GOOGLE - MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (E:\Projects\NodeJS Projects\Scriptopia Code\server\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:186:23)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)

@@ -11,6 +11,7 @@ import returnStarter from "@/components/StarterGenerator";
 import JSConfetti from "js-confetti";
 import SuccessDrawer from "./SuccessDrawer";
 import { toast } from "sonner";
+import Explain from "./Explain";
 
 function App() {
   const [statement, setStatement] = useState<any>({});
@@ -29,6 +30,15 @@ function App() {
   const jsConfetti = new JSConfetti();
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const [timeTaken, setTimeTaken] = useState<number>(0);
+  const [memoryUsed, setMemoryUsed] = useState<number>(0);
+
+  const [openSheet, setOpenSheet] = useState(false);
+  const [sheetLoading, setSheetLoading] = useState(false);
+  const [explainResponse, setExplainResponse] = useState("");
+  const [explainCodeStr, setExplainCodeStr] = useState<string>("");
+  const [sheetError, setSheetError] = useState(false);
 
   useEffect(() => {
     const probId = window.location.pathname.split("/").pop();
@@ -114,6 +124,8 @@ function App() {
           res.data.output.failedCaseNumber === -1
         ) {
           setSubmitSuccess(true);
+          setTimeTaken(res.data.output.runtime);
+          setMemoryUsed(res.data.output.memoryUsage);
           jsConfetti.addConfetti();
         }
       })
@@ -133,6 +145,32 @@ function App() {
         _resolve("");
       }
     });
+  };
+
+  const explainCode = async (value: string) => {
+    setSheetLoading(true);
+    setOpenSheet(true);
+    setExplainCodeStr(value);
+
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/explain`, {
+        code: value,
+      })
+      .then((res) => {
+        setExplainResponse(res.data.response);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong!");
+        console.error(err.response.data.message);
+        setSheetError(true);
+      })
+      .finally(() => {
+        setSheetLoading(false);
+      });
+  };
+
+  const setOpenValue = (val: boolean) => {
+    setOpenSheet(val);
   };
 
   useEffect(() => {
@@ -182,7 +220,12 @@ function App() {
           className="md:w-[50%] w-[100%] h-[90vh] split"
           direction="vertical"
         >
-          <CodeEditor runCode={runCode} code={code} submitCode={submitCode} />
+          <CodeEditor
+            runCode={runCode}
+            code={code}
+            submitCode={submitCode}
+            explainCode={explainCode}
+          />
           <Descriptor
             cases={cases}
             consoleOutput={consoleOutput}
@@ -193,7 +236,17 @@ function App() {
           />
         </Split>
       </div>
-      {submitSuccess && <SuccessDrawer />}
+      {submitSuccess && (
+        <SuccessDrawer memoryUsed={memoryUsed} timeTaken={timeTaken} />
+      )}
+      <Explain
+        open={openSheet}
+        setOpen={setOpenValue}
+        code={explainCodeStr}
+        responseStr={explainResponse}
+        loading={sheetLoading}
+        err={sheetError}
+      />
     </div>
   );
 }

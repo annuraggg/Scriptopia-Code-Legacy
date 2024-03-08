@@ -7,10 +7,15 @@ import RecentLogins from "./pages/settings/recent_logins/RecentLogins";
 import ChangePassword from "./pages/settings/change_password/ChangePassword";
 import TFA from "./pages/settings/tfa/TFA";
 import Learn from "./pages/learn/Learn";
+import Course from "./pages/course/Course";
+import CourseName from "./pages/course/{courseName}/CourseName";
+import Assessments from "./pages/assessments/Assessments";
+import SubRoutes from "./SubRoutes";
 
 function ProtectedRoutes() {
   return (
     <>
+      {SubRoutes()}
       <Route path="/editor/:id" element={<Editor />} />
       <Route path="/create/problem" element={<CreateProblem />} />
 
@@ -19,7 +24,12 @@ function ProtectedRoutes() {
       <Route path="/settings/password" element={<ChangePassword />} />
       <Route path="/settings/two-factor" element={<TFA />} />
 
+      <Route path="/assessments" element={<Assessments />} />
+
       <Route path="/learn" element={<Learn />} />
+
+      <Route path="/course" element={<Course />} />
+      <Route path="/course/:courseName" element={<CourseName />} />
 
       <Route path="/" element={<Home />} />
 
