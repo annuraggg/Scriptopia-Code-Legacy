@@ -1,9 +1,8 @@
 import { Navbar } from "@/components/ui/navbar";
 import { ArrowLeftIcon } from "lucide-react";
-import ReactFlow from "reactflow";
-import "reactflow/dist/style.css";
 import All from "./All";
 
+/*
 const modules = {};
 
 const initialNodes = [
@@ -11,6 +10,7 @@ const initialNodes = [
   { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
 ];
 const initialEdges = [{ id: "e1-2", source: "1", target: "2", animated: true }];
+*/
 
 const CourseName = () => {
   return (

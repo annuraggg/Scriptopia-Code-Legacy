@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/ui/navbar";
 import StatementComponent from "./StatementComponent";
-import SolutionComponent from "./SolutionComponent";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ProblemMetaComponent from "./ProblemMetaComponent";
