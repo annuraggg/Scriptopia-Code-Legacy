@@ -10,6 +10,7 @@ const app = express();
 
 import "./logger.js";
 import "./mongoose.js";
+import helmet from "helmet";
 
 dotenv.config();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(useragent.express());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(helmet());
 app.use(cors(
   {
     origin: [process.env.FRONTEND_URL!],

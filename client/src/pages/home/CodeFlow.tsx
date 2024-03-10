@@ -11,6 +11,19 @@ const CodeFlow = () => {
 
   const daysIndex = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+  const getStatusClassName = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-[#15B8A7]";
+      case "missed":
+        return "bg-[#EE4445]";
+      case "inprogress":
+        return "bg-[#EAB209]";
+      default:
+        return "bg-background border-primary border";
+    }
+  };
+
   return (
     <div className="bg-primary-foreground w-[25vw] p-5 rounded shadow-md">
       <h3>Your Codeflow</h3>
@@ -18,15 +31,7 @@ const CodeFlow = () => {
         {codeFlow.map((status, index) => (
           <div
             key={index}
-            className={`${
-              status === "completed"
-                ? "bg-[#15B8A7]"
-                : status === "missed"
-                ? "bg-[#EE4445]"
-                : status === "inprogress"
-                ? "bg-[#EAB209]"
-                : "bg-background border-primary border"
-            }
+            className={`${getStatusClassName(status)}
             h-20 w-full rounded-sm flex items-center justify-around flex-col            `}
           >
             <p>{daysIndex[index]}</p>
@@ -35,7 +40,7 @@ const CodeFlow = () => {
             ) : status === "missed" ? (
               <i className="fa-regular fa-circle-xmark"></i>
             ) : status === "inprogress" ? (
-                <i className="fa-regular fa-clock"></i>
+              <i className="fa-regular fa-clock"></i>
             ) : status === "not" ? (
               <i className="fa-regular fa-circle"></i>
             ) : null}

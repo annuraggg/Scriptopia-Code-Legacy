@@ -1,29 +1,28 @@
 FROM ubuntu:18.04
 
-RUN dpkg --configure -a
+# Create a non-root user
+RUN groupadd -r myuser && useradd -r -g myuser myuser
 
-ENV PYTHON_VERSION 3.7.7
-ENV PYTHON_PIP_VERSION 20.1
-ENV DEBIAN_FRONTEND noninteractive
+# Switch to the non-root user
+USER myuser
 
-RUN apt-get update
-RUN apt-get -y install gcc mono-mcs golang-go \
-    default-jre default-jdk nodejs npm \
-    python3-pip python3 curl && \
+# Update and install dependencies
+RUN apt-get update && \
+    apt-get -y --no-install-recommends install gcc mono-mcs golang-go \
+        default-jre default-jdk nodejs npm \
+        python3-pip python3 curl && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Set environment variables, copy files, and set working directory
 ENV NODE_VERSION=16.13.2
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-# RUN nvm install 16.13.2
-
-COPY . /app
 WORKDIR /app
-RUN npm install
+COPY . /app
 
+# Install dependencies
+RUN npm install && \
+    npm cache clean --force
+
+# Expose port and specify default command
 EXPOSE 3000
 CMD ["npm", "start"]

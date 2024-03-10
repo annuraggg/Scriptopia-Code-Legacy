@@ -46,6 +46,7 @@ const Settings = () => {
           <div
             key={index}
             onClick={option.onClick}
+            onKeyPress={option.onClick}
             className="border py-5 px-5 mt-5 rounded flex items-center justify-between hover:bg-gray-900 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center">

@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
 import {
   Dialog,
@@ -28,7 +27,6 @@ const divStyle = {
 };
 
 const Login = () => {
-  const navigate = useNavigate();
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -149,7 +147,7 @@ const Login = () => {
       className="h-[100vh] flex flex-col items-center justify-center gap-3"
       style={divStyle}
     >
-      <img srcSet="assets/img/logo.svg" width="100px" />
+      <img srcSet="assets/img/logo.svg" width="100px" alt="logo" />
       <h2 className=" mt-5 mb-5 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Welcome, Please Login.
       </h2>

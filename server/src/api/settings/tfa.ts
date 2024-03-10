@@ -7,6 +7,7 @@ import User from "@/schemas/UserSchema";
 import logger from "@/config/logger";
 const router = express.Router();
 
+
 const generateSecret = () => {
   try {
     const buffer = randomBytes(14);

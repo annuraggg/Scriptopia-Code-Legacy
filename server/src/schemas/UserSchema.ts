@@ -22,7 +22,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
     // Regular expression for basic email validation
-    match: /^\S+@\S+\.\S+$/,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   password: {
     type: String,

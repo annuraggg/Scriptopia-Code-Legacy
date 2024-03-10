@@ -229,6 +229,7 @@ const Signup = () => {
             <div
               className="border border-blue-500 p-4 rounded-lg mt-2 cursor-pointer"
               onClick={() => setShow(!show)}
+              onKeyDown={() => setShow(!show)}
             >
               {show ? <FaEye /> : <FaEyeSlash />}
             </div>

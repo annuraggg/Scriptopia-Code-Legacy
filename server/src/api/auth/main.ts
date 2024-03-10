@@ -26,7 +26,7 @@ const getIP = async (req: express.Request) => {
   const client =
     process.env.NODE_ENV === "production"
       ? requestIP.getClientIp(req)
-      : "1.22.128.204";
+      : process.env.DEV_IP;
 
   const ipInfo = fetch(
     `https://api.ipgeolocation.io/ipgeo?apiKey=${process.env.IPGEOL_API_KEY}&ip=${client}`
