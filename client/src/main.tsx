@@ -3,10 +3,17 @@ import App from "./App.tsx";
 import "./index.css";
 import { ThemeProvider } from "./components/theme-provider.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import store from "./store.ts";
+import { Provider } from "react-redux";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <Toaster />
-    <App />
-  </ThemeProvider>
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <ThemeProvider>
+      <Provider store={store}>
+        <Toaster />
+        <App />
+      </Provider>
+    </ThemeProvider>
+  </GoogleOAuthProvider>
 );

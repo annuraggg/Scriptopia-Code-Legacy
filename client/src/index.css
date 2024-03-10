@@ -1,7 +1,53 @@
+/* @ts-ignore */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 /* Select the add block button */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.react-tagsinput {
+  background-color: transparent;
+  border: 1px solid #1e293b;
+  overflow: hidden;
+  padding-left: 5px;
+  padding-top: 5px;
+  border-radius: 10px;
+  width: 33vw;
+}
+
+.react-tagsinput--focused {
+  border-color: #3c82f5;
+}
+
+.react-tagsinput-tag {
+  background-color: #3c82f5;
+  border-radius: 5px;
+  border: none;
+  color: black;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.react-flow__node {
+  background-color: #09265555;
+  color: white;
+  border: 1px solid #3c83f59e;
+}
 
 .gutter {
   background-color: transparent;

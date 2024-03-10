@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import EditorJS from "@editorjs/editorjs";
 // @ts-expect-error
 import Header from "@editorjs/header";
@@ -13,7 +12,6 @@ import Table from "@editorjs/table";
 import Warning from "@editorjs/warning";
 
 const StatementComponent = () => {
-
   const tools = {
     header: {
       class: Header,
@@ -54,17 +52,29 @@ const StatementComponent = () => {
 
   const handleSave = async () => {
     const data = await editor.saver.save();
-    document.write(JSON.stringify(data))
+    document.write(JSON.stringify(data));
   };
 
   return (
-    <div className="h-[100%] w-[50%] rounded p-3">
+    <div className="h-[100%] w-[50%] rounded p-3 bg-secondary">
+      <style>
+        {`
+
+          #statement {
+            background: rgba(255,255,255,1);
+            color: black;
+            padding: 10px 20px;
+            padding-left: 60px;
+          }
+        `}
+      </style>
+      <h3 className="mb-2 mt-2">Enter Problem Statement Here</h3>
+
       <div
         id="statement"
-        className="h-full rounded pl-20 px-10 py-5 bg-white text-black bg-opacity-100 overflow-y-auto"
+        className="h-[70vh] w-full rounded overflow-y-auto"
         style={{ border: "1px solid gray" }}
       ></div>
-      <Button onClick={handleSave}>Save</Button>
     </div>
   );
 };

@@ -54,7 +54,6 @@ const ProblemStatement = ({
 }) => {
   useEffect(() => {
     if (statement?.blocks?.length != undefined) {
-      console.log(statement?.blocks?.length);
       new EditorJS({
         holder: "statement",
         data: statement,
@@ -83,11 +82,20 @@ const ProblemStatement = ({
           <ReportButton />
         </div>
       </div>
-      <div
-        className="rounded-lg h-[82vh] bg-accent overflow-y-auto"
-        id="statement"
-        style={{ border: "none" }}
-      ></div>
+      <div className=" overflow-y-auto h-[82vh]">
+        <div className="rounded-lg bg-accent overflow-y-auto gap-5 flex px-10 py-0">
+          {meta.tags?.map((tag, index) => (
+            <Badge variant="outline" className="border border-blue-500" key={index}>
+              {tag}
+            </Badge>
+          ))}
+        </div>
+        <div
+          className="rounded-lg bg-accent mt-[-20px]"
+          id="statement"
+          style={{ border: "none" }}
+        ></div>
+      </div>
     </div>
   );
 };

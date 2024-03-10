@@ -270,7 +270,7 @@ const ChallengeCompass = () => {
           </Select>
         </div>
       </div>
-      <div className="mt-5 bg-gray-900 p-5 rounded">
+      <div className="mt-5 bg-primary-foreground p-5 rounded shadow-md">
         <Table>
           <TableHeader>
             <TableRow>

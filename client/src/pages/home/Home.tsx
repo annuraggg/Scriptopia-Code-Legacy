@@ -3,8 +3,25 @@ import { Navbar } from "@/components/ui/navbar";
 import PopularCourses from "./PopularCourses";
 import ChallengeCompass from "./ChallengeCompass";
 import CodeFlow from "./CodeFlow";
+import SetUsername from "./SetUsername";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Home = () => {
+  const [searchParams] = useSearchParams();
+  const [modal, setModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    const newAcc = searchParams.get("new");
+    if (newAcc) {
+      setModal(true);
+    }
+  }, [searchParams]);
+
+  const setOpen = (value: boolean) => {
+    setModal(value);
+  };
+
   return (
     <>
       <Navbar />
@@ -18,6 +35,7 @@ const Home = () => {
           <CodeFlow />
         </div>
       </div>
+      {modal && <SetUsername setOpen={setOpen} />}
     </>
   );
 };

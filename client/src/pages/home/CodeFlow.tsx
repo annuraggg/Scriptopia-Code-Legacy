@@ -12,7 +12,7 @@ const CodeFlow = () => {
   const daysIndex = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
-    <div className="bg-gray-900 w-[25vw] p-5 rounded">
+    <div className="bg-primary-foreground w-[25vw] p-5 rounded shadow-md">
       <h3>Your Codeflow</h3>
       <div className="flex gap-2 mt-5">
         {codeFlow.map((status, index) => (

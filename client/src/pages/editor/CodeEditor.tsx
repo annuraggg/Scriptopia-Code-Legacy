@@ -4,10 +4,22 @@ import { Button } from "@/components/ui/button";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
+import { BsStars } from "react-icons/bs";
 
-const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
+const CodeEditor = ({
+  runCode,
+  code,
+  submitCode,
+  explainCode,
+}: {
+  runCode: Function;
+  code: string;
+  submitCode: Function;
+  explainCode: Function;
+}) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);
+  const language = "javascript";
 
   useEffect(() => {
     // fetch data
@@ -20,7 +32,7 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
 
   const runOnParent = async () => {
     setRunning(true);
-    runCode(value)
+    runCode(value, language)
       .catch(() => {
         toast.error("Something went wrong!");
       })
@@ -29,11 +41,30 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
       });
   };
 
+  const submitOnParent = async () => {
+    setRunning(true);
+    submitCode(value, language)
+      .catch(() => {
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setRunning(false);
+      });
+  };
+
+  const generateSummary = () => {
+    explainCode(value);
+  };
+
   return (
     <div className="overflow-y-auto rounded ">
       <div className="bg-secondary rounded-t sticky z-50 top-0 border p-1 px-7 text-gray-400 flex justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <p>JavaScript</p>
+          <Button className="ml-3" variant="link" onClick={generateSummary}>
+            <BsStars size={12} />
+            <p className="text-xs ml-2">Explain Code</p>
+          </Button>
         </div>
         <div className="flex gap-1 items-center">
           <Button
@@ -46,7 +77,11 @@ const CodeEditor = ({ runCode, code }: { runCode: Function; code: string }) => {
             ) : null}
             Run
           </Button>
-          <Button variant="default" disabled={running ? true : false}>
+          <Button
+            variant="default"
+            disabled={running ? true : false}
+            onClick={submitOnParent}
+          >
             Submit
           </Button>
         </div>
