@@ -163,9 +163,7 @@ const TFA = () => {
               Scan the QR code with your authenticator app
             </p>
             {enableLoading ? (
-              <>
-                <Skeleton className="w-[200px] h-[200px] mt-5 rounded-md" />
-              </>
+              <Skeleton className="w-[200px] h-[200px] mt-5 rounded-md" />
             ) : (
               <>
                 <img src={qr} alt="QR Code" className="mt-5" />
@@ -220,27 +218,25 @@ const TFA = () => {
 
         {enabled && defaultEnabled && (
           <div className="mt-5">
-            <>
-              <div className="flex flex-col items-center justify-center">
-                <h5>Recovery Codes</h5>
-                <p className="mt-5 text-center">
-                  Save these codes in a safe place. You can use these codes to
-                  access your account if you lose access to your authenticator
-                  app.
-                </p>
-              </div>
+            <div className="flex flex-col items-center justify-center">
+              <h5>Recovery Codes</h5>
+              <p className="mt-5 text-center">
+                Save these codes in a safe place. You can use these codes to
+                access your account if you lose access to your authenticator
+                app.
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 w-2/5 mx-auto">
-                {recoverCodes.map((code: any, i) => (
-                  <p
-                    key={i}
-                    className="text-center bg-secondary py-1 px-5 rounded-sm mt-2 flex items-center justify-center gap-5"
-                  >
-                    {code.code}
-                  </p>
-                ))}
-              </div>
-            </>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 w-2/5 mx-auto">
+              {recoverCodes.map((code: any, i) => (
+                <p
+                  key={i}
+                  className="text-center bg-secondary py-1 px-5 rounded-sm mt-2 flex items-center justify-center gap-5"
+                >
+                  {code.code}
+                </p>
+              ))}
+            </div>
           </div>
         )}
 

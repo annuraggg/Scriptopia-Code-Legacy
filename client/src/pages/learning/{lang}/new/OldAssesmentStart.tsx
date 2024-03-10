@@ -2,8 +2,6 @@ import { Navbar } from "@/components/ui/navbar";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";

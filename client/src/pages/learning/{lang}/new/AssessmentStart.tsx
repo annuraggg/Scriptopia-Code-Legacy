@@ -1,5 +1,3 @@
-import React from "react";
-
 const AssessmentStart = () => {
   return (
     <div className="flex items-center justify-center h-[100vh]">

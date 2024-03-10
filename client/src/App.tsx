@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import User from "./types/User";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import axios from "axios";
-import SubRoutes from "./SubRoutes";
 
 function App() {
   const [userLocal, setUserLocal] = useState<null | Object>(null);

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import EditorJS from "@editorjs/editorjs";
 // @ts-expect-error
 import Header from "@editorjs/header";
@@ -38,22 +37,18 @@ const StatementComponent = () => {
     },
   };
 
-  let editor: EditorJS;
+  new EditorJS({
+    autofocus: true,
+    holder: "statement",
+    inlineToolbar: true,
+    tools,
+    placeholder: "Write Problem Statement Here",
+  });
 
-  useEffect(() => {
-    editor = new EditorJS({
-      autofocus: true,
-      holder: "statement",
-      inlineToolbar: true,
-      tools,
-      placeholder: "Write Problem Statement Here",
-    });
-  }, []);
-
-  const handleSave = async () => {
+  /*const handleSave = async () => {
     const data = await editor.saver.save();
     document.write(JSON.stringify(data));
-  };
+  };*/
 
   return (
     <div className="h-[100%] w-[50%] rounded p-3 bg-secondary">
