@@ -17,7 +17,7 @@ function ProtectedRoutes() {
     <>
       {SubRoutes()}
       <Route path="/editor/:id" element={<Editor />} />
-      <Route path="/create/problem" element={<CreateProblem />} />
+      <Route path="/problems/create" element={<CreateProblem />} />
 
       <Route path="/settings" element={<Settings />} />
       <Route path="/settings/logins" element={<RecentLogins />} />

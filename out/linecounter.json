@@ -1,0 +1,1455 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "e:\\Projects\\Express-React Projects\\ScriptopiaCode",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2024-03-10 19:15:48",
+            "filesum": 228,
+            "codesum": 22273,
+            "commentsum": 301,
+            "blanksum": 952,
+            "statistics": {
+                ".json": {
+                    "code": 11707,
+                    "comment": 2,
+                    "blank": 162
+                },
+                "": {
+                    "code": 53,
+                    "comment": 29,
+                    "blank": 11
+                },
+                ".ts": {
+                    "code": 1676,
+                    "comment": 33,
+                    "blank": 178
+                },
+                ".txt": {
+                    "code": 2,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".js": {
+                    "code": 1928,
+                    "comment": 135,
+                    "blank": 52
+                },
+                ".css": {
+                    "code": 140,
+                    "comment": 8,
+                    "blank": 13
+                },
+                ".tsx": {
+                    "code": 5768,
+                    "comment": 88,
+                    "blank": 522
+                },
+                ".md": {
+                    "code": 21,
+                    "comment": 4,
+                    "blank": 8
+                },
+                ".svg": {
+                    "code": 700,
+                    "comment": 2,
+                    "blank": 6
+                },
+                ".html": {
+                    "code": 49,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".log": {
+                    "code": 211,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".cjs": {
+                    "code": 18,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "client\\.ENV"
+                },
+                {
+                    "blank": 0,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "client\\.eslintrc.cjs"
+                },
+                {
+                    "blank": 2,
+                    "code": 14,
+                    "comment": 10,
+                    "filename": "client\\.gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "client\\components.json"
+                },
+                {
+                    "filename": "client\\dist\\assets\\blob-bg.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "client\\dist\\assets\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "client\\dist\\assets\\img\\google.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo-black.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo-color.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo-filled.svg"
+                },
+                {
+                    "blank": 2,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo-icon.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo-white.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\img\\logo.svg"
+                },
+                {
+                    "blank": 7,
+                    "code": 123,
+                    "comment": 106,
+                    "filename": "client\\dist\\assets\\index-E-j7G9uc.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\index-NV21nWxM.css"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\c.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\cpp.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\java.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\javascript.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\nodejs.svg"
+                },
+                {
+                    "blank": 1,
+                    "code": 260,
+                    "comment": 1,
+                    "filename": "client\\dist\\assets\\languages\\python.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\react.svg"
+                },
+                {
+                    "filename": "client\\dist\\assets\\languages\\react.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\scala.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\languages\\typescript.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\dist\\assets\\wave.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "client\\dist\\index.html"
+                },
+                {
+                    "blank": 0,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "client\\index.html"
+                },
+                {
+                    "blank": 111,
+                    "code": 7123,
+                    "comment": 0,
+                    "filename": "client\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 93,
+                    "comment": 0,
+                    "filename": "client\\package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "client\\postcss.config.js"
+                },
+                {
+                    "filename": "client\\public\\assets\\blob-bg.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "client\\public\\assets\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "client\\public\\assets\\img\\google.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo-black.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo-color.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo-filled.svg"
+                },
+                {
+                    "blank": 2,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo-icon.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo-white.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\img\\logo.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\c.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\cpp.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\java.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\javascript.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\nodejs.svg"
+                },
+                {
+                    "blank": 1,
+                    "code": 260,
+                    "comment": 1,
+                    "filename": "client\\public\\assets\\languages\\python.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\react.svg"
+                },
+                {
+                    "filename": "client\\public\\assets\\languages\\react.webp",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\scala.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\languages\\typescript.svg"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "client\\public\\assets\\wave.svg"
+                },
+                {
+                    "blank": 8,
+                    "code": 21,
+                    "comment": 4,
+                    "filename": "client\\README.md"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "client\\src\\App.css"
+                },
+                {
+                    "blank": 5,
+                    "code": 45,
+                    "comment": 0,
+                    "filename": "client\\src\\App.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ModeToggle.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\PageLoading.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 17,
+                    "comment": 1,
+                    "filename": "client\\src\\components\\StarterGenerator.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 57,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\theme-provider.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\accordion.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 126,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\alert-dialog.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 43,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\avatar.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\badge.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 52,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\button.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\card.tsx"
+                },
+                {
+                    "blank": 29,
+                    "code": 231,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\carousel.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\checkbox.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 136,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\command.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 108,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\dialog.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 104,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\drawer.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 186,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\dropdown-menu.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\input-otp.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\input.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\label.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\navbar.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 116,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\navigation-menu.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 111,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\pagination.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\popover.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 149,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\select.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 124,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\sheet.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\skeleton.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\sonner.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\switch.tsx"
+                },
+                {
+                    "blank": 10,
+                    "code": 110,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\table.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 47,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\tabs.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\textarea.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "client\\src\\components\\ui\\tooltip.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "client\\src\\functions\\expireSession.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 136,
+                    "comment": 8,
+                    "filename": "client\\src\\index.css"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "client\\src\\lib\\utils.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "client\\src\\main.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\assessments\\Assessments.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\assessments\\GivenAssessments.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\assessments\\MyAssessments.tsx"
+                },
+                {
+                    "blank": 19,
+                    "code": 221,
+                    "comment": 1,
+                    "filename": "client\\src\\pages\\auth\\Login.tsx"
+                },
+                {
+                    "blank": 25,
+                    "code": 293,
+                    "comment": 1,
+                    "filename": "client\\src\\pages\\auth\\Signup.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\course\\Course.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 116,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\course\\{courseName}\\All.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\course\\{courseName}\\CourseName.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 92,
+                    "comment": 1,
+                    "filename": "client\\src\\pages\\editor\\CodeEditor.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\editor\\Descriptor.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 236,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\editor\\Editor.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 57,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\editor\\Explain.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 93,
+                    "comment": 5,
+                    "filename": "client\\src\\pages\\editor\\ProblemStatement.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 89,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\editor\\ReportButton.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 58,
+                    "comment": 73,
+                    "filename": "client\\src\\pages\\editor\\SuccessDrawer.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 341,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\home\\ChallengeCompass.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 50,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\home\\CodeFlow.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\home\\Home.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\home\\LearningPath.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\home\\PopularCourses.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 108,
+                    "comment": 1,
+                    "filename": "client\\src\\pages\\home\\SetUsername.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 119,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learn\\AllCourses.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learn\\Learn.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 100,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learn\\MyCourses.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learn\\PopularCourses.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learning\\Routes.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learning\\{lang}\\new\\AssessmentStart.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 60,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\learning\\{lang}\\new\\OldAssesmentStart.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 45,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\problems\\create\\CreateProblem.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\problems\\create\\ProblemMetaComponent.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 40,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\problems\\create\\SolutionComponent.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 70,
+                    "comment": 5,
+                    "filename": "client\\src\\pages\\problems\\create\\StatementComponent.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\problems\\create\\TestCaseComponent.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 120,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\settings\\change_password\\ChangePassword.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\settings\\recent_logins\\RecentLogins.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 61,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\settings\\Settings.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 142,
+                    "comment": 0,
+                    "filename": "client\\src\\pages\\settings\\tfa\\TFA.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "client\\src\\ProtectedRoutes.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 42,
+                    "comment": 0,
+                    "filename": "client\\src\\states\\user\\UserSlice.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "client\\src\\store.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "client\\src\\SubRoutes.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "client\\src\\types\\ProblemMeta.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "client\\src\\types\\TestCase.tsx"
+                },
+                {
+                    "blank": 1,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "client\\src\\types\\User.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 1,
+                    "filename": "client\\src\\vite-env.d.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 96,
+                    "comment": 1,
+                    "filename": "client\\tailwind.config.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 26,
+                    "comment": 2,
+                    "filename": "client\\tsconfig.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "client\\tsconfig.node.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "client\\vite.config.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "compiler\\.dockerignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "compiler\\.gitignore"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 17,
+                    "filename": "compiler\\Dockerfile"
+                },
+                {
+                    "blank": 0,
+                    "code": 688,
+                    "comment": 0,
+                    "filename": "compiler\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "compiler\\package.json"
+                },
+                {
+                    "blank": 6,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "compiler\\src\\file-system\\createCodeFile.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "compiler\\src\\file-system\\removeCodeFile.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "compiler\\src\\index.js"
+                },
+                {
+                    "blank": 18,
+                    "code": 74,
+                    "comment": 0,
+                    "filename": "compiler\\src\\run-code\\index.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "compiler\\src\\run-code\\info.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 81,
+                    "comment": 0,
+                    "filename": "compiler\\src\\run-code\\instructions.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "designGuidelines.txt"
+                },
+                {
+                    "blank": 5,
+                    "code": 13,
+                    "comment": 2,
+                    "filename": "server\\.ENV"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "server\\.gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 290,
+                    "comment": 2,
+                    "filename": "server\\dist\\api\\auth\\main.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "server\\dist\\api\\compiler\\explain.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "server\\dist\\api\\compiler\\main.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "server\\dist\\api\\compiler\\run.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 108,
+                    "comment": 2,
+                    "filename": "server\\dist\\api\\compiler\\submit.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "server\\dist\\api\\problems\\main.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "server\\dist\\api\\settings\\main.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 58,
+                    "comment": 1,
+                    "filename": "server\\dist\\api\\settings\\password.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 1,
+                    "filename": "server\\dist\\api\\settings\\recentLogins.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 143,
+                    "comment": 8,
+                    "filename": "server\\dist\\api\\settings\\tfa.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "server\\dist\\config\\init.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 66,
+                    "comment": 8,
+                    "filename": "server\\dist\\config\\logger.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "server\\dist\\config\\mongoose.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 13,
+                    "comment": 2,
+                    "filename": "server\\dist\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Achievements.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Case.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Forum.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\LearningPath.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Problem.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Quiz.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Submission.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\Tag.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\User.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "server\\dist\\Interfaces\\UserToken.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 146,
+                    "comment": 3,
+                    "filename": "server\\dist\\languageTemplates\\js.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "server\\dist\\middlewares\\verifyJWT.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\AchivementSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 42,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\ForumSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 67,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\LearningPath.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\ProblemSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\QuizSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\SubmissionSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "server\\dist\\schemas\\TagSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 138,
+                    "comment": 1,
+                    "filename": "server\\dist\\schemas\\UserSchema.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "server\\error.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "server\\nodemon.json"
+                },
+                {
+                    "blank": 47,
+                    "code": 3656,
+                    "comment": 0,
+                    "filename": "server\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 53,
+                    "comment": 0,
+                    "filename": "server\\package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 131,
+                    "comment": 0,
+                    "filename": "server\\server.log"
+                },
+                {
+                    "blank": 29,
+                    "code": 297,
+                    "comment": 2,
+                    "filename": "server\\src\\api\\auth\\main.ts"
+                },
+                {
+                    "blank": 9,
+                    "code": 62,
+                    "comment": 0,
+                    "filename": "server\\src\\api\\compiler\\explain.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "server\\src\\api\\compiler\\main.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "server\\src\\api\\compiler\\run.ts"
+                },
+                {
+                    "blank": 8,
+                    "code": 130,
+                    "comment": 2,
+                    "filename": "server\\src\\api\\compiler\\submit.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "server\\src\\api\\problems\\main.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "server\\src\\api\\settings\\main.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 47,
+                    "comment": 1,
+                    "filename": "server\\src\\api\\settings\\password.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 17,
+                    "comment": 1,
+                    "filename": "server\\src\\api\\settings\\recentLogins.ts"
+                },
+                {
+                    "blank": 13,
+                    "code": 127,
+                    "comment": 8,
+                    "filename": "server\\src\\api\\settings\\tfa.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "server\\src\\config\\init.ts"
+                },
+                {
+                    "blank": 6,
+                    "code": 76,
+                    "comment": 8,
+                    "filename": "server\\src\\config\\logger.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 1,
+                    "filename": "server\\src\\config\\mongoose.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 13,
+                    "comment": 2,
+                    "filename": "server\\src\\index.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\Achievements.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\Case.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\Forum.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\LearningPath.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 2,
+                    "filename": "server\\src\\Interfaces\\Problem.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\Quiz.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 10,
+                    "comment": 1,
+                    "filename": "server\\src\\Interfaces\\Submission.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\Tag.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\User.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "server\\src\\Interfaces\\UserToken.ts"
+                },
+                {
+                    "blank": 21,
+                    "code": 154,
+                    "comment": 3,
+                    "filename": "server\\src\\languageTemplates\\js.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "server\\src\\middlewares\\verifyJWT.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\AchivementSchema.ts"
+                },
+                {
+                    "blank": 5,
+                    "code": 42,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\ForumSchema.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 67,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\LearningPath.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 49,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\ProblemSchema.ts"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\QuizSchema.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\SubmissionSchema.ts"
+                },
+                {
+                    "blank": 3,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "server\\src\\schemas\\TagSchema.ts"
+                },
+                {
+                    "blank": 2,
+                    "code": 138,
+                    "comment": 1,
+                    "filename": "server\\src\\schemas\\UserSchema.ts"
+                },
+                {
+                    "blank": 0,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "server\\tsconfig.json"
+                }
+            ]
+        }
+    ]
+}

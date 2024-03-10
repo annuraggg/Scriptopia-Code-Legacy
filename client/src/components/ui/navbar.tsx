@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import expireSession from "@/functions/expireSession";
+import { Button } from "./button";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -40,10 +41,11 @@ export const Navbar = () => {
         <img
           className=" cursor-pointer z-50"
           srcSet="/assets/img/logo-icon.svg"
-          style={{ height: "25px" }}
+          style={{ height: "25px", marginRight: "-50px" }}
           onClick={() => navigate("/")}
         />
-        <div className="flex items-center">
+        <div className="flex items-center gap-5">
+          <Button variant="link" onClick={() => navigate("/problems/create")}>Create a Problem</Button>
           <p
             onClick={() => navigate("/assessments")}
             className=" cursor-pointer hover:text-primary hover:underline duration-100"
