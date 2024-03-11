@@ -37,7 +37,7 @@ const messageSchema = new Schema({
 const forumSchema = new Schema({
   postId: {
     type: Schema.Types.ObjectId,
-    required: true
+    required: false
   },
   messages: [messageSchema]
 });

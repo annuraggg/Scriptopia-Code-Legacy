@@ -1,4 +1,4 @@
-import { Document, Schema, Types } from 'mongoose';
+import { Document, Schema, Types } from "mongoose";
 
 interface TestCase {
   input: string[];
@@ -8,6 +8,7 @@ interface TestCase {
 interface Problem extends Document {
   title: string;
   description: Record<string, any>; // Assuming the description can be any object type
+  author: string;
   category: string;
   difficulty: string;
   tags?: string[];
@@ -15,7 +16,7 @@ interface Problem extends Document {
   starterFunction: string;
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
-  chatId: Types.ObjectId;
+  chatId?: Types.ObjectId;
 }
 
 export default Problem;

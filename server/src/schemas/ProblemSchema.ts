@@ -1,51 +1,57 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const problemSchema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: Object,
-    required: true
+    required: true,
+  },
+  author: {
+    type: String,
+    required: true,
   },
   category: {
     type: String,
-    required: true
+    required: true,
   },
   difficulty: {
     type: String,
-    required: true
+    required: true,
   },
   tags: [String],
   votes: {
     type: Number,
-    default: 0
+    default: 0,
   },
   starterFunction: {
     type: String,
-    required: true
+    required: true,
   },
   starterVarArgs: {
     type: [],
-    required: true
+    required: true,
   },
-  testCases: [{
-    input: {
-      type: [String],
-      required: true
+  testCases: [
+    {
+      input: {
+        type: [String],
+        required: true,
+      },
+      output: {
+        type: String,
+        required: true,
+      },
     },
-    output: {
-      type: String,
-      required: true
-    }
-  }],
+  ],
   chatId: {
     type: Schema.Types.ObjectId,
-    required: true
-  }
+    required: false,
+  },
 });
 
-const Problem = mongoose.model('Problem', problemSchema);
+const Problem = mongoose.model("Problem", problemSchema);
 export default Problem;
