@@ -3,8 +3,8 @@ import runJS from "@/languageTemplates/js.js";
 import Problem from "@/schemas/ProblemSchema.js";
 import verifyJWT from "@/middlewares/verifyJWT.js";
 import Submission from "@/schemas/SubmissionSchema.js";
-import Case from "@/Interfaces/Case";
-import logger from "@/config/logger";
+import Case from "@/Interfaces/Case.js";
+import logger from "@/config/logger.js";
 const router = express.Router();
 
 interface User {

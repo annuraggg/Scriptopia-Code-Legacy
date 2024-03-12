@@ -1,4 +1,4 @@
-import Problem from "@/schemas/ProblemSchema";
+import Problem from "@/schemas/ProblemSchema.js";
 import express from "express";
 
 const router = express.Router();

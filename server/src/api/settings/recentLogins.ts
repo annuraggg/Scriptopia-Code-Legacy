@@ -1,8 +1,8 @@
 import express from "express";
-import verifyJWT from "@/middlewares/verifyJWT";
-import UserToken from "../../Interfaces/UserToken";
-import User from "@/schemas/UserSchema";
-import logger from "@/config/logger";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import UserToken from "../../Interfaces/UserToken.js";
+import User from "@/schemas/UserSchema.js";
+import logger from "@/config/logger.js";
 
 const router = express.Router();
 
