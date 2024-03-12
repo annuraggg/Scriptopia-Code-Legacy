@@ -60,7 +60,6 @@ const logger = winston.createLogger({
   ],
 });
 
-if (process.env.NODE_ENV !== "production") {
   logger.add(
     new winston.transports.Console({
       format: winston.format.combine(
@@ -84,7 +83,6 @@ if (process.env.NODE_ENV !== "production") {
       ),
     })
   );
-}
 
 
 export default logger;

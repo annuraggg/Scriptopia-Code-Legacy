@@ -133,7 +133,7 @@ router.post("/login", async (req, res) => {
 
               res
                 .status(200)
-                .cookie("jwt", token, {
+                .cookie("token", token, {
                   httpOnly: false,
                   sameSite: "none",
                   secure: true,
@@ -148,7 +148,9 @@ router.post("/login", async (req, res) => {
                   expiresIn: "5m",
                 }
               );
-              res.status(200).json({ tfa: true, id: user._id, token: idJwt });
+              res
+                .status(200)
+                .json({ tfa: true, id: user._id, token: idJwt });
             }
           } else {
             res.status(401).send();
@@ -182,7 +184,14 @@ router.post("/register", async (req, res) => {
       const token = createJWT(u as unknown as UserType, sessID);
       performSecurityLogs(req, u as unknown as UserType, sessID);
 
-      res.status(200).json({ success: true, token });
+      res
+        .status(200)
+        .cookie("token", token, {
+          httpOnly: false,
+          sameSite: "none",
+          secure: true,
+        })
+        .json({ success: true, token });
     } catch (error) {
       res.status(409).send();
       logger.error({ code: "AUTH-REGISTER-001", message: error });
@@ -231,7 +240,14 @@ router.post("/google", async (req, res) => {
           const token = createJWT(user as unknown as UserType, sessID);
           performSecurityLogs(req, user as unknown as UserType, sessID);
 
-          res.status(200).json({ token });
+          res
+            .status(200)
+            .cookie("token", token, {
+              httpOnly: false,
+              sameSite: "none",
+              secure: true,
+            })
+            .json({ token });
         } else {
           const randomID = crypto.randomUUID();
           const idJwt = jwt.sign(
