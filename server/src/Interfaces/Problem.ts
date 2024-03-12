@@ -16,6 +16,7 @@ interface Problem extends Document {
   starterFunction: string;
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
+  lastUpdated: Date;
   chatId?: Types.ObjectId;
 }
 

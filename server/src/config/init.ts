@@ -10,7 +10,7 @@ import { rateLimit } from 'express-rate-limit'
 const app = express();
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, 
+	limit: 1000, 
 	standardHeaders: 'draft-7',
 	legacyHeaders: false, 
 })
@@ -26,10 +26,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
-app.use(limiter)
+process.env.NODE_ENV === "production" && app.use(limiter)
 app.use(cors(
   {
-    origin: [process.env.FRONTEND_URL!],
+    origin: [process.env.FRONTEND_URL!, "http://localhost:5173", "https://scriptopia-code.anuragsawant.tech"],
     credentials: true,
   }
 ));

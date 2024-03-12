@@ -77,10 +77,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
       },
-      title: {
-        type: String,
-        required: true,
-      },
       solvedOn: Date,
       score: Number,
       internalScore: Number,
@@ -135,6 +131,10 @@ const userSchema = new Schema({
       expires: Date,
     },
   ],
+  streak: {
+    type: [String],
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema);

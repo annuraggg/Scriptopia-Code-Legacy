@@ -47,6 +47,10 @@ const problemSchema = new Schema({
       },
     },
   ],
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
+  },
   chatId: {
     type: Schema.Types.ObjectId,
     required: false,

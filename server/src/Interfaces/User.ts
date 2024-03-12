@@ -10,7 +10,6 @@ interface AchievementReceivables {
 interface SolvedProblem {
   problemId: Types.ObjectId;
   title: string;
-  solvedOn?: Date;
   score?: number;
   internalScore?: number;
 }
@@ -70,6 +69,7 @@ interface User extends Document {
   learningPath: LearningPathModule[];
   tagsSolved: string[];
   loginHistory: LoginHistory[];
+  streak: string[]
 }
 
 export default User;

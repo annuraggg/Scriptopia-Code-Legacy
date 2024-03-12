@@ -1,23 +1,13 @@
-const CodeFlow = () => {
-  const codeFlow = [
-    "completed",
-    "completed",
-    "missed",
-    "missed",
-    "completed",
-    "inprogress",
-    "not",
-  ];
-
+const CodeFlow = ({ codeFlow }: { codeFlow: string[] }) => {
   const daysIndex = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const getStatusClassName = (status: string) => {
     switch (status) {
-      case "completed":
+      case "true":
         return "bg-[#15B8A7]";
-      case "missed":
+      case "false":
         return "bg-[#EE4445]";
-      case "inprogress":
+      case "null":
         return "bg-[#EAB209]";
       default:
         return "bg-background border-primary border";
