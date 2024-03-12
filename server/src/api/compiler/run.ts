@@ -1,7 +1,7 @@
 import express from "express";
 import runJS from "@/languageTemplates/js.js";
 import Case from "@/Interfaces/Case.js";
-import logger from "@/config/logger";
+import logger from "@/config/logger.js";
 const router = express.Router();
 
 const selectLangAndRun = async (

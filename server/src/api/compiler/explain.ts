@@ -1,11 +1,11 @@
-import verifyJWT from "@/middlewares/verifyJWT";
+import verifyJWT from "@/middlewares/verifyJWT.js";
 import express from "express";
 import {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
-import logger from "@/config/logger";
+import logger from "@/config/logger.js";
 
 const router = express.Router();
 

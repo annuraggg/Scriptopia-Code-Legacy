@@ -1,10 +1,10 @@
-import verifyJWT from "@/middlewares/verifyJWT";
+import verifyJWT from "@/middlewares/verifyJWT.js";
 import { randomBytes } from "crypto";
 import express from "express";
 import * as OTPAuth from "otpauth";
 import hb32 from "hi-base32";
-import User from "@/schemas/UserSchema";
-import logger from "@/config/logger";
+import User from "@/schemas/UserSchema.js";
+import logger from "@/config/logger.js";
 const router = express.Router();
 
 

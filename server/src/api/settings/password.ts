@@ -1,8 +1,8 @@
-import verifyJWT from "@/middlewares/verifyJWT";
-import User from "@/schemas/UserSchema";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 import bcrypt from "bcrypt";
-import logger from "@/config/logger";
+import logger from "@/config/logger.js";
 const router = express.Router();
 
 router.post("/", verifyJWT, async (req, res) => {

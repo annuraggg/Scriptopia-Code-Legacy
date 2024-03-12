@@ -2,6 +2,10 @@ import express from "express";
 const router = express.Router();
 import Problem from "../../schemas/ProblemSchema.js";
 import logger from "../../config/logger.js";
+import create from "./create.js";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+
+router.use("/create",verifyJWT ,create);
 
 router.get("/:probID", (req, res) => {
   Problem.findById(req.params.probID)
