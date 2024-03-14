@@ -84,6 +84,29 @@ const Home = () => {
     setModal(value);
   };
 
+  const filterProblems = (difficulty?: string, search?: string) => {
+    setLoading(true);
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home/filter`, {
+        difficulty,
+        search,
+        exclude: excludedIDs,
+      })
+      .then((res) => {
+        let prob = problems;
+        prob[currentPage - 1] = res.data.problems;
+        setProblems(prob);
+        setPages(res.data.pages);
+      })
+      .catch((err) => {
+        toast.error("Failed to fetch data");
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <>
       <Navbar />
@@ -98,6 +121,7 @@ const Home = () => {
             currentPage={currentPage}
             setPrevPage={setPrevPage}
             loading={loading}
+            filter={filterProblems}
           />
         </div>
         <div>
@@ -109,7 +133,7 @@ const Home = () => {
               "true",
               "false",
               "missed",
-              "null"
+              "null",
             ]}
           />
         </div>

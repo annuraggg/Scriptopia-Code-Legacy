@@ -24,15 +24,15 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
 type Problem = {
   id: string;
@@ -49,6 +49,7 @@ const ChallengeCompass = ({
   setCurrentPage,
   setPrevPage,
   loading,
+  filter,
 }: {
   problems: Problem[];
   pages: number;
@@ -56,12 +57,19 @@ const ChallengeCompass = ({
   setCurrentPage: (value: number) => void;
   setPrevPage: (value: number) => void;
   loading: boolean;
+  filter: Function;
 }) => {
   const navigate = useNavigate();
+  const [search, setSearch] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>("all");
 
   useEffect(() => {
     console.log(problems);
   }, [problems]);
+
+  const evalSearch = () => {
+    filter(difficulty, search);
+  };
 
   return (
     <div className="mt-5 w-[65vw]">
@@ -70,17 +78,33 @@ const ChallengeCompass = ({
           <h2>Challenge Compass</h2>
         </div>
         <div className="flex gap-5">
-          <Input placeholder="Search" className="ml-5 w-[250px]" />
-          <Select>
+          <Input
+            placeholder="Search"
+            className="ml-5 w-[250px]"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
+
+          <Select
+            value={difficulty}
+            onValueChange={(difficulty) => {
+              setDifficulty(difficulty);
+            }}
+          >
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="easy">Easy</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
               <SelectItem value="hard">Hard</SelectItem>
             </SelectContent>
           </Select>
+
+          <Button variant="default" onClick={() => evalSearch()}>
+            Search
+          </Button>
         </div>
       </div>
       {loading ? (

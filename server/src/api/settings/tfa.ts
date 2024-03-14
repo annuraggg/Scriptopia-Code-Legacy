@@ -74,6 +74,7 @@ router.post("/verify", verifyJWT, async (req, res) => {
       secret: secret,
     });
 
+    console.log(totpCheck.validate({ token: totp, window: 2 }));
     if (totpCheck.validate({ token: totp, window: 2 }) === 0) {
       const recoveryCodes = generateRecoveryCodes();
 
