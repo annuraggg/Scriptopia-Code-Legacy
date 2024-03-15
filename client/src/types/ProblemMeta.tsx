@@ -4,7 +4,6 @@ type Meta = {
   difficulty: "easy" | "medium" | "hard";
   votes: number;
   tags: string[];
-  similarProblems: string[];
 };
 
 export default Meta;

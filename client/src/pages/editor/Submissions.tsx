@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Submission {
+  _id: string;
   problemID: string;
   userID: string;
   code: string;
@@ -10,6 +11,8 @@ interface Submission {
 }
 
 const Submissions = ({ submissions }: { submissions: Submission[] }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="flex items-center justify-between bg-secondary rounded-t-lg sticky p-2.5 px-7 text-gray-400">
@@ -27,7 +30,12 @@ const Submissions = ({ submissions }: { submissions: Submission[] }) => {
                 <p className="text-gray-300">{submission.status}</p>
               </div>
               <div className="flex gap-5">
-                <button className="text-gray-300">View</button>
+                <button
+                  className="text-gray-300"
+                  onClick={() => navigate(`/submission/${submission._id}`)}
+                >
+                  View
+                </button>
                 <button className="text-gray-300">Delete</button>
               </div>
             </div>

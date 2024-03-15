@@ -54,11 +54,8 @@ router.post("/", verifyJWT, async (req, res) => {
       });
 
       const result = await chat.sendMessage(`${appendTemplate} ${code}`);
-      console.log(result);
       const response = result.response;
-      console.log(response);
       const toText = response.text();
-      console.log(toText);
 
       res.status(200).json({ response: toText });
     }

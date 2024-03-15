@@ -34,6 +34,7 @@ router.post("/:probID", verifyJWT, async (req, res) => {
         // @ts-ignore
         userID: req?.user?.id,
       });
+
       res.status(200).json({ desc, meta, cases, func, args, submissions });
     }
   } catch (err) {

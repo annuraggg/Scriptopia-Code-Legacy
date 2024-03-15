@@ -303,3 +303,35 @@
 15/03/24 08:50 (Info): MONGOOSE-CONNECT - Connected to MongoDB
 15/03/24 08:54 (Info): MONGOOSE-CONNECT - Connected to MongoDB
 15/03/24 08:55 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:32 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:32 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:33 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:34 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:37 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:38 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:39 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:40 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:40 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:40 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 09:42 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 13:08 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+15/03/24 13:09 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 13:10 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+15/03/24 13:10 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 13:12 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+15/03/24 13:12 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)

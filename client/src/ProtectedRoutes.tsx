@@ -11,6 +11,7 @@ import Course from "./pages/course/Course";
 import CourseName from "./pages/course/{courseName}/CourseName";
 import Assessments from "./pages/assessments/Assessments";
 import SubRoutes from "./SubRoutes";
+import Submission from "./pages/submission/Submission";
 
 function ProtectedRoutes() {
   return (
@@ -30,6 +31,8 @@ function ProtectedRoutes() {
 
       <Route path="/course" element={<Course />} />
       <Route path="/course/:courseName" element={<CourseName />} />
+
+      <Route path="/submission/:id" element={<Submission />} />
 
       <Route path="/" element={<Home />} />
 

@@ -78,3 +78,21 @@
     at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
     at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
     at async loadESM (node:internal/process/esm_loader:28:7)
+15/03/24 13:08 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+15/03/24 13:10 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+15/03/24 13:12 (Error): COM_EXP_001 - Error: [503 Service Unavailable] The model is overloaded. Please try again later.
+    at makeRequest (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:210:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
+    at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
+    at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)

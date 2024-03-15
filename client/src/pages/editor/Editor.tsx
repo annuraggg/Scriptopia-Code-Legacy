@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Submissions from "./Submissions";
 
 interface Submission {
+  _id: string;
   problemID: string;
   userID: string;
   code: string;
@@ -52,7 +53,7 @@ function App() {
   const [explainCodeStr, setExplainCodeStr] = useState<string>("");
   const [sheetError, setSheetError] = useState(false);
 
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([] as Submission[]);
 
   const [error, setError] = useState("");
 
@@ -253,7 +254,7 @@ function App() {
           </Tabs>
         </div>
         <Split
-          className="md:w-[50%] w-[100%] h-[90vh] split"
+          className="md:w-[50%] w-[100%] h-[90vh] split z-50"
           direction="vertical"
         >
           <CodeEditor
