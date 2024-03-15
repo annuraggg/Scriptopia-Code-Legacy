@@ -26,12 +26,19 @@ import {
 import { Bar } from "react-chartjs-2";
 */
 
-const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: number}) => {
+const SuccessDrawer = ({
+  memoryUsed,
+  timeTaken,
+  open,
+  setOpen,
+}: {
+  memoryUsed: number;
+  timeTaken: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
   const dateAndTime = new Date().toLocaleString();
 
-  useEffect(() => {
-    document.getElementById("trig")?.click();
-  }, []);
   // ! UNCOMMENT THIS TO USE CHARTJS
   /* 
   ChartJS.register(
@@ -88,8 +95,7 @@ const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: 
   };
 */
   return (
-    <Drawer shouldScaleBackground>
-      <DrawerTrigger id="trig">Open</DrawerTrigger>
+    <Drawer shouldScaleBackground open={open}>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Solution Accepted!</DrawerTitle>
@@ -122,12 +128,9 @@ const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: 
             </div>
           </div>
         </DrawerHeader>
-        <DrawerFooter className="flex items-center justify-center">
-          <Button className=" w-fit">Submit</Button>
-          <DrawerClose className="border py-2 px-4 rounded-lg">
-            Cancel
-          </DrawerClose>
-        </DrawerFooter>
+        <DrawerClose className="flex items-center justify-center mb-8">
+          <Button className=" w-fit" onClick={() => setOpen(false)}>Done</Button>
+        </DrawerClose>
       </DrawerContent>
     </Drawer>
   );

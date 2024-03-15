@@ -89,6 +89,7 @@ router.post("/", verifyJWT, async (req, res) => {
     if (!result) {
       res.status(500).send("Failed to fetch output");
     } else {
+      console.log(result);
       if (
         result.internalStatus === "PASSED" &&
         result.failedCaseNumber === -1

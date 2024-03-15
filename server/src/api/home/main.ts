@@ -8,6 +8,18 @@ const router = express.Router();
 
 const limit = 8;
 
+function compareDates(date1: Date, date2: Date | null): boolean {
+  if (date2 === null) return false;
+  const isoDate1 = date1.toISOString().split("T")[0];
+  const isoDate2 = date2.toISOString().split("T")[0];
+
+  console.log(isoDate1, isoDate2);
+  console.log(isoDate1 === isoDate2);
+  if (isoDate1 === isoDate2) return true;
+  else if (isoDate1 < isoDate2) return false;
+  else return false;
+}
+
 router.post("/", verifyJWT, async (req, res) => {
   const user = req?.user as UserToken;
 
@@ -54,10 +66,31 @@ router.post("/", verifyJWT, async (req, res) => {
 
   const pages = Math.ceil(totalProblems / limit);
 
+  // GET Codeflow
+  const userObj = await User.findOne({ _id: user.id }).select("streak");
+  const streak = userObj?.streak;
+
+  const streakArr: boolean[] = [];
+  if (streak) {
+    let day = 0;
+    for (let i = 7; i > 0; i--) {
+      const date = new Date(new Date().setDate(new Date().getDate() - day))
+        .toISOString()
+        .toString();
+
+      day++;
+      const date2 = streak[i] ? new Date(streak[i]) : null;
+      streakArr.push(compareDates(new Date(date), date2));
+    }
+  }
+
+  console.log(streakArr);
+
   res.status(200).json({
     problems,
     exclude: [...excludedProblemIDs, ...furtherExclude],
     pages,
+    streak: streakArr,
   });
 });
 

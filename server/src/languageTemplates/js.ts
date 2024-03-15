@@ -20,7 +20,7 @@ const createJSFunction = (code: string, fnName: string, cases: Case[]) => {
   jsCodeString += `const input = cases[i].input;\n`;
   jsCodeString += `const output = cases[i].output;\n`;
   jsCodeString += `const result = ${fnName}(...input);\n`;
-  jsCodeString += `if (result === output) {\n`;
+  jsCodeString += `if (result == output) {\n`;
   jsCodeString += `resultArr.push(result);\n passed = true;\n`;
   jsCodeString += `} else {\n`;
   jsCodeString += `resultArr.push(result);\n`;
@@ -116,7 +116,11 @@ const fetchOutput = async (code: string, casesLength: number) => {
 };
 
 const getConsole = (output: string[], totalCases: number): string[] => {
-  return output.slice(0, output.length - 4);
+  if (output.slice(0, output.length - 4).length == 0) {
+    return ["No Output"];
+  } else {
+    return output.slice(0, output.length - 4);
+  }
 };
 
 const getOutput = (
@@ -126,7 +130,7 @@ const getOutput = (
     let op: { status: string; op: string[]; failedCaseNumber: number } = {
       status: "",
       op: [],
-      failedCaseNumber: 0
+      failedCaseNumber: 0,
     };
     if (output && output.length > 3) {
       op = JSON.parse(output[output.length - 4]);

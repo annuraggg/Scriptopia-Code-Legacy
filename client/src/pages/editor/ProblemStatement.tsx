@@ -64,7 +64,7 @@ const ProblemStatement = ({
   }, [statement]);
 
   return (
-    <div className="md:w-[50%] w-[100%] rounded-t" style={glassFrost}>
+    <div className="rounded-lg" style={glassFrost}>
       <div className="flex items-center justify-between bg-secondary rounded-t-lg sticky p-2.5 px-7 text-gray-400">
         <p>Problem Statement</p>
         <div className="flex items-center justify-between gap-5">
@@ -82,7 +82,7 @@ const ProblemStatement = ({
           <ReportButton />
         </div>
       </div>
-      <div className=" overflow-y-auto h-[82vh]">
+      <div className=" overflow-y-auto h-[77vh] rounded-b-lg bg-secondary">
         <div className="rounded-lg bg-accent overflow-y-auto gap-5 flex px-10 py-0">
           {meta.tags?.map((tag, index) => (
             <Badge variant="outline" className="border border-blue-500" key={index}>

@@ -4,32 +4,42 @@ import Problem from "../../schemas/ProblemSchema.js";
 import logger from "../../config/logger.js";
 import create from "./create.js";
 import verifyJWT from "@/middlewares/verifyJWT.js";
+import ProblemType from "@/Interfaces/Problem.js";
+import Submission from "@/schemas/SubmissionSchema.js";
+import SubmissionType from "@/Interfaces/Submission.js";
 
-router.use("/create",verifyJWT ,create);
+router.use("/create", verifyJWT, create);
 
-router.get("/:probID", (req, res) => {
-  Problem.findById(req.params.probID)
-    .then((problem) => {
-      if (problem) {
-        const meta = {
-          id: problem._id,
-          title: problem.title,
-          difficulty: problem.difficulty.toLowerCase(),
-          votes: problem.votes,
-          tags: problem.tags,
-        };
-        const desc = problem.description;
-        const cases = problem.testCases;
-        const func = problem.starterFunction;
-        const args = problem.starterVarArgs;
+router.post("/:probID", verifyJWT, async (req, res) => {
+  try {
+    const problem: ProblemType | any = await Problem.findById(
+      req.params.probID
+    ).exec();
 
-        res.status(200).json({ desc, meta, cases, func, args });
-      }
-    })
-    .catch((err) => {
-      logger.error({ code: "PROBLEMS-GET-001", message: err });
-      res.status(404).json(err);
-    });
+    if (problem) {
+      const meta = {
+        id: problem._id,
+        title: problem.title,
+        difficulty: problem.difficulty.toLowerCase(),
+        votes: problem.votes,
+        tags: problem.tags,
+      };
+      const desc = problem.description;
+      const cases = problem.testCases;
+      const func = problem.starterFunction;
+      const args = problem.starterVarArgs;
+
+      const submissions: SubmissionType[] = await Submission.find({
+        problemID: req.params.probID,
+        // @ts-ignore
+        userID: req?.user?.id,
+      });
+      res.status(200).json({ desc, meta, cases, func, args, submissions });
+    }
+  } catch (err) {
+    logger.error(err);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
 });
 
 export default router;

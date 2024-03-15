@@ -25,6 +25,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [prevPage, setPrevPage] = useState<number>(1);
   const [excludedIDs, setExcludedIDs] = useState<string[]>([]);
+  const [streak, setStreak] = useState<boolean[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -63,6 +64,7 @@ const Home = () => {
         setProblems(prob);
         setPages(res.data.pages);
         setExcludedIDs(res.data.exclude);
+        setStreak(res.data.streak);
       })
       .catch((err) => {
         toast.error("Failed to fetch data");
@@ -97,6 +99,7 @@ const Home = () => {
         prob[currentPage - 1] = res.data.problems;
         setProblems(prob);
         setPages(res.data.pages);
+
       })
       .catch((err) => {
         toast.error("Failed to fetch data");
@@ -126,15 +129,7 @@ const Home = () => {
         </div>
         <div>
           <CodeFlow
-            codeFlow={[
-              "true",
-              "false",
-              "missed",
-              "true",
-              "false",
-              "missed",
-              "null",
-            ]}
+            codeFlow={streak}
           />
         </div>
       </div>
