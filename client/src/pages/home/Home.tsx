@@ -1,6 +1,4 @@
-import LearningPath from "./LearningPath";
 import { Navbar } from "@/components/ui/navbar";
-import PopularCourses from "./PopularCourses";
 import ChallengeCompass from "./ChallengeCompass";
 import CodeFlow from "./CodeFlow";
 import SetUsername from "./SetUsername";

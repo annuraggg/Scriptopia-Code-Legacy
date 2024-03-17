@@ -3,15 +3,11 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
-import { MdMemory, MdAccessTime } from "react-icons/md";
-
+import { MdAccessTime, MdMemory } from "react-icons/md";
 /*import { AxisOptions, Chart } from "react-charts";
 
 import {

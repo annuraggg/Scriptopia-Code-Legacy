@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <ThemeProvider>
       <Provider store={store}>
-        <Toaster />
+        <Toaster richColors />
         <App />
       </Provider>
     </ThemeProvider>

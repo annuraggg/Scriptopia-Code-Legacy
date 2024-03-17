@@ -9,28 +9,21 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import expireSession from "@/functions/expireSession";
 import { Button } from "./button";
+import { useTheme } from "../theme-provider";
 
 export const Navbar = () => {
   const navigate = useNavigate();
-
-  const [theme, setTheme] = useState<string>(
-    localStorage.getItem("vite-ui-theme")!
-  );
+  const { setTheme, theme } = useTheme();
 
   const changeTheme = () => {
     if (theme === "dark") {
-      localStorage.setItem("vite-ui-theme", "light");
       setTheme("light");
     } else {
-      localStorage.setItem("vite-ui-theme", "dark");
       setTheme("dark");
     }
-
-    window.location.reload();
   };
 
   useHotkeys("ctrl+shift+l", changeTheme);
@@ -47,7 +40,9 @@ export const Navbar = () => {
           alt="logo"
         />
         <div className="flex items-center gap-5">
-          <Button variant="link" onClick={() => navigate("/problems/create")}>Create a Problem</Button>
+          <Button variant="link" onClick={() => navigate("/problems/create")}>
+            Create a Problem
+          </Button>
           <p
             onClick={() => navigate("/assessments")}
             className=" cursor-pointer hover:text-primary hover:underline duration-100"

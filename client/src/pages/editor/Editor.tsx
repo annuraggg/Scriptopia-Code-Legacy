@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Meta from "@/types/ProblemMeta";
 import { Case } from "@/types/TestCase";
 import axios from "axios";
-import returnStarter from "@/components/StarterGenerator";
+import returnStarter from "@/functions/StarterGenerator";
 import JSConfetti from "js-confetti";
 import SuccessDrawer from "./SuccessDrawer";
 import { toast } from "sonner";
@@ -70,6 +70,7 @@ function App() {
         const starter = returnStarter(
           "javascript",
           response.func,
+          response.returnType,
           response.args
         );
         setCode(starter);

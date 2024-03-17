@@ -1,140 +1,176 @@
 import { Navbar } from "@/components/ui/navbar";
-import StatementComponent from "./StatementComponent";
-import { useState } from "react";
-import ProblemMetaComponent from "./ProblemMetaComponent";
-import TestCaseComponent from "./TestCaseComponent";
+import { cloneElement, useState } from "react";
+import DetailsComponent from "./DetailsComponent";
+import SelectLanguage from "./SelectLanguage";
+import StubComponenent from "./StubComponenent";
+import AddCase from "./AddCase";
 import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-} from "@/components/ui/alert-dialog";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import axios from "axios";
 
 const CreateProblem = () => {
-  const [currPage, setCurrPage] = useState<number>(0);
-  const [statement, setStatement] = useState<any>(null);
-  const [meta, setMeta] = useState<{
-    title: string;
-    difficulty: string;
-    tags: string[];
-    functionName: string;
-    args: { key: string; type: string }[];
-  } | null>(null);
-  const [cases, setCases] = useState<{ input: string; output: string }[]>([]);
+  const [active, setActive] = useState(0);
+  const [requestNext, setRequestNext] = useState<boolean>(false);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [time, setTime] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy"
+  );
+  const [tags, setTags] = useState<string[]>([]);
+  const [description, setDescription] = useState<string>("");
 
-  const getStatement = (statement: any) => {
-    setStatement(statement);
-    setCurrPage(1);
-  };
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
-  const goBack = (current: number) => {
-    setCurrPage(current - 1);
-  };
+  const [functionName, setFunctionName] = useState<string>("");
+  const [returnType, setReturnType] = useState<
+    "int" | "string" | "float" | "double" | "char" | "boolean"
+  >("int");
+  const [args, setArgs] = useState<
+    {
+      key: string;
+      type: "int" | "string" | "float" | "double" | "char" | "boolean";
+    }[]
+  >([]);
 
-  const getMeta = (meta: {
-    title: string;
-    difficulty: string;
-    tags: string[];
-    functionName: string;
-    args: { key: string; type: string }[];
-  }) => {
-    setMeta(meta);
-    setCurrPage(2);
-  };
+  const [testCases, setTestCases] = useState<
+    {
+      caseName: string;
+      difficulty: "easy" | "medium" | "hard";
+      score: number;
+      input: string;
+      output: string;
+      isSample: boolean;
+    }[]
+  >([]);
 
-  const getCases = (casesArr: { input: string; output: string }[]) => {
-    setCases(casesArr);
-    if (statement.blocks.length === 0) {
-      toast.error("Please enter the problem statement");
+  const goToTab = (index: number) => {
+    if (index === active) return;
+    if (index < active) {
+      setActive(index);
       return;
     }
+    setRequestNext(true);
+  };
 
-    if (
-      !meta?.title ||
-      !meta?.difficulty ||
-      !meta?.tags ||
-      !meta?.functionName ||
-      !meta?.args
-    ) {
-      toast.error("Please enter the problem meta");
-      return;
+  const saveData = (data: any) => {
+    if (active === 0) {
+      setName(data.name);
+      setTime(data.time);
+      setDifficulty(data.difficulty);
+      setTags(data.tags);
+      setDescription(data.description);
+    } else if (active === 1) {
+      setSelectedLanguages(data);
+    } else if (active === 2) {
+      setFunctionName(data.functionName);
+      setReturnType(data.returnType);
+      setArgs(data.args);
+    } else if (active === 3) {
+      setTestCases(data);
     }
+  };
 
-    if (casesArr.length === 0) {
-      toast.error("Please enter at least one test case");
-      return;
-    }
-
-    setLoading(true);
-    axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/create`, {
-        statement,
-        meta,
-        cases: casesArr,
-      })
-      .then((res) => {
-        toast.success("Problem Created Successfully");
-        window.location.href = "/editor/" + res.data.id;
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          toast.error("Please login to create a problem");
-          return;
-        }
-        if (err.res.data.status === 400) {
-          toast.error("Please fill all the fields");
-          return;
-        }
-
-        toast.error("Error Creating Problem");
-      })
-      .finally(() => {
-        setLoading(false);
+  const goToNext = (allowed?: boolean, data?: any) => {
+    setRequestNext(false);
+    if (allowed) {
+      saveData(data);
+      setActive(active + 1);
+    } else {
+      toast.error("Please fill all the fields", {
+        position: "top-center",
       });
+    }
   };
+
+  // ! PROCESS THE DATA AND SUBMIT
+  const submit = (allowed: boolean, data: any) => {
+    if (allowed) {
+      saveData(data);
+      toast.success("Problem Created Successfully", {
+        position: "top-center",
+      });
+    } else {
+      toast.error("Please fill all the fields", {
+        position: "top-center",
+      });
+    }
+  };
+
+  const steps: { title: string; component?: JSX.Element }[] = [
+    {
+      title: "Question Details",
+      component: (
+        <DetailsComponent
+          respondNext={goToNext}
+          requestNext={requestNext}
+          data={{ name, time, difficulty, tags, description }}
+        />
+      ),
+    },
+    {
+      title: "Languages",
+      component: (
+        <SelectLanguage
+          respondNext={goToNext}
+          requestNext={requestNext}
+          data={selectedLanguages}
+        />
+      ),
+    },
+    {
+      title: "Code Stub",
+      component: (
+        <StubComponenent
+          respondNext={goToNext}
+          requestNext={requestNext}
+          data={{ functionName, returnType, args }}
+        />
+      ),
+    },
+    {
+      title: "Test Cases",
+      component: (
+        <AddCase
+          respondNext={submit}
+          data={testCases}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
       <Navbar />
-      <div>
-        {currPage === 0 ? (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <StatementComponent getStatement={getStatement} data={statement} />
+      <div className="px-10 py-5">
+        <h2>Create Problem</h2>
+        <div className="flex mt-5 gap-10">
+          <div className="flex mt-5 gap-5 flex-col">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                onClick={() => goToTab(index)}
+                className={`cursor-pointer flex items-center gap-5 p-5 rounded-sm bg-secondary bg-opacity-20 w-[250px] border-8 ${
+                  active == index
+                    ? "border-l-primary opacity-100"
+                    : active > index
+                    ? "border-l-green-500 opacity-75"
+                    : "border-l-secondary opacity-50"
+                }`}
+              >
+                <div className="h-10 w-10 flex items-center justify-center rounded-full border border-white">
+                  {index + 1}
+                </div>
+                <div>
+                  <p className="text-xs">Step {index + 1}</p>
+                  <p className="mt-2">{step.title}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ) : currPage === 1 ? (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <ProblemMetaComponent
-              getMeta={getMeta}
-              goBack={goBack}
-              data={meta}
-            />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <TestCaseComponent
-              getCases={getCases}
-              goBack={goBack}
-              data={cases}
-            />
-            <div className="flex gap-5"></div>
-          </div>
-        )}
-
-        <AlertDialog open={loading}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogDescription className="flex items-center justify-center flex-col gap-5">
-                <p>Please Wait</p>
-                <ReloadIcon className="animate-spin" />
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-          </AlertDialogContent>
-        </AlertDialog>
+          {cloneElement(steps[active].component!, {
+            requestNext: requestNext,
+            responseNext: goToNext,
+          })}
+        </div>
       </div>
     </>
   );

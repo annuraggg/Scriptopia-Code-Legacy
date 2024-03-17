@@ -335,3 +335,7 @@
     at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
     at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
     at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+17/03/24 09:19 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+17/03/24 13:45 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+17/03/24 13:51 (Info): MONGOOSE-CONNECT - Connected to MongoDB
+17/03/24 18:15 (Info): MONGOOSE-CONNECT - Connected to MongoDB

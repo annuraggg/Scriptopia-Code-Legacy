@@ -10,7 +10,7 @@ import { rateLimit } from 'express-rate-limit'
 const app = express();
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 1000, 
+	limit: 10000, 
 	standardHeaders: 'draft-7',
 	legacyHeaders: false, 
 })
