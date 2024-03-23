@@ -1,12 +1,15 @@
 import { Navbar } from "@/components/ui/navbar";
-import { cloneElement, useState } from "react";
+import { cloneElement, useEffect, useState } from "react";
 import DetailsComponent from "./DetailsComponent";
 import SelectLanguage from "./SelectLanguage";
 import StubComponenent from "./StubComponenent";
 import AddCase from "./AddCase";
 import { toast } from "sonner";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CreateProblem = () => {
+  const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [requestNext, setRequestNext] = useState<boolean>(false);
 
@@ -19,6 +22,8 @@ const CreateProblem = () => {
   const [description, setDescription] = useState<string>("");
 
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+
+  const [saving, setSaving] = useState<boolean>(false);
 
   const [functionName, setFunctionName] = useState<string>("");
   const [returnType, setReturnType] = useState<
@@ -33,14 +38,39 @@ const CreateProblem = () => {
 
   const [testCases, setTestCases] = useState<
     {
-      caseName: string;
+      name: string;
       difficulty: "easy" | "medium" | "hard";
       score: number;
-      input: string;
+      input: string[];
       output: string;
       isSample: boolean;
     }[]
   >([]);
+
+  useEffect(() => {
+    const isEdit = window.location.pathname.includes("edit");
+    if (isEdit) {
+      axios
+        .post(
+          `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/edit/${
+            window.location.pathname.split("/")[2]
+          }`
+        )
+        .then((res) => {
+          const { desc, meta, cases, func, args } = res.data;
+          setName(meta.title);
+          setTime(meta.time);
+          setDifficulty(meta.difficulty);
+          setTags(meta.tags);
+          setDescription(desc);
+          setSelectedLanguages(meta.langs);
+          setFunctionName(func);
+          setReturnType("int");
+          setArgs(args);
+          setTestCases(cases);
+        });
+    }
+  }, []);
 
   const goToTab = (index: number) => {
     if (index === active) return;
@@ -81,13 +111,53 @@ const CreateProblem = () => {
     }
   };
 
-  // ! PROCESS THE DATA AND SUBMIT
   const submit = (allowed: boolean, data: any) => {
+    setSaving(true);
     if (allowed) {
       saveData(data);
-      toast.success("Problem Created Successfully", {
-        position: "top-center",
-      });
+
+      axios
+        .post(
+          `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${
+            window.location.pathname.includes("edit")
+              ? `edit/${window.location.pathname.split("/")[2]}/save`
+              : "create"
+          }`,
+          {
+            name,
+            time,
+            difficulty,
+            tags,
+            description,
+            selectedLanguages,
+            functionName,
+            returnType,
+            args,
+            testCases: data,
+          }
+        )
+        .then((res) => {
+          toast.success("Problem created successfully", {
+            position: "top-center",
+          });
+          setTimeout(() => {
+            navigate(`/editor/${res.data.id}`);
+          }, 1000);
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            toast.error("Please fill all the fields", {
+              position: "top-center",
+            });
+            return;
+          }
+          toast.error("Error creating problem", {
+            position: "top-center",
+          });
+        })
+        .finally(() => {
+          setSaving(false);
+        });
     } else {
       toast.error("Please fill all the fields", {
         position: "top-center",
@@ -128,12 +198,7 @@ const CreateProblem = () => {
     },
     {
       title: "Test Cases",
-      component: (
-        <AddCase
-          respondNext={submit}
-          data={testCases}
-        />
-      ),
+      component: <AddCase respondNext={submit} data={testCases} args={args} saving={saving} />,
     },
   ];
 

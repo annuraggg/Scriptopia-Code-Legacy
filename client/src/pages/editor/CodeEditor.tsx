@@ -19,6 +19,8 @@ const CodeEditor = ({
 }) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);
+  const [codeStarted, setCodeStarted] = useState(false);
+  const [timer, setTimer] = useState(0);
   const language = "javascript";
 
   useEffect(() => {
@@ -26,29 +28,41 @@ const CodeEditor = ({
     setValue(code);
   }, [code]);
 
+  useEffect(() => {
+    if (codeStarted) {
+      setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+    }
+  }, [codeStarted]);
+
   const onChange = useCallback((val: SetStateAction<string>) => {
     setValue(val);
   }, []);
 
   const runOnParent = async () => {
     setRunning(true);
-    runCode(value, language)
+    runCode(value, language, timer)
       .catch(() => {
         toast.error("Something went wrong!");
       })
       .finally(() => {
         setRunning(false);
+        setTimer(0);
+        setCodeStarted(false);
       });
   };
 
   const submitOnParent = async () => {
     setRunning(true);
-    submitCode(value, language)
+    submitCode(value, language, timer)
       .catch(() => {
         toast.error("Something went wrong!");
       })
       .finally(() => {
         setRunning(false);
+        setTimer(0);
+        setCodeStarted(false);
       });
   };
 
@@ -93,6 +107,7 @@ const CodeEditor = ({
         extensions={[javascript({ jsx: true })]}
         onChange={onChange}
         theme={oneDark}
+        onClick={() => setCodeStarted(true)}
       />
     </div>
   );

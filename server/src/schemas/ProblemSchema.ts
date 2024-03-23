@@ -1,3 +1,4 @@
+import { lang } from "moment-timezone";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
@@ -14,8 +15,12 @@ const problemSchema = new Schema({
     type: String,
     required: true,
   },
-  category: {
-    type: String,
+  languageSupport: {
+    type: [String],
+    required: true,
+  },
+  recommendedTime: {
+    type: Number,
     required: true,
   },
   difficulty: {
@@ -31,18 +36,38 @@ const problemSchema = new Schema({
     type: String,
     required: true,
   },
+  functionReturn: {
+    type: String,
+    required: true,
+  },
   starterVarArgs: {
     type: [],
     required: true,
   },
   testCases: [
     {
+      name: {
+        type: String,
+        required: true,
+      },
+      difficulty: {
+        type: String,
+        required: true,
+      },
+      score: {
+        type: Number,
+        required: true,
+      },
       input: {
-        type: [String],
+        type: Schema.Types.Mixed,
         required: true,
       },
       output: {
-        type: String,
+        type: Schema.Types.Mixed,
+        required: true,
+      },
+      isSample: {
+        type: Boolean,
         required: true,
       },
     },

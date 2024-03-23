@@ -8,6 +8,7 @@ import compiler from "./api/compiler/main.js";
 import settings from "./api/settings/main.js";
 import submission from "./api/submission/main.js";
 import home from "./api/home/main.js"
+import profile from "./api/profile/main.js"
 
 app.use("/auth", auth);
 app.use("/problems", problems);
@@ -15,6 +16,7 @@ app.use("/compiler", compiler);
 app.use("/settings", settings);
 app.use("/home", home)
 app.use("/submission", submission)
+app.use("/profile", profile)
 
 app.get("/version", (req, res) => {
   res.json({ version: "0.1.4" });

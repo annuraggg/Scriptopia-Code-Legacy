@@ -53,7 +53,14 @@ function App() {
   const [explainCodeStr, setExplainCodeStr] = useState<string>("");
   const [sheetError, setSheetError] = useState(false);
 
-  const [submissions, setSubmissions] = useState<Submission[]>([] as Submission[]);
+  const [timeArr, setTimeArr] = useState<number[]>([]);
+  const [totalRuns, setTotalRuns] = useState<number>(0);
+
+  const [submissions, setSubmissions] = useState<Submission[]>(
+    [] as Submission[]
+  );
+  const [subTimeArr, setSubTimeArr] = useState<number[]>([]);
+  const [totalSub, setTotalSub] = useState<number>(0);
 
   const [error, setError] = useState("");
 
@@ -83,10 +90,12 @@ function App() {
       });
   }, []);
 
-  const runCode = async (code: string, language: string) => {
+  const runCode = async (code: string, language: string, timer: number) => {
     setRunning(true);
+    setTimeArr((prev) => [...prev, timer]);
+    setTotalRuns((prev) => prev + 1);
     let err = false;
-    await axios
+    axios
       .post(
         `${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`,
         {
@@ -94,6 +103,7 @@ function App() {
           language,
           cases,
           fn,
+          probID: meta.id,
         },
         { withCredentials: true }
       )
@@ -120,8 +130,10 @@ function App() {
     });
   };
 
-  const submitCode = async (code: string, language: string) => {
+  const submitCode = async (code: string, language: string, timer: number) => {
     setRunning(true);
+    setSubTimeArr((prev) => [...prev, timer]);
+    setTotalSub((prev) => prev + 1);
     let err = false;
     await axios
       .post(
@@ -230,7 +242,7 @@ function App() {
               ? "radial-gradient(circle, rgba(1,45,9,1) 0%, rgba(2,8,23,1) 100%)"
               : bgOverlay === 2
               ? " radial-gradient(circle, rgba(45,1,1,1) 0%, rgba(2,8,23,1) 100%)"
-              : "radial-gradient(circle, rgba(13,15,0,1) 0%, rgba(2,8,23,1) 100%)",
+              : "",
         }}
       ></div>
       <Navbar />
@@ -272,6 +284,8 @@ function App() {
             vars={vars}
             output={output.output}
             error={error}
+            failedCase={output.failedCase}
+            failedCaseNumber={output.failedCaseNumber}
           />
         </Split>
       </div>

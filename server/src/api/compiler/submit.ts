@@ -5,6 +5,7 @@ import verifyJWT from "@/middlewares/verifyJWT.js";
 import Submission from "@/schemas/SubmissionSchema.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
+import ProblemType from "@/Interfaces/Problem";
 const router = express.Router();
 
 interface User {
@@ -17,13 +18,15 @@ const selectLangAndRun = async (
   code: string,
   fn: string,
   cases: Case[],
-  language: string
+  language: string,
+  prob: ProblemType
 ): Promise<{
   timeStamp: string;
   status: string;
   output: string[];
   internalStatus: string;
   failedCaseNumber: number;
+  failedCase: Case;
   error: string;
   language: string;
   info: string;
@@ -34,7 +37,23 @@ const selectLangAndRun = async (
   try {
     switch (language) {
       case "javascript":
-        return await runJS(code, fn, cases);
+        const result = await runJS(code, fn, cases, prob);
+        return (
+          result || {
+            timeStamp: "",
+            status: "FAILED",
+            output: [],
+            internalStatus: "FAILED",
+            failedCaseNumber: -1,
+            failedCase: {} as Case,
+            error: "Internal error",
+            language: "unsupported",
+            info: "",
+            consoleOP: [],
+            runtime: 0,
+            memoryUsage: 0,
+          }
+        );
       default:
         return {
           timeStamp: "",
@@ -42,6 +61,7 @@ const selectLangAndRun = async (
           output: [],
           internalStatus: "FAILED",
           failedCaseNumber: -1,
+          failedCase: {} as Case,
           error: "Language not supported yet!",
           language: "unsupported",
           info: "",
@@ -58,6 +78,7 @@ const selectLangAndRun = async (
       output: [],
       internalStatus: "FAILED",
       failedCaseNumber: -1,
+      failedCase: {} as Case,
       error: "Internal error",
       language: "unsupported",
       info: "",
@@ -71,7 +92,14 @@ const selectLangAndRun = async (
 router.post("/", verifyJWT, async (req, res) => {
   try {
     const { code, language, fn, probID } = req.body;
-    const cases: Case[] = await fetchCases(probID);
+    const prob = await Problem.findById(probID);
+    if (!prob) {
+      res.status(404).send("Problem not found");
+      return;
+    }
+
+    const cases: Case[] = await fetchCases(prob);
+
     const result: {
       timeStamp: string;
       status: string;
@@ -84,12 +112,12 @@ router.post("/", verifyJWT, async (req, res) => {
       consoleOP: string[];
       runtime: number;
       memoryUsage: number;
-    } = await selectLangAndRun(code, fn, cases, language);
+      failedCase: Case;
+    } = await selectLangAndRun(code, fn, cases, language, prob);
 
     if (!result) {
       res.status(500).send("Failed to fetch output");
     } else {
-      console.log(result);
       if (
         result.internalStatus === "PASSED" &&
         result.failedCaseNumber === -1
@@ -127,10 +155,9 @@ router.post("/", verifyJWT, async (req, res) => {
   }
 });
 
-const fetchCases = async (probID: string): Promise<Case[]> => {
+const fetchCases = async (probID: ProblemType): Promise<Case[]> => {
   try {
-    const response = await Problem.findById(probID).select("testCases");
-    const cases = response ? response.testCases : [];
+    const cases = probID ? probID.testCases : [];
     return cases as Case[];
   } catch (error) {
     logger.error({ code: "COMPILER-SUBMIT-FETCHCASES", message: error });

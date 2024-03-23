@@ -12,6 +12,7 @@ import CourseName from "./pages/course/{courseName}/CourseName";
 import Assessments from "./pages/assessments/Assessments";
 import SubRoutes from "./SubRoutes";
 import Submission from "./pages/submission/Submission";
+import Profile from "./pages/profile/Profile";
 
 function ProtectedRoutes() {
   return (
@@ -19,6 +20,7 @@ function ProtectedRoutes() {
       {SubRoutes()}
       <Route path="/editor/:id" element={<Editor />} />
       <Route path="/problems/create" element={<CreateProblem />} />
+      <Route path="/problems/:id/edit" element={<CreateProblem />} />
 
       <Route path="/settings" element={<Settings />} />
       <Route path="/settings/logins" element={<RecentLogins />} />
@@ -26,6 +28,8 @@ function ProtectedRoutes() {
       <Route path="/settings/two-factor" element={<TFA />} />
 
       <Route path="/assessments" element={<Assessments />} />
+
+      <Route path="/u/:id" element={<Profile />} />
 
       <Route path="/learn" element={<Learn />} />
 

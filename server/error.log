@@ -96,3 +96,18 @@
     at async generateContent (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:534:22)
     at async ChatSession.sendMessage (file:///E:/Projects/Express-React%20Projects/ScriptopiaCode/server/node_modules/@google/generative-ai/dist/index.mjs:679:9)
     at <anonymous> (e:\Projects\Express-React Projects\ScriptopiaCode\server\src\api\compiler\explain.ts:56:22)
+23/03/24 12:39 (Error): undefined - undefined
+23/03/24 12:42 (Error): undefined - undefined
+23/03/24 12:42 (Error): undefined - undefined
+23/03/24 12:43 (Error): undefined - undefined
+23/03/24 12:47 (Error): undefined - undefined
+23/03/24 12:47 (Error): undefined - undefined
+23/03/24 12:49 (Error): [object Object]
+23/03/24 12:50 (Error): [object Object]
+23/03/24 12:53 (Error): [object Object]
+23/03/24 12:55 (Error): [object Object]
+23/03/24 19:02 (Error): [object Object]
+23/03/24 19:09 (Error): [object Object]
+23/03/24 21:14 (Error): [object Object]
+23/03/24 21:19 (Error): [object Object]
+23/03/24 21:57 (Error): [object Object]

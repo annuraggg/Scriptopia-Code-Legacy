@@ -13,10 +13,12 @@ import { useHotkeys } from "react-hotkeys-hook";
 import expireSession from "@/functions/expireSession";
 import { Button } from "./button";
 import { useTheme } from "../theme-provider";
+import { useSelector } from "react-redux";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { setTheme, theme } = useTheme();
+  const userSelector = useSelector((state: any) => state?.user);
 
   const changeTheme = () => {
     if (theme === "dark") {
@@ -70,7 +72,7 @@ export const Navbar = () => {
               </span>
               <DropdownMenuShortcut>⌘ + ⇧ + L</DropdownMenuShortcut>
             </DropdownMenuItem>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate(`u/${userSelector.username}`)}>Profile</DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate("/settings")}>
               Settings
             </DropdownMenuItem>

@@ -2,16 +2,11 @@ import express from "express";
 const router = express.Router();
 import Problem from "../../schemas/ProblemSchema.js";
 import logger from "../../config/logger.js";
-import create from "./create.js";
 import verifyJWT from "@/middlewares/verifyJWT.js";
 import ProblemType from "@/Interfaces/Problem.js";
 import Submission from "@/schemas/SubmissionSchema.js";
 import SubmissionType from "@/Interfaces/Submission.js";
 import User from "@/schemas/UserSchema.js";
-import edit from "./edit.js";
-
-router.use("/create", verifyJWT, create);
-router.use("/edit", verifyJWT, edit);
 
 router.post("/:probID", verifyJWT, async (req, res) => {
   try {
@@ -20,7 +15,6 @@ router.post("/:probID", verifyJWT, async (req, res) => {
     ).exec();
 
     if (problem) {
-
       const author = await User.findById(problem.author).exec();
 
       const meta = {
@@ -31,6 +25,8 @@ router.post("/:probID", verifyJWT, async (req, res) => {
         tags: problem.tags,
         author: author?.username,
         authorid: author?._id,
+        time: problem.recommendedTime,
+        langs: problem.languageSupport,
       };
       const desc = problem.description;
       const cases = problem.testCases;
@@ -48,6 +44,65 @@ router.post("/:probID", verifyJWT, async (req, res) => {
   } catch (err) {
     logger.error(err);
     res.status(500).json({ error: "Something went wrong!" });
+  }
+});
+
+router.post("/:probid/save", async (req, res) => {
+  const {
+    name,
+    time,
+    difficulty,
+    tags,
+    description,
+    selectedLanguages,
+    functionName,
+    returnType,
+    args,
+    testCases,
+  } = req.body;
+
+  if (
+    !name ||
+    !time ||
+    !difficulty ||
+    !tags ||
+    !description ||
+    !selectedLanguages ||
+    !functionName ||
+    !returnType ||
+    !args ||
+    testCases.length === 0
+  ) {
+    return res.status(400).json({ message: "Invalid Request" })
+    }
+
+
+  try {
+    const problem = await Problem.findById(req.params.probid).exec();
+
+    if (!problem) {
+      return res.status(404).json({ message: "Problem Not Found" });
+    }
+
+    console.log(testCases)
+    
+    problem.title = name;
+    problem.recommendedTime = time;
+    problem.description = description;
+    problem.difficulty = difficulty;
+    problem.tags = tags;
+    problem.languageSupport = selectedLanguages;
+    problem.starterFunction = functionName;
+    problem.functionReturn = returnType;
+    problem.starterVarArgs = args;
+    problem.testCases = testCases;
+    
+    await problem.save();
+
+    res.status(201).json({ message: "Problem Updated Successfully", id: problem._id});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error Creating Problem" });
   }
 });
 

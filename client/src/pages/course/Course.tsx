@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/ui/navbar";
-import "reactflow/dist/style.css";
 
 const Course = () => {
 

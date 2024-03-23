@@ -11,6 +11,8 @@ const Descriptor = ({
   vars,
   output,
   error,
+  failedCaseNumber,
+  failedCase,
 }: {
   cases: Case[];
   consoleOutput: string[];
@@ -19,12 +21,15 @@ const Descriptor = ({
   vars: any;
   output: string[];
   error: string;
+  failedCaseNumber: number;
+  failedCase: Case;
 }) => {
   const [currTab, setCurrTab] = useState("console");
 
   useEffect(() => {
     if (runs > 0) {
       setCurrTab("tests");
+      console.log(cases);
     }
   }, [runs]);
 
@@ -113,6 +118,13 @@ const Descriptor = ({
                   ></div>
                   Case 3
                 </TabsTrigger>
+
+                {failedCaseNumber >= 3 && (
+                  <TabsTrigger value="fc">
+                    <div className="bg-red-500 h-1 w-1 mr-2 rounded-full"></div>
+                    Failed Case
+                  </TabsTrigger>
+                )}
               </TabsList>
               {cases?.map((c, i) => {
                 if (i < 3) {
@@ -121,7 +133,7 @@ const Descriptor = ({
                       <p>Input</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
                         {c?.input?.map((ci, i2) => {
-                          return vars[i2].key + " = " + ci;
+                          return vars[i2].key + " = " + ci + " ";
                         })}
                       </div>
                       <p>Output</p>
@@ -136,6 +148,22 @@ const Descriptor = ({
                   );
                 }
               })}
+              <TabsContent value="fc">
+                <p>Input</p>
+                <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                  {failedCase?.input?.map((ci, i2) => {
+                    return vars[i2].key + " = " + ci + " ";
+                  })}
+                </div>
+                <p>Output</p>
+                <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                  {failedCase.output}
+                </div>
+                <p>Expected</p>
+                <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                  {cases[failedCaseNumber].output}
+                </div>
+              </TabsContent>
             </Tabs>
           )}
         </TabsContent>

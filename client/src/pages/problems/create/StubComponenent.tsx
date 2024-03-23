@@ -131,7 +131,7 @@ const StubComponenent = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="int">int</SelectItem>
-                <SelectItem value="string">string</SelectItem>
+                <SelectItem value="string">string (or array)</SelectItem>
                 <SelectItem value="float">float</SelectItem>
                 <SelectItem value="double">double</SelectItem>
                 <SelectItem value="char">char</SelectItem>
@@ -181,7 +181,7 @@ const StubComponenent = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="int">int</SelectItem>
-                  <SelectItem value="string">string</SelectItem>
+                  <SelectItem value="string">string (or array)</SelectItem>
                   <SelectItem value="float">float</SelectItem>
                   <SelectItem value="double">double</SelectItem>
                   <SelectItem value="char">char</SelectItem>

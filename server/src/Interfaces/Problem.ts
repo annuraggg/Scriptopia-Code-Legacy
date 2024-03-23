@@ -1,23 +1,29 @@
 import { Document, Schema, Types } from "mongoose";
 
 interface TestCase {
-  input: string[];
-  output: string;
+  name: string;
+  difficulty: string;
+  score: number;
+  input: any;
+  output: any;
+  isSample: boolean;
 }
 
 interface Problem extends Document {
   title: string;
   description: Record<string, any>; // Assuming the description can be any object type
   author: string;
-  category: string;
   difficulty: string;
+  languageSupport: string[];
+  recommendedTime: number;
   tags?: string[];
   votes: number;
   starterFunction: string;
+  functionReturn: string;
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
   lastUpdated: Date;
-  chatId?: Types.ObjectId;
+  chatId?: Types.ObjectId | null;
 }
 
 export default Problem;

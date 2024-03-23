@@ -4,6 +4,8 @@ type Meta = {
   difficulty: "easy" | "medium" | "hard";
   votes: number;
   tags: string[];
+  author: string;
+  authorid: number;
 };
 
 export default Meta;
