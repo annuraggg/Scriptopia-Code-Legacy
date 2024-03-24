@@ -161,7 +161,7 @@ const Descriptor = ({
                 </div>
                 <p>Expected</p>
                 <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                  {cases[failedCaseNumber].output}
+                  {cases[failedCaseNumber]?.output}
                 </div>
               </TabsContent>
             </Tabs>

@@ -41,16 +41,16 @@ export const Navbar = () => {
           onKeyDown={() => navigate("/")}
           alt="logo"
         />
-        <div className="flex items-center gap-5">
+        <div className="flex items-center ml-5">
+          <Button variant="link" onClick={() => navigate("/screenings")}>
+            Screenings
+          </Button>
           <Button variant="link" onClick={() => navigate("/problems/create")}>
             Create a Problem
           </Button>
-          <p
-            onClick={() => navigate("/assessments")}
-            className=" cursor-pointer hover:text-primary hover:underline duration-100"
-          >
-            Assesments
-          </p>
+          <Button variant="link" onClick={() => navigate("/leaderboards")}>
+            Leaderboards
+          </Button>
         </div>
       </div>
       <Avatar
@@ -72,9 +72,18 @@ export const Navbar = () => {
               </span>
               <DropdownMenuShortcut>⌘ + ⇧ + L</DropdownMenuShortcut>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`u/${userSelector.username}`)}>Profile</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`u/${userSelector.username}`)}
+            >
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate("/settings")}>
               Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/u/${userSelector.username}/report`)}
+            >
+              Get Report
             </DropdownMenuItem>
             <DropdownMenuItem onClick={expireSession}>Logout</DropdownMenuItem>
           </DropdownMenuContent>

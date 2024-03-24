@@ -9,10 +9,11 @@ import TFA from "./pages/settings/tfa/TFA";
 import Learn from "./pages/learn/Learn";
 import Course from "./pages/course/Course";
 import CourseName from "./pages/course/{courseName}/CourseName";
-import Assessments from "./pages/assessments/Assessments";
+import Assessments from "./pages/assessments/Screenings";
 import SubRoutes from "./SubRoutes";
 import Submission from "./pages/submission/Submission";
 import Profile from "./pages/profile/Profile";
+import CreateScreening from "./pages/assessments/create/CreateScreening";
 
 function ProtectedRoutes() {
   return (
@@ -27,7 +28,8 @@ function ProtectedRoutes() {
       <Route path="/settings/password" element={<ChangePassword />} />
       <Route path="/settings/two-factor" element={<TFA />} />
 
-      <Route path="/assessments" element={<Assessments />} />
+      <Route path="/screenings" element={<Assessments />} />
+      <Route path="/screenings/create" element={<CreateScreening />} />
 
       <Route path="/u/:id" element={<Profile />} />
 

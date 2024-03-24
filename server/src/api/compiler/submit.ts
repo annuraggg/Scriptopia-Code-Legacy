@@ -6,6 +6,7 @@ import Submission from "@/schemas/SubmissionSchema.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
 import ProblemType from "@/Interfaces/Problem";
+import generateAssessment from "./assess";
 const router = express.Router();
 
 interface User {
@@ -91,7 +92,7 @@ const selectLangAndRun = async (
 
 router.post("/", verifyJWT, async (req, res) => {
   try {
-    const { code, language, fn, probID } = req.body;
+    const { code, language, fn, probID, timer, totalRuns } = req.body;
     const prob = await Problem.findById(probID);
     if (!prob) {
       res.status(404).send("Problem not found");
@@ -131,6 +132,17 @@ router.post("/", verifyJWT, async (req, res) => {
           status: "PASSED",
           output: result,
         };
+
+        generateAssessment(
+          code,
+          language,
+          fn,
+          probID,
+          timer,
+          totalRuns,
+          result,
+          req.user
+        );
 
         Submission.create(submission);
         res.status(200).json({ console: "", output: result });

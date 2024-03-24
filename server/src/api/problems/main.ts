@@ -20,7 +20,6 @@ router.post("/:probID", verifyJWT, async (req, res) => {
     ).exec();
 
     if (problem) {
-
       const author = await User.findById(problem.author).exec();
 
       const meta = {
@@ -45,6 +44,16 @@ router.post("/:probID", verifyJWT, async (req, res) => {
 
       res.status(200).json({ desc, meta, cases, func, args, submissions });
     }
+  } catch (err) {
+    logger.error(err);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const problems = await Problem.find({}).exec();
+    res.status(200).json(problems);
   } catch (err) {
     logger.error(err);
     res.status(500).json({ error: "Something went wrong!" });

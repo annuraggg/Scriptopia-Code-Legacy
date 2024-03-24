@@ -19,6 +19,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const divStyle = {
   backgroundImage: "url(/assets/wave-bg.png)",
@@ -27,6 +28,10 @@ const divStyle = {
 };
 
 const Login = () => {
+  useHotkeys("enter", () => {
+    handleLogin();
+  });
+
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -142,6 +147,13 @@ const Login = () => {
     setIsTfa(!isTfa);
   };
 
+  const listenEnter = (e: any) => {
+    setPassword(e.target.value);;
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <div
       className="h-[100vh] flex flex-col items-center justify-center gap-3"
@@ -163,8 +175,7 @@ const Login = () => {
         placeholder="Password"
         type="password"
         className="w-[250px]"
-        onChange={(e) => setPassword(e.target.value)}
-        value={password}
+        onKeyUp={(e) => listenEnter(e)}
       />
 
       <Button

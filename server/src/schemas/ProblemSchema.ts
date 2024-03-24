@@ -72,6 +72,10 @@ const problemSchema = new Schema({
       },
     },
   ],
+  isPrivate: {
+    type: Boolean,
+    default: false,
+  },
   lastUpdated: {
     type: Date,
     default: Date.now,

@@ -22,6 +22,7 @@ interface Problem extends Document {
   functionReturn: string;
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
+  isPrivate: boolean;
   lastUpdated: Date;
   chatId?: Types.ObjectId | null;
 }

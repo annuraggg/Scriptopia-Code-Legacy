@@ -42,14 +42,12 @@ const CodeEditor = ({
 
   const runOnParent = async () => {
     setRunning(true);
-    runCode(value, language, timer)
+    runCode(value, language)
       .catch(() => {
         toast.error("Something went wrong!");
       })
       .finally(() => {
         setRunning(false);
-        setTimer(0);
-        setCodeStarted(false);
       });
   };
 

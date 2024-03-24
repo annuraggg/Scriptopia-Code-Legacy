@@ -53,14 +53,11 @@ function App() {
   const [explainCodeStr, setExplainCodeStr] = useState<string>("");
   const [sheetError, setSheetError] = useState(false);
 
-  const [timeArr, setTimeArr] = useState<number[]>([]);
   const [totalRuns, setTotalRuns] = useState<number>(0);
 
   const [submissions, setSubmissions] = useState<Submission[]>(
     [] as Submission[]
   );
-  const [subTimeArr, setSubTimeArr] = useState<number[]>([]);
-  const [totalSub, setTotalSub] = useState<number>(0);
 
   const [error, setError] = useState("");
 
@@ -90,9 +87,8 @@ function App() {
       });
   }, []);
 
-  const runCode = async (code: string, language: string, timer: number) => {
+  const runCode = async (code: string, language: string) => {
     setRunning(true);
-    setTimeArr((prev) => [...prev, timer]);
     setTotalRuns((prev) => prev + 1);
     let err = false;
     axios
@@ -132,8 +128,6 @@ function App() {
 
   const submitCode = async (code: string, language: string, timer: number) => {
     setRunning(true);
-    setSubTimeArr((prev) => [...prev, timer]);
-    setTotalSub((prev) => prev + 1);
     let err = false;
     await axios
       .post(
@@ -144,6 +138,8 @@ function App() {
           cases,
           fn,
           probID: meta.id,
+          timer,
+          totalRuns,
         },
         { withCredentials: true }
       )
@@ -171,6 +167,7 @@ function App() {
       })
       .finally(() => {
         setRunning(false);
+        setTotalRuns(0);
       });
 
     return new Promise((_resolve, reject) => {
