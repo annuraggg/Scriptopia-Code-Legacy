@@ -12,26 +12,69 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Trash } from "lucide-react";
+import Preview from "./Question/Preview";
+import CreateProblem from "./Question/CreateProblem";
 
-const Questions = ({ nextTab }: { nextTab: (currentPage: string) => void }) => {
+const Questions = ({
+  nextTab,
+  data,
+  setData,
+}: {
+  nextTab: (currentPage: string, data: any) => void;
+  data: any;
+  setData: any;
+}) => {
+  const navigate = useNavigate();
+
   const [questionDrawer, setQuestionDrawer] = useState(false);
   const [questionsLoading, setQuestionsLoading] = useState<boolean>(false);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [currQuest, setCurrQuest] = useState<any>(null);
+
+  const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setSelectedQuestions(data);
+    }
+  }, []);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/problems/`)
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/`)
       .then((res) => {
-        console.log(res.data);
+        setQuestions(res.data);
         setQuestionsLoading(false);
       })
       .catch((err) => {
         console.error(err);
         setQuestionsLoading(false);
       });
-  });
+  }, [questionDrawer]);
 
   const goToNext = (tab: string) => {
     nextTab(tab);
+  };
+
+  const addQuest = (question: any) => {
+    setSelectedQuestions([...selectedQuestions, question]);
+  };
+
+  const save = () => {
+    setData(selectedQuestions);
+    goToNext("questions");
   };
 
   return (
@@ -48,18 +91,49 @@ const Questions = ({ nextTab }: { nextTab: (currentPage: string) => void }) => {
             </div>
           </div>
         </div>
+        <div>
+          {selectedQuestions.map((question) => {
+            return (
+              <div
+                className="py-4 px-5 border-r-0 cursor-pointer hover:bg-gray-900 transition-all duration-300"
+                onClick={() => {
+                  setCurrQuest(question);
+                }}
+              >
+                <div className="flex items-center">
+                  <p className="line-clamp-1">{question.title}</p>
+                  <div className="ml-auto rounded-full h-5 w-5 flex items-center justify-center hover:scale-125 p-4  cursor-pointer duration-100 transition-all">
+                    <p>
+                      <Trash
+                        size="14"
+                        className=" text-red-500"
+                        onClick={() => {
+                          setSelectedQuestions(
+                            selectedQuestions.filter(
+                              (q) => q._id !== question._id
+                            )
+                          );
+                        }}
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
         <div className="absolute bottom-2 right-5">
           <Button className="mt-5 mr-5" onClick={() => goToNext("null")}>
             Back
           </Button>
-          <Button className="mt-5" onClick={() => goToNext("questions")}>
+          <Button className="mt-5" onClick={() => save()}>
             Save
           </Button>
         </div>
       </div>
 
       <Sheet open={questionDrawer} onOpenChange={setQuestionDrawer}>
-        <SheetContent className="min-w-[40vw]">
+        <SheetContent className="min-w-[40vw] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Problem Library</SheetTitle>
             <SheetDescription>
@@ -75,47 +149,84 @@ const Questions = ({ nextTab }: { nextTab: (currentPage: string) => void }) => {
               <ReloadIcon className="animate-spin h-6 w-6" />
             </div>
           ) : (
-            // ! Add a map function here to map through the problems
-            <div className="border py-4 px-5 rounded-lg">
-              <div>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-5">
-                    <p>Problem 1</p>
-                    <Badge className="bg-green-500">Easy</Badge>
+            questions?.map((question) => {
+              // render only if the question is not already selected
+              if (
+                selectedQuestions.find((q) => q._id === question._id) ===
+                undefined
+              ) {
+                return (
+                  <div className="border py-4 px-5 rounded-lg mt-5">
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-5">
+                          <p className="w-72 truncate ">{question?.title}</p>
+                        </div>
+                        <Badge className="bg-green-500">Easy</Badge>
+                        <p className=" text-gray-500 text-xs w-32 truncate ">
+                          By @
+                          <u className="hover:text-primary cursor-pointer duration-100 transition-all">
+                            {question?.author}
+                          </u>
+                        </p>
+                      </div>
+                      <p className=" line-clamp-2 text-sm mt-2">
+                        {question.description.ops.map((op: any) => {
+                          if (op.insert) {
+                            return op.insert;
+                          }
+                        })}
+                      </p>
+                      <div className="flex gap-2 items-center my-3">
+                        <p>Tags: </p>
+                        {question?.tags.map((tag: string, i) => {
+                          return (
+                            i < 5 && (
+                              <Badge key={tag} className="bg-primary">
+                                {tag}
+                              </Badge>
+                            )
+                          );
+                        })}
+                      </div>
+                      <Separator />
+                      <div className="mt-3 flex items-center justify-end">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            if (
+                              !selectedQuestions.find(
+                                (q) => q._id === question._id
+                              )
+                            ) {
+                              setSelectedQuestions([
+                                ...selectedQuestions,
+                                question,
+                              ]);
+                            }
+
+                            setQuestionDrawer(false);
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <p className=" text-gray-500 text-xs">
-                    By @
-                    <u className="hover:text-primary cursor-pointer duration-100 transition-all">
-                      scriptopia
-                    </u>
-                  </p>
-                </div>
-                <p className=" line-clamp-2 text-sm mt-2">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Iusto eaque ullam provident veniam optio temporibus autem
-                  sequi in nesciunt, minima illo at est iure suscipit ratione
-                  harum blanditiis assumenda dolores!
-                </p>
-                <div className="flex gap-2 items-center my-3">
-                  <p>Tags: </p>
-                  <Badge>Array</Badge>
-                  <Badge>String</Badge>
-                </div>
-                <Separator />
-                <div className="mt-3 flex items-center justify-end">
-                  <Button className="mr-3" variant="outline">
-                    View
-                  </Button>
-                  <Button className="mr-3" variant="outline">
-                    Edit
-                  </Button>
-                  <Button variant="outline">Add</Button>
-                </div>
-              </div>
-            </div>
+                );
+              }
+            })
           )}
         </SheetContent>
       </Sheet>
+
+      <div className="p-5">
+        <CreateProblem
+          addQuest={addQuest}
+          currQuest={currQuest}
+          allQuestions={questions}
+        />
+      </div>
     </div>
   );
 };

@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/pagination";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 
 type Problem = {
@@ -107,61 +106,57 @@ const ChallengeCompass = ({
           </Button>
         </div>
       </div>
-      {loading ? (
-        <div className="mt-16 h-[62vh]w-[65vw] flex items-center justify-center">
-          <ReloadIcon className="animate-spin h-8 w-8" />
-        </div>
-      ) : (
-        <div className="mt-5 bg-primary-foreground p-5 rounded shadow-md">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Difficulty</TableHead>
-                <TableHead>Tags</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {problems.map((problem) => (
-                <TableRow
-                  key={problem.id}
-                  className="cursor-pointer"
-                  onClick={() => navigate(`/editor/${problem.id}`)}
-                >
-                  <TableCell>{problem.title}</TableCell>
-                  <TableCell>{problem.difficulty}</TableCell>
-                  <TableCell className="w-[250px] overflow-hidden line-clamp-1 text-nowrap flex items-center h-[50px]">
-                    {problem.tags.map((tag, i) => (
-                      <TooltipProvider key={tag}>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Badge key={i} variant="outline" className="mr-2">
+
+      <div className="mt-5 bg-primary-foreground p-5 rounded shadow-md">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Difficulty</TableHead>
+              <TableHead>Tags</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {problems.map((problem) => (
+              <TableRow
+                key={problem.id}
+                className="cursor-pointer"
+                onClick={() => navigate(`/editor/${problem.id}`)}
+              >
+                <TableCell>{problem.title}</TableCell>
+                <TableCell>{problem.difficulty}</TableCell>
+                <TableCell className="w-[250px] overflow-hidden line-clamp-1 text-nowrap flex items-center h-[50px]">
+                  {problem.tags.map((tag, i) => (
+                    <TooltipProvider key={tag}>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Badge key={i} variant="outline" className="mr-2">
+                            {tag}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent className=" bg-background border">
+                          {problem.tags.map((tag, i) => (
+                            <Badge
+                              key={i}
+                              variant="outline"
+                              className={`${
+                                i === problem.tags.length - 1 ? "" : "mr-2"
+                              }`}
+                            >
                               {tag}
                             </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent className=" bg-background border">
-                            {problem.tags.map((tag, i) => (
-                              <Badge
-                                key={i}
-                                variant="outline"
-                                className={`${
-                                  i === problem.tags.length - 1 ? "" : "mr-2"
-                                }`}
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ))}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+                          ))}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
       <Pagination className="mt-5">
         <PaginationContent className="cursor-pointer">
           <PaginationPrevious

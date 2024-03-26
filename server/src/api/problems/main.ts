@@ -50,8 +50,9 @@ router.post("/:probID", verifyJWT, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
+    console.log("here");
     const problems = await Problem.find({}).exec();
     res.status(200).json(problems);
   } catch (err) {

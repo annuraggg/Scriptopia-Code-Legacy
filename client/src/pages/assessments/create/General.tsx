@@ -57,7 +57,7 @@ const General = ({
   return (
     <div className="mt-5 w-[95vw]">
       <div className="flex w-full gap-10">
-        <div className="w-full">
+        <div className="w-full bg-primary-foreground p-10 rounded-lg">
           <h2>General</h2>
           <div className="flex flex-col gap-3 mt-5">
             <p>Screening Name</p>
@@ -74,63 +74,70 @@ const General = ({
               placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="h-[190px]"
             />
           </div>
 
-          <div className="flex flex-col gap-3 mt-5">
-            <p>Time Limit (In Minutes) </p>
-            <Input
-              placeholder="Limit"
-              type="number"
-              className="w-20"
-              value={timeLimit}
-              onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-            />
-          </div>
+          <div className="flex gap-10 mt-10 items-center justify-between">
+            <div className="flex gap-3 items-center">
+              <p>Time Limit (In Minutes) </p>
+              <Input
+                placeholder="Limit"
+                type="number"
+                className="w-20"
+                value={timeLimit}
+                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              />
+            </div>
 
-          <div className="flex gap-3 mt-10">
-            <Checkbox
-              checked={allowAutocomplete}
-              onCheckedChange={() => setAllowAutocomplete(!allowAutocomplete)}
-            />
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Allow Autocomplete
-            </label>
-          </div>
+            <div className="flex gap-10">
+              <div className="flex gap-3">
+                <Checkbox
+                  checked={allowAutocomplete}
+                  onCheckedChange={() =>
+                    setAllowAutocomplete(!allowAutocomplete)
+                  }
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Allow Autocomplete
+                </label>
+              </div>
 
-          <div className="flex gap-3 mt-5">
-            <Checkbox
-              checked={allowRunCode}
-              onCheckedChange={() => setAllowRunCode(!allowRunCode)}
-            />
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Allow to Run Code
-            </label>
-          </div>
+              <div className="flex gap-3">
+                <Checkbox
+                  checked={allowRunCode}
+                  onCheckedChange={() => setAllowRunCode(!allowRunCode)}
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Allow to Run Code
+                </label>
+              </div>
 
-          <div className="flex gap-3 mt-5">
-            <Checkbox
-              checked={allowSyntaxHighlighting}
-              onCheckedChange={() =>
-                setAllowSyntaxHighlighting(!allowSyntaxHighlighting)
-              }
-            />
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Allow Syntax Highlighting
-            </label>
+              <div className="flex gap-3">
+                <Checkbox
+                  checked={allowSyntaxHighlighting}
+                  onCheckedChange={() =>
+                    setAllowSyntaxHighlighting(!allowSyntaxHighlighting)
+                  }
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Allow Syntax Highlighting
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-3 mt-5 px-10">
+        <div className="flex flex-col items-center justify-center gap-3 px-10 py-5 bg-primary-foreground rounded-lg">
           <div>
             <p>Test Open Range</p>
 
@@ -163,8 +170,8 @@ const General = ({
           </div>
         </div>
       </div>
-      <Button className="mt-10 float-right" onClick={goToNext}>
-        Save  
+      <Button className="mt-5 float-right" onClick={goToNext}>
+        Next
       </Button>
     </div>
   );

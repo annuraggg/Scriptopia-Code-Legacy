@@ -24,6 +24,8 @@ const CreateScreening = () => {
   const [fromTime, setFromTime] = useState<string>("");
   const [toTime, setToTime] = useState<string>("");
 
+  const [questions, setQuestions] = useState<any[]>([]);
+
   const generalObj = {
     name,
     description,
@@ -83,7 +85,7 @@ const CreateScreening = () => {
   return (
     <>
       <Navbar />
-      <div className="flex px-10 py-5">
+      <div className="flex px-10" vaul-drawer-wrapper="">
         <Tabs
           defaultValue="account"
           className="flex flex-col w-full"
@@ -103,7 +105,11 @@ const CreateScreening = () => {
             <General nextTab={nextTab} data={generalObj} />
           </TabsContent>
           <TabsContent value="questions">
-            <Questions nextTab={nextTab} />
+            <Questions
+              nextTab={nextTab}
+              data={questions}
+              setData={setQuestions}
+            />
           </TabsContent>
           <TabsContent value="candidates">
             <Candidates nextTab={nextTab} />

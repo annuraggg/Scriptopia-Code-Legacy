@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import Loader from "@/components/Loader";
 
 type Problem = {
   id: string;
@@ -97,7 +98,6 @@ const Home = () => {
         prob[currentPage - 1] = res.data.problems;
         setProblems(prob);
         setPages(res.data.pages);
-
       })
       .catch((err) => {
         toast.error("Failed to fetch data");
@@ -108,32 +108,34 @@ const Home = () => {
       });
   };
 
-  return (
-    <>
-      <Navbar />
-      <div className="flex p-5 px-10 gap-5 justify-center">
-        <div>
-          {/*}<LearningPath />
-          <PopularCourses />{*/}
-          <ChallengeCompass
-            problems={problems[currentPage - 1] || []}
-            pages={pages}
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
-            setPrevPage={setPrevPage}
-            loading={loading}
-            filter={filterProblems}
-          />
+  if (loading) {
+    return <Loader />;
+  } else {
+    return (
+      <>
+        <Navbar />
+        <div className="flex p-5 px-10 gap-5 justify-center">
+          <div>
+            {/*}<LearningPath />
+            <PopularCourses />{*/}
+            <ChallengeCompass
+              problems={problems[currentPage - 1] || []}
+              pages={pages}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+              setPrevPage={setPrevPage}
+              loading={loading}
+              filter={filterProblems}
+            />
+          </div>
+          <div>
+            <CodeFlow codeFlow={streak} />
+          </div>
         </div>
-        <div>
-          <CodeFlow
-            codeFlow={streak}
-          />
-        </div>
-      </div>
-      {modal && <SetUsername setOpen={setOpen} />}
-    </>
-  );
+        {modal && <SetUsername setOpen={setOpen} />}
+      </>
+    );
+  }
 };
 
 export default Home;
