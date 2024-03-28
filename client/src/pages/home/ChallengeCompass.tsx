@@ -47,7 +47,6 @@ const ChallengeCompass = ({
   currentPage,
   setCurrentPage,
   setPrevPage,
-  loading,
   filter,
 }: {
   problems: Problem[];

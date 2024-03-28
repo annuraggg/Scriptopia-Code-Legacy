@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
       return;
     }
 
-    const sampleCases = cases.filter((c) => c?.isSample);
+    const sampleCases = cases.filter((c: any) => c?.isSample);
 
     const result = await selectLangAndRun(code, fn, sampleCases, language, prob);
 

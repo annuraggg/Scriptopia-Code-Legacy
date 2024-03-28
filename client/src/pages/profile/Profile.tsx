@@ -11,7 +11,6 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
 import Heatmap from "@uiw/react-heat-map";
-// @ts-expect-error
 import Tooltip from "@uiw/react-tooltip";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/components/theme-provider";
@@ -24,7 +23,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,7 +54,6 @@ const ProgressBar = ({ value, color }: { value: number; color: string }) => {
 const Profile = () => {
   const { theme } = useTheme();
   const [mapColor, setMapColor] = useState("");
-  const [user, setUser] = useState<any>({});
   const [editOpen, setEditOpen] = useState(false);
   const [openProfilePicture, setOpenProfilePicture] = useState(false);
 
@@ -72,7 +70,7 @@ const Profile = () => {
   useEffect(() => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/profile`)
-      .then((res) => {});
+      .then(() => {});
   });
 
   const data = {

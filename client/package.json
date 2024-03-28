@@ -41,6 +41,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@types/js-cookie": "^3.0.6",
     "@types/qrcode": "^1.5.5",
+    "@types/react-avatar-editor": "^13.0.2",
     "@types/react-tagsinput": "^3.20.6",
     "@uiw/codemirror-theme-atomone": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",

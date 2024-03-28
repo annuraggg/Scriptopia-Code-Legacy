@@ -1,8 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import React from "react";
 
-const Security = ({ goNext }: { goNext: (current: string) => void }) => {
+const Security = () => {
   return (
     <div className="flex gap-5">
       <div>

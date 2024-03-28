@@ -71,7 +71,7 @@ const AddCase = ({
   const [output, setOutput] = useState<string>("");
   const [isSample, setIsSample] = useState<boolean>(false);
 
-  const [inputCaseArray, setInputCaseArray] = useState<string>([]);
+  const [inputCaseArray, setInputCaseArray] = useState<string>("");
   const [outputCaseArray, setOutputCaseArray] = useState<string>("");
 
   const [testCases, setTestCases] = useState<

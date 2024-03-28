@@ -6,7 +6,6 @@ import StubComponenent from "./StubComponenent";
 import AddCase from "./AddCase";
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const CreateProblem = ({
   addQuest,
@@ -32,7 +31,6 @@ const CreateProblem = ({
     }
   }, [currQuest]);
 
-  const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [requestNext, setRequestNext] = useState<boolean>(false);
 
@@ -129,7 +127,7 @@ const CreateProblem = ({
     setActive(active - 1);
   };
 
-  const checkDuplicate = (allQuestions) => {
+  const checkDuplicate = (allQuestions: any) => {
     const currFields = {
       title: name,
       recommendedTime: time,
@@ -307,6 +305,7 @@ const CreateProblem = ({
 
   return (
     <>
+      <Navbar />
       <div className="px-5">
         <div className="flex gap-10">
           {cloneElement(steps[active].component!, {

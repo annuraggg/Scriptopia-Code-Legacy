@@ -14,21 +14,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import {
-  CalendarIcon,
-  EnvelopeClosedIcon,
-  FaceIcon,
-  GearIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
-
 import {
   CommandDialog,
   CommandEmpty,
@@ -36,8 +26,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import TagsInput from "react-tagsinput";
 
@@ -60,7 +48,7 @@ const Screenings = () => {
   const [experience, setExperience] = useState(0);
   const [selectedCities, setSelectedCities] = useState<City[]>([] as City[]);
   const [selectedRoles, setSelectedRoles] = useState([]);
-  const [currentCity, setCurrentCity] = useState<City>({} as City);
+  const [_currentCity, setCurrentCity] = useState<City>({} as City);
 
   const [citiesOpen, setCitiesOpen] = useState(false);
 

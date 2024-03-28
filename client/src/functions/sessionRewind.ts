@@ -9,8 +9,10 @@ const useSessionRewind = () => {
       };
 
       const w = window;
+      // @ts-ignore
       w.SessionRewindConfig = o;
       const f = document.createElement("script");
+      // @ts-ignore
       f.async = 1;
       f.crossOrigin = "anonymous";
       f.src = "https://rec.sessionrewind.com/srloader.js";
@@ -25,17 +27,20 @@ const useSessionRewind = () => {
       const scripts = document.getElementsByTagName("script");
       for (let i = 0; i < scripts.length; i++) {
         if (scripts[i].src === "https://rec.sessionrewind.com/srloader.js") {
-          scripts[i].parentNode.removeChild(scripts[i]);
+          // @ts-ignore
+          scripts[i]?.parentNode.removeChild(scripts[i]);
         }
       }
     };
   }, []); // Empty dependency array ensures that this effect runs only once on component mount
 
   const startSession = () => {
+    // @ts-ignore
     window.sessionRewind && window.sessionRewind.startSession();
   };
 
   const stopSession = () => {
+    // @ts-ignore
     window.sessionRewind && window.sessionRewind.stopSession();
   };
 

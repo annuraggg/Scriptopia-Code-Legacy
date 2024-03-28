@@ -12,19 +12,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Trash } from "lucide-react";
-import Preview from "./Question/Preview";
 import CreateProblem from "./Question/CreateProblem";
 
 const Questions = ({
@@ -36,7 +24,6 @@ const Questions = ({
   data: any;
   setData: any;
 }) => {
-  const navigate = useNavigate();
 
   const [questionDrawer, setQuestionDrawer] = useState(false);
   const [questionsLoading, setQuestionsLoading] = useState<boolean>(false);
@@ -65,7 +52,7 @@ const Questions = ({
   }, [questionDrawer]);
 
   const goToNext = (tab: string) => {
-    nextTab(tab);
+    nextTab(tab, null);
   };
 
   const addQuest = (question: any) => {
@@ -179,7 +166,7 @@ const Questions = ({
                       </p>
                       <div className="flex gap-2 items-center my-3">
                         <p>Tags: </p>
-                        {question?.tags.map((tag: string, i) => {
+                        {question?.tags.map((tag: string, i: number) => {
                           return (
                             i < 5 && (
                               <Badge key={tag} className="bg-primary">

@@ -1,4 +1,3 @@
-import { Route } from "react-router-dom";
 import Editor from "./pages/editor/Editor";
 import CreateProblem from "./pages/problems/create/CreateProblem";
 import Home from "./pages/home/Home";
@@ -10,41 +9,26 @@ import Learn from "./pages/learn/Learn";
 import Course from "./pages/course/Course";
 import CourseName from "./pages/course/{courseName}/CourseName";
 import Assessments from "./pages/assessments/Screenings";
-import SubRoutes from "./SubRoutes";
 import Submission from "./pages/submission/Submission";
 import Profile from "./pages/profile/Profile";
 import CreateScreening from "./pages/assessments/create/CreateScreening";
+import Organization from "./pages/organization/Organization";
 
-function ProtectedRoutes() {
-  return (
-    <>
-      {SubRoutes()}
-      <Route path="/editor/:id" element={<Editor />} />
-      <Route path="/problems/create" element={<CreateProblem />} />
-      <Route path="/problems/:id/edit" element={<CreateProblem />} />
-
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/settings/logins" element={<RecentLogins />} />
-      <Route path="/settings/password" element={<ChangePassword />} />
-      <Route path="/settings/two-factor" element={<TFA />} />
-
-      <Route path="/screenings" element={<Assessments />} />
-      <Route path="/screenings/create" element={<CreateScreening />} />
-
-      <Route path="/u/:id" element={<Profile />} />
-
-      <Route path="/learn" element={<Learn />} />
-
-      <Route path="/course" element={<Course />} />
-      <Route path="/course/:courseName" element={<CourseName />} />
-
-      <Route path="/submission/:id" element={<Submission />} />
-
-      <Route path="/" element={<Home />} />
-
-      <Route path="*" element={"404 Not Found"} />
-    </>
-  );
-}
-
-export default ProtectedRoutes;
+export const Routes = [
+  { path: "/editor/:id", Component: Editor },
+  { path: "/problems/create", Component: CreateProblem },
+  { path: "/problems/:id/edit", Component: CreateProblem },
+  { path: "/settings", Component: Settings },
+  { path: "/settings/logins", Component: RecentLogins },
+  { path: "/settings/password", Component: ChangePassword },
+  { path: "/settings/two-factor", Component: TFA },
+  { path: "/screenings", Component: Assessments },
+  { path: "/screenings/create", Component: CreateScreening },
+  { path: "/organization", Component: Organization },
+  { path: "/u/:id", Component: Profile },
+  { path: "/learn", Component: Learn },
+  { path: "/course", Component: Course },
+  { path: "/course/:courseName", Component: CourseName },
+  { path: "/submission/:id", Component: Submission },
+  { path: "/", Component: Home },
+];

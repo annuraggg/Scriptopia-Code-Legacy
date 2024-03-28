@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post("/", verifyJWT, async (req, res) => {
   try {
+    // @ts-ignore
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });

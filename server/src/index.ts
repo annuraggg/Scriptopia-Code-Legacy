@@ -11,6 +11,7 @@ import home from "./api/home/main.js"
 import profile from "./api/profile/main.js"
 import screening from "./api/screenings/main.js"
 import apis from "./api/data/main.js"
+import organization from "./api/organization/main.js"
 
 app.use("/auth", auth);
 app.use("/problems", problems);
@@ -21,6 +22,7 @@ app.use("/submission", submission)
 app.use("/profile", profile)
 app.use("/screenings", screening)
 app.use("/api", apis)
+app.use("/organization", organization)
 
 app.get("/version", (req, res) => {
   res.json({ version: "0.1.4" });

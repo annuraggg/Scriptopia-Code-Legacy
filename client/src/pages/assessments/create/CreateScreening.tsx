@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Navbar } from "@/components/ui/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import General from "./General";

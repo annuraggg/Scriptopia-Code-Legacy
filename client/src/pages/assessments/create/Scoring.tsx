@@ -1,8 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import React from "react";
 
-const Scoring = ({ goNext }: { goNext: (current: string) => void }) => {
+const Scoring = () => {
   return (
     <div>
       <h2>Scoring</h2>

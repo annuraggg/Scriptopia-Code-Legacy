@@ -24,6 +24,10 @@ const userSchema = new Schema({
     // Regular expression for basic email validation
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
+  phone: {
+    type: String,
+    required: false,
+  },
   password: {
     type: String,
     required: false,

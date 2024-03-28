@@ -60,6 +60,7 @@ interface User extends Document {
   lastName?: string;
   username: string;
   email: string;
+  phone?: string;
   password?: string;
   accountType: string;
   tfa: tfa;

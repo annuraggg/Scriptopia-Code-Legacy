@@ -1,12 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import React from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -22,8 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-const Candidates = ({ nextTab }: { nextTab: (currentTab: string) => void }) => {
-  const [isPublic, setIsPublic] = React.useState(false);
+const Candidates = () => {
 
   return (
     <div className="flex flex-col px-48 items-center">

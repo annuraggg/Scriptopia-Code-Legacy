@@ -141,6 +141,7 @@ router.post("/", verifyJWT, async (req, res) => {
           timer,
           totalRuns,
           result,
+          // @ts-ignore
           req.user
         );
 
