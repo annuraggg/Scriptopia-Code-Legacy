@@ -50,6 +50,11 @@ interface tfa {
   ];
 }
 
+interface jobPreferences {
+  location: [string];
+  role: [string];
+}
+
 interface User extends Document {
   firstName: string;
   lastName?: string;
@@ -59,6 +64,12 @@ interface User extends Document {
   accountType: string;
   tfa: tfa;
   googleId?: string;
+  organization?: string;
+  profilePicture?: string;
+  bio?: string;
+  enabledScreening: boolean;
+  experience: number;
+  jobPreferences: jobPreferences;
   achievements: AchievementReceivables[];
   solvedProblems: SolvedProblem[];
   userLevel?: number;

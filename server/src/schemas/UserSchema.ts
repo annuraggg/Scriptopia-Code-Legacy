@@ -37,6 +37,36 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  organization: {
+    type: Schema.Types.ObjectId,
+    required: false,
+  },
+  profilePicture: {
+    type: String,
+    required: false,
+  },
+  enabledScreening: {
+    type: Boolean,
+    default: false,
+  },
+  experience: {
+    type: Number,
+    default: 0,
+  },
+  bio: {
+    type: String,
+    required: false,
+  },
+  jobPreferences: {
+    location: {
+      type: [String],
+      required: false,
+    },
+    role: {
+      type: [String],
+      required: false,
+    },
+  },
   tfa: {
     enabled: Boolean,
     secret: String,
