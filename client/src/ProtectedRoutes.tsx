@@ -14,30 +14,35 @@ import Profile from "./pages/profile/Profile";
 import CreateScreening from "./pages/assessments/create/CreateScreening";
 import Organization from "./pages/organization/Organization";
 import { useEffect } from "react";
-import axios from "axios";
 import Cookies from "js-cookie";
 import User from "./types/User";
 import { jwtDecode } from "jwt-decode";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
+import ErrB from "./ErrorBoundary";
 
 export const Routes = [
-  { path: "/editor/:id", Component: Editor },
-  { path: "/problems/create", Component: CreateProblem },
-  { path: "/problems/:id/edit", Component: CreateProblem },
-  { path: "/settings", Component: Settings },
-  { path: "/settings/logins", Component: RecentLogins },
-  { path: "/settings/password", Component: ChangePassword },
-  { path: "/settings/two-factor", Component: TFA },
-  { path: "/screenings", Component: Assessments },
-  { path: "/screenings/create", Component: CreateScreening },
-  { path: "/organization", Component: Organization },
-  { path: "/u/:id", Component: Profile },
-  { path: "/learn", Component: Learn },
-  { path: "/course", Component: Course },
-  { path: "/course/:courseName", Component: CourseName },
-  { path: "/submission/:id", Component: Submission },
-  { path: "/", Component: Home },
+  {
+    element: <ErrB />,
+    children: [
+      { path: "/editor/:id", Component: Editor },
+      { path: "/problems/create", Component: CreateProblem },
+      { path: "/problems/:id/edit", Component: CreateProblem },
+      { path: "/settings", Component: Settings },
+      { path: "/settings/logins", Component: RecentLogins },
+      { path: "/settings/password", Component: ChangePassword },
+      { path: "/settings/two-factor", Component: TFA },
+      { path: "/screenings", Component: Assessments },
+      { path: "/screenings/create", Component: CreateScreening },
+      { path: "/organization", Component: Organization },
+      { path: "/u/:id", Component: Profile },
+      { path: "/learn", Component: Learn },
+      { path: "/course", Component: Course },
+      { path: "/course/:courseName", Component: CourseName },
+      { path: "/submission/:id", Component: Submission },
+      { path: "/", Component: Home },
+    ],
+  },
 ];
 
 export default function ProtectedRoutes() {
@@ -45,7 +50,6 @@ export default function ProtectedRoutes() {
 
   useEffect(() => {
     const excludeRedirection = ["/signin", "/signup"];
-    axios.defaults.withCredentials = true;
     const token = Cookies.get("token");
     if (token) {
       const decodedToken: User = jwtDecode(token);

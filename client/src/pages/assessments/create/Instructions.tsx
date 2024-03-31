@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 const Instructions = ({
-  nextTab,
+  instructions,
+  setInstructions,
 }: {
-  nextTab: (currentTab: string) => void;
+  instructions: string;
+  setInstructions: (instructions: string) => void;
 }) => {
   return (
     <div>
@@ -12,17 +13,12 @@ const Instructions = ({
       <p>Instructions for the candidates.</p>
 
       <div className="mt-5">
-        <Textarea placeholder="Instructions" className="h-[60vh]" />
-      </div>
-
-      <div className="mt-5 flex gap-5 absolute right-10 bottom-10">
-        <Button className="btn-primary" onClick={() => nextTab("candidates")}>
-          Back
-        </Button>
-
-        <Button className="btn-primary" onClick={() => nextTab("instructions")}>
-          Next
-        </Button>
+        <Textarea
+          placeholder="Instructions"
+          className="h-[60vh]"
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+        />
       </div>
     </div>
   );

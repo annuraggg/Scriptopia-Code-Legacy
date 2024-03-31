@@ -1,59 +1,48 @@
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 
 const General = ({
-  nextTab,
-  data,
+  name,
+  setName,
+  description,
+  setDescription,
+  timeLimit,
+  setTimeLimit,
+  allowAutocomplete,
+  setAllowAutocomplete,
+  allowRunCode,
+  setAllowRunCode,
+  allowSyntaxHighlighting,
+  setAllowSyntaxHighlighting,
+  range,
+  setRange,
+  fromTime,
+  setFromTime,
+  toTime,
+  setToTime,
 }: {
-  nextTab: (currentTab: string, data: any) => void;
-  data: any;
+  name: string;
+  setName: (name: string) => void;
+  description: string;
+  setDescription: (description: string) => void;
+  timeLimit: number;
+  setTimeLimit: (timeLimit: number) => void;
+  allowAutocomplete: boolean;
+  setAllowAutocomplete: (allowAutocomplete: boolean) => void;
+  allowRunCode: boolean;
+  setAllowRunCode: (allowRunCode: boolean) => void;
+  allowSyntaxHighlighting: boolean;
+  setAllowSyntaxHighlighting: (allowSyntaxHighlighting: boolean) => void;
+  range: DateRange;
+  setRange: (range: DateRange) => void;
+  fromTime: string;
+  setFromTime: (fromTime: string) => void;
+  toTime: string;
+  setToTime: (toTime: string) => void;
 }) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [timeLimit, setTimeLimit] = useState<number | undefined>(undefined);
-  const [allowAutocomplete, setAllowAutocomplete] = useState<boolean>(false);
-  const [allowRunCode, setAllowRunCode] = useState<boolean>(false);
-  const [allowSyntaxHighlighting, setAllowSyntaxHighlighting] =
-    useState<boolean>(false);
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
-  const [fromTime, setFromTime] = useState<string>("");
-  const [toTime, setToTime] = useState<string>("");
-
-  useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setDescription(data.description);
-      setTimeLimit(data.timeLimit);
-      setAllowAutocomplete(data.allowAutocomplete);
-      setAllowRunCode(data.allowRunCode);
-      setAllowSyntaxHighlighting(data.allowSyntaxHighlighting);
-      setRange(data.range);
-      setFromTime(data.fromTime);
-      setToTime(data.toTime);
-    }
-  }, [data]);
-
-  const goToNext = () => {
-    const data = {
-      name,
-      description,
-      timeLimit,
-      allowAutocomplete,
-      allowRunCode,
-      allowSyntaxHighlighting,
-      range,
-      fromTime,
-      toTime,
-    };
-
-    nextTab("general", data);
-  };
-
   return (
     <div className="mt-5 w-[95vw]">
       <div className="flex w-full gap-10">
@@ -144,7 +133,7 @@ const General = ({
             <Calendar
               mode="range"
               selected={range}
-              onSelect={setRange}
+              onSelect={(range) => setRange(range as DateRange)}
               className="rounded-md mt-3"
             />
 
@@ -170,9 +159,6 @@ const General = ({
           </div>
         </div>
       </div>
-      <Button className="mt-5 float-right" onClick={goToNext}>
-        Next
-      </Button>
     </div>
   );
 };

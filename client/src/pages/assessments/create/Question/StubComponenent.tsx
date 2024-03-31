@@ -112,7 +112,7 @@ const StubComponenent = ({
   };
 
   return (
-    <div className="pr-16 w-[1000px]">
+    <div className="w-full">
       <div className=" overflow-y-auto h-[65vh]">
         <h5>Code Stub</h5>
         <div className="flex gap-10 mt-5 items-center">

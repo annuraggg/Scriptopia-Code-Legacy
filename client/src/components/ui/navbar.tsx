@@ -74,6 +74,7 @@ export const Navbar = () => {
                 <DropdownMenuShortcut>⌘ + ⇧ + L</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/organization")}> My Organization </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/settings")}>
                 Settings
               </DropdownMenuItem>
