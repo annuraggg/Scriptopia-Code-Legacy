@@ -13,6 +13,13 @@ import Submission from "./pages/submission/Submission";
 import Profile from "./pages/profile/Profile";
 import CreateScreening from "./pages/assessments/create/CreateScreening";
 import Organization from "./pages/organization/Organization";
+import { useEffect } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import User from "./types/User";
+import { jwtDecode } from "jwt-decode";
+import { clearUser, setUser } from "./states/user/UserSlice";
+import { useDispatch } from "react-redux";
 
 export const Routes = [
   { path: "/editor/:id", Component: Editor },
@@ -32,3 +39,24 @@ export const Routes = [
   { path: "/submission/:id", Component: Submission },
   { path: "/", Component: Home },
 ];
+
+export default function ProtectedRoutes() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const excludeRedirection = ["/signin", "/signup"];
+    axios.defaults.withCredentials = true;
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken: User = jwtDecode(token);
+      dispatch(setUser(decodedToken));
+    } else {
+      if (!excludeRedirection.includes(window.location.pathname)) {
+        window.location.href = "/signin";
+      }
+      dispatch(clearUser());
+    }
+  }, [dispatch]);
+
+  return <></>;
+}

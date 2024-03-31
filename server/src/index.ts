@@ -24,8 +24,8 @@ app.use("/screenings", screening)
 app.use("/api", apis)
 app.use("/organization", organization)
 
-app.get("/version", (req, res) => {
-  res.json({ version: "0.1.4" });
+app.get("/version", (_req, res) => {
+  res.json({ version: "0.1.59" });
 });
 
 app.listen(3000);
