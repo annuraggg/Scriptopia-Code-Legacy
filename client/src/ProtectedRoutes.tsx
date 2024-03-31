@@ -20,6 +20,7 @@ import { jwtDecode } from "jwt-decode";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
 import ErrB from "./ErrorBoundary";
+import Leaderboards from "./pages/assessments/leaderboards/leaderboards";
 
 export const Routes = [
   {
@@ -41,6 +42,7 @@ export const Routes = [
       { path: "/course/:courseName", Component: CourseName },
       { path: "/submission/:id", Component: Submission },
       { path: "/", Component: Home },
+      { path: "/leaderboards", Component: Leaderboards },
     ],
   },
 ];
