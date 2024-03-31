@@ -20,6 +20,7 @@ import User from "./types/User";
 import { jwtDecode } from "jwt-decode";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
+import Leaderboards from "./pages/assessments/leaderboards/leaderboards"
 
 export const Routes = [
   { path: "/editor/:id", Component: Editor },
@@ -30,6 +31,7 @@ export const Routes = [
   { path: "/settings/password", Component: ChangePassword },
   { path: "/settings/two-factor", Component: TFA },
   { path: "/screenings", Component: Assessments },
+  { path: "/leaderboards", Component: Leaderboards },
   { path: "/screenings/create", Component: CreateScreening },
   { path: "/organization", Component: Organization },
   { path: "/u/:id", Component: Profile },
