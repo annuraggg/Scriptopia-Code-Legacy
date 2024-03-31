@@ -9,6 +9,7 @@ import User from "./types/User";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import axios from "axios";
 import { Routes as ProtectedRoutes } from "./ProtectedRoutes";
+import Proutes from "./ProtectedRoutes";
 
 const router = createBrowserRouter([
   { path: "/signin", Component: Login },
@@ -35,7 +36,12 @@ function App() {
     }
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Proutes />
+    </>
+  );
 }
 
 export default App;
