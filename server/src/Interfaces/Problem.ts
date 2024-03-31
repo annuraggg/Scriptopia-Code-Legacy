@@ -10,6 +10,7 @@ interface TestCase {
 }
 
 interface Problem extends Document {
+  _id: Types.ObjectId;
   title: string;
   description: Record<string, any>; // Assuming the description can be any object type
   author: string;
@@ -22,9 +23,10 @@ interface Problem extends Document {
   functionReturn: string;
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
-  isPrivate: boolean;
+  isPrivate?: boolean;
   lastUpdated: Date;
   chatId?: Types.ObjectId | null;
+  __v: number;
 }
 
 export default Problem;

@@ -1,3 +1,5 @@
+import { Delta } from "quill/core";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface TestCase {
   name: string;
@@ -11,7 +13,7 @@ interface TestCase {
 interface Problem {
   _id: string;
   title: string;
-  description: any; // Assuming the description can be any object type
+  description: Delta; // Assuming the description can be any object type
   author: string;
   difficulty: string;
   languageSupport: string[];

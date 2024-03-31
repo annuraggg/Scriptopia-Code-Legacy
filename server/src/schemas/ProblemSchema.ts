@@ -1,8 +1,7 @@
-import { lang } from "moment-timezone";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const problemSchema = new Schema({
+export const problemSchema = new Schema({
   title: {
     type: String,
     required: true,

@@ -21,6 +21,7 @@ import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
 import ErrB from "./ErrorBoundary";
 import Leaderboards from "./pages/assessments/leaderboards/leaderboards";
+import RedirectScreening from "./pages/assessments/RedirectScreening";
 
 export const Routes = [
   {
@@ -33,8 +34,11 @@ export const Routes = [
       { path: "/settings/logins", Component: RecentLogins },
       { path: "/settings/password", Component: ChangePassword },
       { path: "/settings/two-factor", Component: TFA },
+
       { path: "/screenings", Component: Assessments },
       { path: "/screenings/create", Component: CreateScreening },
+      { path: "/screenings/srt/:id/", Component: RedirectScreening },
+
       { path: "/organization", Component: Organization },
       { path: "/u/:id", Component: Profile },
       { path: "/learn", Component: Learn },

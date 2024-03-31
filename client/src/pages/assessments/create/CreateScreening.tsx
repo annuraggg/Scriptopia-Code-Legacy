@@ -7,10 +7,22 @@ import Candidates from "./Candidates";
 import Instructions from "./Instructions";
 import Security from "./Security";
 import Feedback from "./Feedback";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Problem from "@/types/Problem";
+import { toast } from "sonner";
+import axios from "axios";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { MdContentCopy } from "react-icons/md";
+import { Button } from "@/components/ui/button";
 
 const CreateScreening = () => {
   const [tab, setTab] = useState("general");
@@ -26,7 +38,7 @@ const CreateScreening = () => {
   const [fromTime, setFromTime] = useState<string>("");
   const [toTime, setToTime] = useState<string>("");
 
-  const [questions, setQuestions] = useState<Problem[]>([]);
+  const [questions, setQuestions] = useState<any>([]);
 
   const [candidates, setCandidates] = useState<
     {
@@ -47,6 +59,10 @@ const CreateScreening = () => {
 
   const [feedbackEmail, setFeedbackEmail] = useState<string>("");
   const [feedbackPhone, setFeedbackPhone] = useState<string>("");
+
+  const [saving, setSaving] = useState<boolean>(false);
+  const [showCode, setShowCode] = useState<boolean>(false);
+  const [link, setLink] = useState<string>("" as any);
 
   const goBack = () => {
     const tabs = [
@@ -85,7 +101,62 @@ const CreateScreening = () => {
   };
 
   const save = () => {
-    console.log("Save screening");
+    if (
+      name === "" ||
+      description === "" ||
+      instructions === "" ||
+      timeLimit === 0 ||
+      range.from === undefined ||
+      range.to === undefined ||
+      questions.length === 0 ||
+      instructions === "" ||
+      feedbackEmail === "" ||
+      feedbackPhone === ""
+    ) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+
+    setSaving(true);
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/create`, {
+        name,
+        desc: description,
+        instructions,
+        duration: timeLimit,
+        openRange: {
+          start: range.from,
+          end: range.to,
+        },
+        questions,
+        candidates,
+        editorOptions: {
+          autoComplete: allowAutocomplete,
+          runCode: allowRunCode,
+          syntaxHighlighting: allowSyntaxHighlighting,
+        },
+        security: {
+          codePlayback: codePlaybacks,
+          tabChangeDetection,
+          gptDetection,
+          copyPasteDetection,
+          plagiarismDetection,
+        },
+        feedback: {
+          email: feedbackEmail,
+          phone: feedbackPhone,
+        },
+      })
+      .then((res) => {
+        setLink(res.data.link);
+        setShowCode(true);
+        toast.success("Screening created successfully");
+        setSaving(false);
+      })
+      .catch(() => {
+        toast.error("Error creating screening");
+        setSaving(false);
+      });
   };
 
   return (
@@ -144,7 +215,10 @@ const CreateScreening = () => {
             />
           </TabsContent>
           <TabsContent value="questions">
-            <Questions selectedQuestions={questions} setSelectedQuestions={setQuestions} />
+            <Questions
+              selectedQuestions={questions}
+              setSelectedQuestions={setQuestions}
+            />
           </TabsContent>
           <TabsContent value="candidates">
             <Candidates
@@ -186,9 +260,36 @@ const CreateScreening = () => {
               feedbackPhone={feedbackPhone}
               setFeedbackPhone={setFeedbackPhone}
               saveScreening={save}
+              saving={saving}
             />
           </TabsContent>
         </Tabs>
+
+        <Dialog open={showCode} onOpenChange={setShowCode}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Done!</DialogTitle>
+              <DialogDescription>
+                You can use this link to share the screening with the candidates
+              </DialogDescription>
+              <div className="flex flex-col items-center justify-center pt-10">
+                <p className="bg-gray-800 px-5 py-2 rounded-lg flex gap-5 items-center">
+                  {`${import.meta.env.VITE_FRONTEND_ADDRESS}/screenings/srt/${link}`}
+                  <MdContentCopy
+                    className=" cursor-pointer"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_ADDRESS}/screenings/srt/${link}`);
+                      toast.success("Link copied to clipboard");
+                    }}
+                  />
+                </p>
+                <Button onClick={() => setShowCode(false)} className="mt-5">
+                  Close
+                </Button>
+              </div>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
