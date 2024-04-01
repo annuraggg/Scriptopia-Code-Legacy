@@ -9,9 +9,11 @@ import User from "./types/User";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import axios from "axios";
 import { Routes as ProtectedRoutes } from "./ProtectedRoutes";
-import Proutes from "./ProtectedRoutes";
 import ErrorBoundary from "./ErrorBoundary";
 import { Button } from "./components/ui/button";
+import Screening from "./pages/assessments/id/Screening";
+import Main from "./pages/assessments/id/Main";
+import Editor from "./pages/assessments/id/Editor/Editor";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/signin", Component: Login },
       { path: "/signup", Component: Signup },
+      { path: "/screenings/:id", Component: Screening},
+      { path: "/screenings/current", Component: Main},
+      { path: "/screening/current/editor", Component: Editor},
       { path: "*", Component: fourOhFour },
       ...ProtectedRoutes,
     ],
@@ -65,7 +70,6 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <Proutes />
     </>
   );
 }

@@ -29,5 +29,24 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      !(function (o) {
+        var w = window;
+
+        w.SessionRewindConfig = o;
+
+        var f = document.createElement("script");
+
+        (f.async = 1),
+          (f.crossOrigin = "anonymous"),
+          (f.src = "https://rec.sessionrewind.com/srloader.js");
+
+        var g = document.getElementsByTagName("head")[0];
+        g.insertBefore(f, g.firstChild);
+      })({
+        apiKey: "YEfQWpLrG24OsxeBjkFZ79xBAXW7f1OS7PLQRaJo",
+        startRecording: false,
+      });
+    </script>
   </body>
 </html>

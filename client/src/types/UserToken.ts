@@ -6,6 +6,6 @@ interface UserToken {
   email: string;
   accountType: string;
   sessionID: string;
-};
+}
 
 export default UserToken;

@@ -274,11 +274,11 @@ const CreateScreening = () => {
               </DialogDescription>
               <div className="flex flex-col items-center justify-center pt-10">
                 <p className="bg-gray-800 px-5 py-2 rounded-lg flex gap-5 items-center">
-                  {`${import.meta.env.VITE_FRONTEND_ADDRESS}/screenings/srt/${link}`}
+                  {`${import.meta.env.VITE_FRONTEND_ADDRESS}/r/${link}`}
                   <MdContentCopy
                     className=" cursor-pointer"
                     onClick={() => {
-                      navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_ADDRESS}/screenings/srt/${link}`);
+                      navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_ADDRESS}/r/${link}`);
                       toast.success("Link copied to clipboard");
                     }}
                   />

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import { problemSchema as Problem } from "./ProblemSchema";
 
 const screeningSchema = new Schema({
@@ -6,6 +6,9 @@ const screeningSchema = new Schema({
   desc: String,
   instructions: String,
   duration: Number,
+  languages: [String],
+  createdAt: Date,
+  createdBy: String,
   openRange: {
     start: Date,
     end: Date,
@@ -17,6 +20,7 @@ const screeningSchema = new Schema({
       email: String,
     },
   ],
+  takenBy: [String],
   editorOptions: {
     autoComplete: Boolean,
     runCode: Boolean,

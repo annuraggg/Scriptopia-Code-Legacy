@@ -7,10 +7,8 @@ router.get("/:code", async (req, res) => {
 
   const realURI = await Redirect.findOne({ from: code });
   if (!realURI) {
-    return res.status(404).json({ error: "No such screening found" });
+    return res.status(404).json({ error: "Not found" });
   }
-
-  console.log("THEN");
   const url = realURI.to;
   console.log(url);
   return res.json({ url: url });

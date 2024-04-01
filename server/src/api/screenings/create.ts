@@ -1,9 +1,10 @@
+import verifyJWT from "@/middlewares/verifyJWT";
 import Redirect from "@/schemas/RedirectSchema";
 import Screening from "@/schemas/ScreeningSchema";
 import express from "express";
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", verifyJWT ,async (req, res) => {
   try {
     const {
       name,
@@ -23,6 +24,9 @@ router.post("/", async (req, res) => {
       desc: desc,
       instructions: instructions,
       duration: duration,
+      createdAt: new Date(),
+      // @ts-expect-error
+      createdBy: req.user.id,
       openRange: openRange,
       questions: questions,
       candidates: candidates,

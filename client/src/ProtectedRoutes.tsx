@@ -21,7 +21,7 @@ import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
 import ErrB from "./ErrorBoundary";
 import Leaderboards from "./pages/assessments/leaderboards/leaderboards";
-import RedirectScreening from "./pages/assessments/RedirectScreening";
+import RedirectScreening from "./pages/Redirects/Redirects";
 
 export const Routes = [
   {
@@ -37,7 +37,8 @@ export const Routes = [
 
       { path: "/screenings", Component: Assessments },
       { path: "/screenings/create", Component: CreateScreening },
-      { path: "/screenings/srt/:id/", Component: RedirectScreening },
+
+      { path: "/r/:id", Component: RedirectScreening },
 
       { path: "/organization", Component: Organization },
       { path: "/u/:id", Component: Profile },
@@ -55,18 +56,29 @@ export default function ProtectedRoutes() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const excludeRedirection = ["/signin", "/signup"];
+    const excludeRedirection = [
+      "/signin",
+      "/signup",
+      "/screenings/",
+      "/screenings",
+      "/r/",
+    ];
     const token = Cookies.get("token");
     if (token) {
       const decodedToken: User = jwtDecode(token);
       dispatch(setUser(decodedToken));
     } else {
-      if (!excludeRedirection.includes(window.location.pathname)) {
+      const currentPath = window.location.pathname;
+      let redirectToSignIn = true;
+      excludeRedirection.forEach((excludedPath) => {
+        if (currentPath.includes(excludedPath)) {
+          redirectToSignIn = false;
+        }
+      });
+      if (redirectToSignIn) {
         window.location.href = "/signin";
       }
       dispatch(clearUser());
     }
   }, [dispatch]);
-
-  return <></>;
 }

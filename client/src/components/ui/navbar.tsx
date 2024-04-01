@@ -18,7 +18,6 @@ import {
 export const Navbar = () => {
   const navigate = useNavigate();
   const { setTheme, theme } = useTheme();
-  // @ts-ignore
   const userSelector = useSelector((state) => state?.user);
 
   const changeTheme = () => {
