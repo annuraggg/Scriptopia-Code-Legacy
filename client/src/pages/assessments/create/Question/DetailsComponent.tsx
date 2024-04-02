@@ -18,7 +18,7 @@ import { Delta } from "quill/core";
 const DetailsComponent = ({
   requestNext,
   respondNext,
-  data
+  data,
 }: {
   requestNext: boolean;
   respondNext: (allowed: boolean, data: any) => void;
@@ -42,7 +42,7 @@ const DetailsComponent = ({
       setName(data.name);
       setTime(data.time);
       setDifficulty(data.difficulty);
-      setTags(data.tags);
+      setTags(data?.tags);
       const quill = new Quill("#editor");
       quill.setContents(data.description as unknown as Delta);
     }
@@ -101,76 +101,81 @@ const DetailsComponent = ({
   }, []);
 
   return (
-    <div className=" overflow-y-auto h-[77vh] pr-16">
-      <h5>Problem Details</h5>
+    <>
+      <div className="">
+        <h5>Problem Details</h5>
 
-      <div className="mt-5">
-        <p>
-          Question Name <span className="text-red-500">*</span>
-          <Input
-            placeholder="Enter Question Name"
-            className="w-[60vw] mt-2"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-          />
-        </p>
-      </div>
-
-      <div className="flex gap-5 items-center mt-10">
-        <div>
-          <p className="mb-3">
-            Difficulty <span className="text-red-500">*</span>
+        <div className="mt-5">
+          <p>
+            Question Name <span className="text-red-500">*</span>
+            <Input
+              placeholder="Enter Question Name"
+              className="w-[60vw] mt-2"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+            />
           </p>
-          <Select
-            onValueChange={(e: "easy" | "medium" | "hard") => setDifficulty(e)}
-            value={difficulty}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Easy" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="easy" defaultChecked>
-                Easy
-              </SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="hard">Hard</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
-        <div>
-          <p className="mb-3">
-            Time Limit <span className="text-red-500">*</span>
+        <div className="flex gap-5 items-center mt-10">
+          <div>
+            <p className="mb-3">
+              Difficulty <span className="text-red-500">*</span>
+            </p>
+            <Select
+              onValueChange={(e: "easy" | "medium" | "hard") =>
+                setDifficulty(e)
+              }
+              value={difficulty}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Easy" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="easy" defaultChecked>
+                  Easy
+                </SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <p className="mb-3">
+              Time Limit <span className="text-red-500">*</span>
+            </p>
+            <Input
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              placeholder="Enter Recommended Time"
+              className="w-[200px] mt-2"
+            />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <TagsInput value={tags} onChange={(tags) => setTags(tags)} />
+          <em className="text-xs">
+            Press enter to add a tag. Click on a tag to remove it.
+          </em>
+        </div>
+
+        <div className="mt-10">
+          <p>
+            Problem Description <span className="text-red-500">*</span>
           </p>
-          <Input
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            placeholder="Enter Recommended Time"
-            className="w-[200px] mt-2"
-          />
+          <div className="border shadow-sm border-input h-[43vh] mt-2 rounded p-1 overflow-auto">
+            <div className=" h-min" id="editor"></div>
+          </div>
         </div>
       </div>
-
-      <div className="mt-10">
-        <TagsInput value={tags} onChange={(tags) => setTags(tags)} />
-        <em className="text-xs">
-          Press enter to add a tag. Click on a tag to remove it.
-        </em>
+      <div className="w-full flex items-center justify-end mt-10">
+        <Button onClick={() => goToNext()} className="py-3">
+          Next
+        </Button>
       </div>
-
-      <div className="mt-10">
-        <p>
-          Problem Description <span className="text-red-500">*</span>
-        </p>
-        <div className="border shadow-sm border-input h-[43vh] mt-2 rounded p-1 overflow-auto">
-          <div className=" h-min" id="editor"></div>
-        </div>
-      </div>
-
-      <Button onClick={() => goToNext()} className="mt-10 float-right">
-        Next
-      </Button>
-    </div>
+    </>
   );
 };
 

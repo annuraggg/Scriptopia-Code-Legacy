@@ -13,22 +13,72 @@ import Submission from "./pages/submission/Submission";
 import Profile from "./pages/profile/Profile";
 import CreateScreening from "./pages/assessments/create/CreateScreening";
 import Organization from "./pages/organization/Organization";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
+import User from "./types/User";
+import { jwtDecode } from "jwt-decode";
+import { clearUser, setUser } from "./states/user/UserSlice";
+import { useDispatch } from "react-redux";
+import ErrB from "./ErrorBoundary";
+import Leaderboards from "./pages/assessments/leaderboards/leaderboards";
+import RedirectScreening from "./pages/Redirects/Redirects";
 
 export const Routes = [
-  { path: "/editor/:id", Component: Editor },
-  { path: "/problems/create", Component: CreateProblem },
-  { path: "/problems/:id/edit", Component: CreateProblem },
-  { path: "/settings", Component: Settings },
-  { path: "/settings/logins", Component: RecentLogins },
-  { path: "/settings/password", Component: ChangePassword },
-  { path: "/settings/two-factor", Component: TFA },
-  { path: "/screenings", Component: Assessments },
-  { path: "/screenings/create", Component: CreateScreening },
-  { path: "/organization", Component: Organization },
-  { path: "/u/:id", Component: Profile },
-  { path: "/learn", Component: Learn },
-  { path: "/course", Component: Course },
-  { path: "/course/:courseName", Component: CourseName },
-  { path: "/submission/:id", Component: Submission },
-  { path: "/", Component: Home },
+  {
+    element: <ErrB />,
+    children: [
+      { path: "/editor/:id", Component: Editor },
+      { path: "/problems/create", Component: CreateProblem },
+      { path: "/problems/:id/edit", Component: CreateProblem },
+      { path: "/settings", Component: Settings },
+      { path: "/settings/logins", Component: RecentLogins },
+      { path: "/settings/password", Component: ChangePassword },
+      { path: "/settings/two-factor", Component: TFA },
+
+      { path: "/screenings", Component: Assessments },
+      { path: "/screenings/create", Component: CreateScreening },
+
+      { path: "/r/:id", Component: RedirectScreening },
+
+      { path: "/organization", Component: Organization },
+      { path: "/u/:id", Component: Profile },
+      { path: "/learn", Component: Learn },
+      { path: "/course", Component: Course },
+      { path: "/course/:courseName", Component: CourseName },
+      { path: "/submission/:id", Component: Submission },
+      { path: "/", Component: Home },
+      { path: "/leaderboards", Component: Leaderboards },
+    ],
+  },
 ];
+
+export default function ProtectedRoutes() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const excludeRedirection = [
+      "/signin",
+      "/signup",
+      "/screenings/",
+      "/screenings",
+      "/r/",
+    ];
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken: User = jwtDecode(token);
+      dispatch(setUser(decodedToken));
+    } else {
+      const currentPath = window.location.pathname;
+      let redirectToSignIn = true;
+      excludeRedirection.forEach((excludedPath) => {
+        if (currentPath.includes(excludedPath)) {
+          redirectToSignIn = false;
+        }
+      });
+      if (redirectToSignIn) {
+        window.location.href = "/signin";
+      }
+      dispatch(clearUser());
+    }
+  }, [dispatch]);
+}

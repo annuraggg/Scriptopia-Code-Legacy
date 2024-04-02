@@ -18,7 +18,6 @@ import {
 export const Navbar = () => {
   const navigate = useNavigate();
   const { setTheme, theme } = useTheme();
-  // @ts-ignore
   const userSelector = useSelector((state) => state?.user);
 
   const changeTheme = () => {
@@ -74,6 +73,7 @@ export const Navbar = () => {
                 <DropdownMenuShortcut>⌘ + ⇧ + L</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/organization")}> My Organization </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/settings")}>
                 Settings
               </DropdownMenuItem>

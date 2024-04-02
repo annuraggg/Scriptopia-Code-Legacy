@@ -180,75 +180,34 @@ const CreateProblem = ({
         return;
       }
 
-      axios
-        .post(
-          `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${
-            window.location.pathname.includes("edit")
-              ? `edit/${window.location.pathname.split("/")[2]}/save`
-              : "create"
-          }`,
-          {
-            name,
-            time,
-            difficulty,
-            tags,
-            description,
-            selectedLanguages,
-            functionName,
-            returnType,
-            args,
-            testCases: data,
-            isPrivate: true,
-          }
-        )
-        .then((res) => {
-          toast.success("Problem created successfully", {
-            position: "top-center",
-          });
+      addQuest({
+        title: name,
+        _id: "",
+        difficulty,
+        tags,
+        time,
+        name,
+        description,
+        selectedLanguages,
+        functionName,
+        returnType,
+        args,
+        testCases: data,
+        isPrivate: true,
+      });
 
-          addQuest({
-            title: name,
-            _id: res.data._id,
-            difficulty,
-            tags,
-            time,
-            name,
-            description,
-            selectedLanguages,
-            functionName,
-            returnType,
-            args,
-            testCases: data,
-            isPrivate: true,
-          });
+      setName("");
+      setTime("");
+      setDifficulty("easy");
+      setTags([]);
+      setDescription("");
+      setSelectedLanguages([]);
+      setFunctionName("");
+      setReturnType("int");
+      setArgs([]);
+      setTestCases([]);
 
-          setName("");
-          setTime("");
-          setDifficulty("easy");
-          setTags([]);
-          setDescription("");
-          setSelectedLanguages([]);
-          setFunctionName("");
-          setReturnType("int");
-          setArgs([]);
-          setTestCases([]);
-
-          setActive(0);
-        })
-        .catch((err) => {
-          if (err.response.status === 400) {
-            toast.error("Please fill all the fields", {
-              position: "top-center",
-            });
-            return;
-          }
-          toast.error("Error creating problem", {
-            position: "top-center",
-          });
-        })
-        .finally(() => {
-          setSaving(false);
-        });
+      setActive(0);
     } else {
       toast.error("Please fill all the fields", {
         position: "top-center",
@@ -305,14 +264,11 @@ const CreateProblem = ({
 
   return (
     <>
-      <Navbar />
-      <div className="px-5">
-        <div className="flex gap-10">
-          {cloneElement(steps[active].component!, {
-            requestNext: requestNext,
-            responseNext: goToNext,
-          })}
-        </div>
+      <div className="px-5 h-[77vh] overflow-y-auto">
+        {cloneElement(steps[active].component!, {
+          requestNext: requestNext,
+          responseNext: goToNext,
+        })}
       </div>
     </>
   );

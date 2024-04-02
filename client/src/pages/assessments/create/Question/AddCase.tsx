@@ -221,7 +221,7 @@ const AddCase = ({
   };
 
   return (
-    <div className=" overflow-y-auto h-[77vh] pr-16">
+    <div className=" overflow-y-auto h-[77vh] w-full">
       <h5>Test Cases</h5>
       <div>
         <div className="flex gap-3">
@@ -236,7 +236,7 @@ const AddCase = ({
         </div>
 
         <div className="h-[50vh] overflow-y-auto">
-          <Table className="w-[70vw] mt-5">
+          <Table className="w-[100%] mt-5">
             <TableHeader>
               <TableRow>
                 <TableHead>Case No.</TableHead>
@@ -282,6 +282,9 @@ const AddCase = ({
         </div>
         <Button className="mt-5 float-right" onClick={() => submitProblem()}>
           {saving ? <ReloadIcon className="m-10 w-10 animate-spin" /> : "Next"}
+        </Button>
+        <Button className="mt-5 mr-5 float-right" onClick={() => goBack()}>
+          Back
         </Button>
       </div>
 

@@ -13,7 +13,7 @@ import edit from "./edit.js";
 router.use("/create", verifyJWT, create);
 router.use("/edit", verifyJWT, edit);
 
-router.post("/:probID", verifyJWT, async (req, res) => {
+router.post("/:probID", async (req, res) => {
   try {
     const problem: ProblemType | any = await Problem.findById(
       req.params.probID
@@ -42,7 +42,7 @@ router.post("/:probID", verifyJWT, async (req, res) => {
         userID: req?.user?.id,
       });
 
-      res.status(200).json({ desc, meta, cases, func, args, submissions });
+      res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.returnType});
     }
   } catch (err) {
     logger.error(err);
@@ -52,7 +52,6 @@ router.post("/:probID", verifyJWT, async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    console.log("here");
     const problems = await Problem.find({}).exec();
     res.status(200).json(problems);
   } catch (err) {
