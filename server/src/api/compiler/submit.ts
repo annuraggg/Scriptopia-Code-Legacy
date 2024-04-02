@@ -7,6 +7,7 @@ import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
 import ProblemType from "@/Interfaces/Problem";
 import generateAssessment from "./assess";
+import generateRecommendation from "@/ml/apriori";
 const router = express.Router();
 
 interface User {
@@ -92,6 +93,12 @@ const selectLangAndRun = async (
 
 router.post("/", verifyJWT, async (req, res) => {
   try {
+    // @ts-ignore
+    const r: any = await generateRecommendation(req.user.id);
+    const sugg = await getSuggestion(r)
+    console.log(sugg?.title);
+    return;
+
     const { code, language, fn, probID, timer, totalRuns } = req.body;
     const prob = await Problem.findById(probID);
     if (!prob) {
@@ -176,6 +183,18 @@ const fetchCases = async (probID: ProblemType): Promise<Case[]> => {
     logger.error({ code: "COMPILER-SUBMIT-FETCHCASES", message: error });
     return [];
   }
+};
+
+const getSuggestion = async (data: {
+  next_problem?: string;
+  confidence?: number;
+  error: boolean;
+}) => {
+  if (data.error) {
+    throw new Error("Error in generating recommendation");
+  }
+  const sugg = await Problem.findById(data.next_problem);
+  return sugg;
 };
 
 export default router;
