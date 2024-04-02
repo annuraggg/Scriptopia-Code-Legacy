@@ -45,7 +45,7 @@ const Main = () => {
     window?.sessionRewind?.startSession();
     // @ts-expect-error - Rewind is not defined
     window?.sessionRewind?.identifyUser({
-      userId: sessionStorage.getItem("email") + nonce + sessionStorage.getItem("id"),
+      userId: sessionStorage.getItem("email") + nonce + sessionStorage.getItem("id")d,
       email: sessionStorage.getItem("email"),
       id: sessionStorage.getItem("id"),
       nonce: nonce
