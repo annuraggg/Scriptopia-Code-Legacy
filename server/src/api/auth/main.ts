@@ -10,6 +10,7 @@ import UserToken from "@/Interfaces/UserToken.js";
 import requestIP from "request-ip";
 import UserType from "../../Interfaces/User.js";
 import * as OTPAuth from "otpauth";
+import crypto from "crypto";
 const client = new OAuth2Client();
 
 interface IpInfo {
