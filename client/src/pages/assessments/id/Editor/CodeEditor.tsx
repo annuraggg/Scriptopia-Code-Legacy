@@ -1,4 +1,3 @@
-import returnStarter from "@/functions/StarterGenerator";
 import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
 import {
   Select,
@@ -7,49 +6,58 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import { javascript } from "@codemirror/lang-javascript";
-import { python } from "@codemirror/lang-python";
-import { java } from "@codemirror/lang-java";
+import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
+import { python, pythonLanguage } from "@codemirror/lang-python";
+import { java, javaLanguage } from "@codemirror/lang-java";
 
 const CodeEditor = ({
-  func,
-  returnType,
-  args,
   languages,
   paste,
   setPaste,
+  autocomplete,
+  syntaxHighlighting,
+
+  code,
+  setCode,
+  selectedLang,
+  setSelectedLang,
 }: {
-  func: string;
-  returnType: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: any;
   languages: string[];
   paste: number;
   setPaste: (value: number) => void;
-}) => {
-  const starter = returnStarter("javascript", func, returnType, args);
-  const [code, setCode] = useState(starter);
-  const [selectedLang, setSelectedLang] = useState(
-    languages[0] || "javascript"
-  );
+  autocomplete: boolean;
+  syntaxHighlighting: boolean;
 
+  code: string;
+  setCode: (value: string) => void;
+  selectedLang: string;
+  setSelectedLang: (value: string) => void;
+}) => {
   const extension = (lang: string) => {
-    switch (lang) {
-      case "javascript":
-        return javascript({ jsx: true });
-      case "python":
-        return python();
-      case "java":
-        return java();
-      default:
-        return javascript({ jsx: true });
+    if (autocomplete) {
+      switch (lang) {
+        case "javascript":
+          return javascript({ jsx: true });
+        case "python":
+          return python();
+        case "java":
+          return java();
+        default:
+          return javascript({ jsx: true });
+      }
+    } else {
+      switch (lang) {
+        case "javascript":
+          return javascriptLanguage;
+        case "python":
+          return pythonLanguage;
+        case "java":
+          return javaLanguage;
+        default:
+          return javascriptLanguage;
+      }
     }
   };
-
-  useEffect(() => {
-    setCode(returnStarter(selectedLang, func, returnType, args));
-  }, [selectedLang, func, returnType, args]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const detectPaste = (event: any) => {
@@ -94,12 +102,14 @@ const CodeEditor = ({
         <ReactCodeMirror
           value={code}
           theme={oneDark}
-          extensions={[extension(selectedLang)]}
+          // @ts-expect-error - CodeMirror types are not up to date
+          extensions={syntaxHighlighting ? extension(selectedLang) : []}
           onPasteCapture={
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (event: any) => detectPaste(event)
           }
           onCopy={copyText}
+          onChange={(value) => setCode(value)}
         />
       </div>
     </div>

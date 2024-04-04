@@ -111,7 +111,7 @@ const Screening = () => {
     localStorage.setItem("timer", JSON.stringify({ minutes: screening?.duration, seconds: 0 }))
     localStorage.removeItem("SessionRewindSessionData");
     navigate(`/screenings/current`, {
-      state: { email, id, screening: screening },
+      state: { email, name, id, screening: screening },
     });
   };
 

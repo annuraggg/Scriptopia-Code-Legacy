@@ -40,51 +40,41 @@ const MyAssessments = () => {
           ) : (
             <div className="mt-5">
               {screenings.map((screening) => (
-                <div key={screening._id} className="border p-2 rounded-md mt-2">
-                  <div>{screening.name}</div>
-                  <div className="text-xs text-gray-500">{screening.desc}</div>
-                  <div>{screening.duration} mins</div>
-                  <Button
-                    onClick={() => navigate(`/screenings/${screening._id}`)}
-                    className="mt-2"
-                  >
-                    View
-                  </Button>
+                <div key={screening._id} className="border p-5 rounded-md mt-2">
+                  <h3>{screening.name}</h3>
+                  <div className=" mt-1 text-xs text-gray-500">
+                    {screening.desc}
+                  </div>
 
                   <Button
                     onClick={() =>
                       navigate(`/screenings/${screening._id}/edit`)
                     }
-                    className="mt-2"
+                    className="mt-8"
                   >
                     Edit
                   </Button>
 
                   <Button
-                    onClick={() =>
-                      navigate(`/screenings/${screening._id}/candidates`)
-                    }
-                    className="mt-2"
+                    onClick={() => {
+                      window.navigator.clipboard.writeText(
+                        `${window.location.origin}/screenings/${screening._id}`
+                      );
+
+                      toast.success("Link Copied");
+                    }}
+                    className="mt-2 ml-2"
                   >
-                    Candidates
+                    Copy Link
                   </Button>
 
                   <Button
                     onClick={() =>
                       navigate(`/screenings/${screening._id}/results`)
                     }
-                    className="mt-2"
+                    className="mt-2 ml-2"
                   >
                     Results
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      navigate(`/screenings/${screening._id}/feedback`)
-                    }
-                    className="mt-2"
-                  >
-                    Feedback
                   </Button>
                 </div>
               ))}

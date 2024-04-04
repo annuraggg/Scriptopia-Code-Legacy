@@ -95,9 +95,7 @@ router.post("/", verifyJWT, async (req, res) => {
   try {
     // @ts-ignore
     const r: any = await generateRecommendation(req.user.id);
-    const sugg = await getSuggestion(r)
-    console.log(sugg?.title);
-    return;
+    const sugg = await getSuggestion(r);
 
     const { code, language, fn, probID, timer, totalRuns } = req.body;
     const prob = await Problem.findById(probID);
@@ -166,7 +164,7 @@ router.post("/", verifyJWT, async (req, res) => {
         };
 
         Submission.create(submission);
-        res.status(200).json({ output: result });
+        res.status(200).json({ output: result, suggestion: sugg});
       }
     }
   } catch (error) {

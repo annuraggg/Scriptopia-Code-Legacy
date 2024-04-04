@@ -20,7 +20,7 @@ import { jwtDecode } from "jwt-decode";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
 import ErrB from "./ErrorBoundary";
-import Leaderboards from "./pages/assessments/leaderboards/leaderboards";
+import Leaderboards from "./pages/leaderboards/leaderboards";
 import RedirectScreening from "./pages/Redirects/Redirects";
 
 export const Routes = [

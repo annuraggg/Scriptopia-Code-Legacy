@@ -66,6 +66,10 @@ const Home = () => {
         setStreak(res.data.streak);
       })
       .catch((err) => {
+        if (err.response.status === 403) {
+          window.location.href = "/signin";
+        }
+
         toast.error("Failed to fetch data");
         console.log(err);
       })

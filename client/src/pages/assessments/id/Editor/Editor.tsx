@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import Statement from "./Statement";
 import axios from "axios";
@@ -15,6 +17,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Screening from "@/types/Screenings";
+import returnStarter from "@/functions/StarterGenerator";
 
 const Editor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,9 +41,26 @@ const Editor = () => {
   const [tabChangeOpen, setTabChangeOpen] = useState(false);
   const [pasteOpen, setPasteOpen] = useState(false);
 
+  const [screening, setScreening] = useState({} as Screening);
+
+  const [submitOpen, setSubmitOpen] = useState(false);
+
+  const [code, setCode] = useState("");
+
+  const [selectedLang, setSelectedLang] = useState(
+    languages[0] || "javascript"
+  );
+
   const [timer, setTimer] = useState(
     JSON.parse(localStorage.getItem("timer") || "{}")
   );
+  const [initialTimer] = useState(localStorage.getItem("timer") || "{}");
+
+  const [running, setRunning] = useState(false);
+  const [runs, setRuns] = useState(0);
+  const [output, setOutput] = useState<any>("" as any);
+  const [consoleOutput, setConsoleOutput] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,7 +94,8 @@ const Editor = () => {
 
   useEffect(() => {
     if (tabChange > 0) {
-      setTabChangeOpen(true);
+      // ! SET TO TRUE
+      setTabChangeOpen(false);
     }
   }, [tabChange]);
 
@@ -75,15 +107,21 @@ const Editor = () => {
 
   useEffect(() => {
     const questionID = window.history.state.usr.id;
+    setScreening(window.history.state.usr.screening);
     setLanguages(window.history.state.usr.languages);
-
-    console.log(window.history.state.usr.languages);
 
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${questionID}`)
       .then((res) => {
         console.log(res.data);
         setQuestion(res.data);
+        const starter = returnStarter(
+          "javascript",
+          res.data?.func,
+          res.data?.returnType,
+          res.data.args ? question?.args : []
+        );
+        setCode(starter);
       })
       .catch((err) => {
         console.log(err);
@@ -91,13 +129,93 @@ const Editor = () => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(selectedLang);
+    if (question) {
+      console.log("setting code");
+      setCode(
+        returnStarter(
+          selectedLang,
+          question?.func,
+          question.returnType,
+          question.args ? question?.args : []
+        )
+      );
+    }
+  }, [selectedLang]);
+
+  const submitCode = () => {
+    const saveObj = {
+      code,
+      lang: selectedLang,
+      probID: question.meta.id,
+      totalTime:
+        JSON.parse(initialTimer).minutes * 60 +
+        JSON.parse(initialTimer).seconds -
+        (timer.minutes * 60 + timer.seconds),
+      runs,
+      paste,
+      tabChange,
+      output,
+      consoleOutput,
+      error,
+    };
+
+    const oldData = localStorage.getItem("submission");
+    const data = oldData ? JSON.parse(oldData) : [];
+    data.push(saveObj);
+    localStorage.setItem("submission", JSON.stringify(data));
+
+    window.history.back();
+    toast.success("Code submitted successfully");
+  };
+
+  const runCode = () => {
+    if (!code) {
+      toast.error("Please write some code before running");
+    }
+
+    setRuns((prev) => prev + 1);
+    setRunning(true);
+
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`, {
+        code,
+        language: selectedLang,
+        cases: question.cases,
+        fn: question.func,
+        probID: question.meta.id,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setConsoleOutput(res.data.output.consoleOP);
+        setOutput(res.data.output);
+        setError(res.data.output.error);
+      })
+      .catch((err) => {
+        console.log(err);
+        err = true;
+      })
+      .finally(() => {
+        setRunning(false);
+      });
+  };
+
   return (
     <div className="flex flex-col items-center justify-center p-3 gap-3 ">
       <div className="w-full flex items-center justify-center">
-        <Button className="mr-2 bg-green-500">
-          <FaPlay className="mr-2 mt-0.5" size={12} /> Run
+        {screening?.editorOptions?.runCode && (
+          <Button
+            className="mr-2 bg-green-500"
+            onClick={runCode}
+            disabled={running}
+          >
+            <FaPlay className="mr-2 mt-0.5" size={12} /> Run
+          </Button>
+        )}
+        <Button onClick={() => setSubmitOpen(true)} disabled={running}>
+          Submit
         </Button>
-        <Button>Submit</Button>
         <p className=" justify-self-start ml-14">
           Time Left: {timer.minutes} mins {timer.seconds} secs
         </p>
@@ -107,17 +225,46 @@ const Editor = () => {
           statement={question?.desc ? question?.desc : ({} as Delta)}
         />
         <div>
-          <Split direction="vertical" className="split h-[89vh]">
+          {screening?.editorOptions?.runCode ? (
+            <Split direction="vertical" className="split h-[89vh]">
+              <CodeEditor
+                languages={languages}
+                paste={paste}
+                setPaste={setPaste}
+                syntaxHighlighting={
+                  screening?.editorOptions?.syntaxHighlighting
+                }
+                autocomplete={screening?.editorOptions?.autoComplete}
+                code={code}
+                setCode={setCode}
+                selectedLang={selectedLang}
+                setSelectedLang={setSelectedLang}
+              />
+              <Terminal
+                cases={question?.cases}
+                consoleOutput={consoleOutput}
+                running={running}
+                runs={runs}
+                vars={question?.args}
+                output={output.output}
+                error={error}
+                failedCase={output.failedCase}
+                failedCaseNumber={output.failedCaseNumber}
+              />
+            </Split>
+          ) : (
             <CodeEditor
-              func={question?.func ? question?.func : ""}
-              returnType={question?.returnType ? question?.returnType : ""}
-              args={question?.args ? question?.args : []}
               languages={languages}
               paste={paste}
               setPaste={setPaste}
+              syntaxHighlighting={screening?.editorOptions?.syntaxHighlighting}
+              autocomplete={screening?.editorOptions?.autoComplete}
+              code={code}
+              setCode={setCode}
+              selectedLang={selectedLang}
+              setSelectedLang={setSelectedLang}
             />
-            <Terminal />
-          </Split>
+          )}
         </div>
       </div>
 
@@ -145,6 +292,22 @@ const Editor = () => {
           </DialogDescription>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={submitOpen} onOpenChange={setSubmitOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your code will be submitted and you will not be able to make any
+              changes.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={submitCode}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

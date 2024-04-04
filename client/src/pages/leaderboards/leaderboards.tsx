@@ -6,9 +6,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Navbar } from "../../../components/ui/navbar"
+import { Navbar } from "../../components/ui/navbar"
 import Table from "./table"
-import Loader from "../../../components/Loader"
+import Loader from "../../components/Loader"
 
 
 

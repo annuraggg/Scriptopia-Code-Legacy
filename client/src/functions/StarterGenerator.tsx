@@ -8,14 +8,14 @@ const returnStarter = (
     case "javascript":
       return `/*
     * @param {${starterVarArgs
-      .map((arg) => `${arg.type} ${arg.key}`)
-      .join(", ")}}
+      ?.map((arg) => `${arg?.type} ${arg?.key}`)
+      ?.join(", ")}}
     * @returns {${starterReturnType}}
     */
         
     function ${starterFunction}(${
-        starterVarArgs.length > 0
-          ? starterVarArgs.map((arg) => `${arg.key}`).join(", ")
+        starterVarArgs?.length > 0
+          ? starterVarArgs?.map((arg) => `${arg?.key}`)?.join(", ")
           : ""
       }) {
       // Write your code here
