@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/ui/navbar";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneElement, useEffect, useState } from "react";
 import DetailsComponent from "./DetailsComponent";
 import SelectLanguage from "./SelectLanguage";

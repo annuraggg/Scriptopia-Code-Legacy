@@ -22,11 +22,12 @@ const SelectLanguage = ({
     if (requestNext) {
       goToNext();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestNext]);
 
   useEffect(() => {
     setSelectedLanguages(data);
-  }, []);
+  }, [data]);
 
   const goToNext = (): boolean => {
     if (verifyFields()) {

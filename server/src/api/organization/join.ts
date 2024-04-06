@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import verifyJWT from "@/middlewares/verifyJWT";
 import express from "express";
 const router = express.Router();
@@ -24,7 +25,8 @@ router.post("/", verifyJWT, async (req, res) => {
       success: true,
       message: "Request sent to join organization",
     });
-  } catch {
+  } catch (error) {
+    logger.error({ code: "ORG_JOI_001", message: error });
     res.status(500).json({
       success: false,
       message: "Failed to join organization",

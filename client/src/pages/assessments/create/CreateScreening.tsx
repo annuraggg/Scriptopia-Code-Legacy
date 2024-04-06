@@ -7,10 +7,9 @@ import Candidates from "./Candidates";
 import Instructions from "./Instructions";
 import Security from "./Security";
 import Feedback from "./Feedback";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import Problem from "@/types/Problem";
 import { toast } from "sonner";
 import axios from "axios";
 import {
@@ -19,7 +18,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { MdContentCopy } from "react-icons/md";
 import { Button } from "@/components/ui/button";

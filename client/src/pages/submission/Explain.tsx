@@ -16,7 +16,7 @@ const Explain = ({
   err,
 }: {
   open: boolean;
-  setOpen: Function;
+  setOpen: (e: boolean) => void;
   code: string;
   responseStr: string;
   loading: boolean;

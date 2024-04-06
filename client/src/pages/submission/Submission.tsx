@@ -9,6 +9,7 @@ import Split from "react-split";
 import Descriptor from "./Descriptor";
 import Explain from "./Explain";
 import { toast } from "sonner";
+import Problem from "@/types/Problem";
 
 interface Submission {
   _id: string;
@@ -17,13 +18,13 @@ interface Submission {
   code: string;
   language: string;
   status: string;
-  output: Record<string, any>;
+  output: Record<string, string>;
 }
 
 const Submission = () => {
   const [loading, setLoading] = useState(true);
   const [submission, setSubmission] = useState<Submission>({} as Submission);
-  const [problem, setProblem] = useState<any>({});
+  const [problem, setProblem] = useState<Problem>({} as Problem);
   const [meta, setMeta] = useState<ProblemMeta>({} as ProblemMeta);
 
   const [openSheet, setOpenValue] = useState(false);
@@ -81,7 +82,9 @@ const Submission = () => {
       <Navbar />
       <div className="flex px-10 py-5 items-start justify-center gap-5 w-full">
         <div className="pl-5 bg-secondary rounded-lg w-[48%]">
-          <ProblemStatement statement={problem} meta={meta} />
+
+          // ! FIX THIS
+          <ProblemStatement statement={problem.description} meta={meta} />
         </div>
         <div className="w-[48%]">
           <Split className="w-[100%] h-[85vh] split" direction="vertical">

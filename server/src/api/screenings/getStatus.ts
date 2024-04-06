@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import verifyJWT from "@/middlewares/verifyJWT";
 import User from "@/schemas/UserSchema";
 import express from "express";
@@ -18,7 +19,7 @@ router.post("/", verifyJWT, async (req, res) => {
 
     return res.status(200).json(dataObj);
   } catch (err) {
-    console.log(err);
+    logger.error({ code: "SCR_GETSTAT_001", message: err });
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });

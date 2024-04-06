@@ -37,14 +37,16 @@ const AddCase = ({
 }: {
   respondNext: (
     allowed: boolean,
-    data: {
-      name: string;
-      difficulty: string;
-      score: number;
-      input: string[];
-      output: string;
-      isSample: boolean;
-    }[]
+    data:
+      | {
+          name: string;
+          difficulty: string;
+          score: number;
+          input: string[];
+          output: string;
+          isSample: boolean;
+        }[]
+      | null
   ) => void;
   args: { key: string; type: string }[];
   data: {
@@ -85,13 +87,13 @@ const AddCase = ({
 
   useEffect(() => {
     setTestCases(data);
-  }, []);
+  }, [data]);
 
   const submitProblem = () => {
     if (verifyFields()) {
       respondNext(true, testCases);
     } else {
-      respondNext(false, null as any);
+      respondNext(false, null);
     }
   };
 
@@ -130,7 +132,7 @@ const AddCase = ({
     seperatedCases.forEach((element) => {
       element = "[" + element + "]";
       let parsedArr = JSON.parse(element);
-      parsedArr = parsedArr.map((item: any) => {
+      parsedArr = parsedArr.map((item: string | number | boolean | object) => {
         if (typeof item === "string") {
           return item;
         } else {
@@ -147,15 +149,9 @@ const AddCase = ({
   const parseOutput = (outputString: string) => {
     let finalStr = JSON.parse(outputString);
 
-    if (
-      finalStr.some(
-        // @ts-ignore
-        (item: any) => typeof item === "object" || typeof item === "array"
-      )
-    ) {
-      finalStr = finalStr.map((item: any) => {
-        // @ts-expect-error
-        if (typeof item === "object" || typeof item === "array") {
+    if (finalStr.some((item: unknown) => typeof item === "object")) {
+      finalStr = finalStr.map((item: unknown) => {
+        if (typeof item === "object") {
           return JSON.stringify(item);
         } else {
           return item;
@@ -211,7 +207,10 @@ const AddCase = ({
     setOpen(true);
   };
 
-  const setCaseArg = (e: any, index: number) => {
+  const setCaseArg = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    index: number
+  ) => {
     const value = e.target.value;
     const current = [...input];
     current[index] = value;

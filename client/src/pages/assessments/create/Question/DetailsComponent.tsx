@@ -21,7 +21,7 @@ const DetailsComponent = ({
   data,
 }: {
   requestNext: boolean;
-  respondNext: (allowed: boolean, data: any) => void;
+  respondNext: (allowed: boolean, data: unknown) => void;
   data: {
     name: string;
     time: string;
@@ -50,6 +50,7 @@ const DetailsComponent = ({
 
   useEffect(() => {
     if (requestNext) goToNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestNext]);
 
   const goToNext = (): boolean => {
@@ -80,17 +81,17 @@ const DetailsComponent = ({
     return true;
   };
 
-  const toolbarOptions: ToolbarConfig = [
-    [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
-    ["bold", "italic", "underline", "strike"], // toggled buttons
-    ["code-block"],
-    ["link", "image"],
-
-    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-    ["clean"], // remove formatting button
-  ];
-
   useEffect(() => {
+    const toolbarOptions: ToolbarConfig = [
+      [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
+      ["bold", "italic", "underline", "strike"], // toggled buttons
+      ["code-block"],
+      ["link", "image"],
+
+      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+      ["clean"], // remove formatting button
+    ];
+
     new Quill("#editor", {
       theme: "snow",
       placeholder: "Write your problem description here...",

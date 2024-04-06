@@ -5,6 +5,8 @@ import Meta from "@/types/ProblemMeta";
 import Quill from "quill";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Delta } from "quill/core";
+import UserToken from "@/types/UserToken";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",
@@ -15,11 +17,11 @@ const ProblemStatement = ({
   statement,
   meta,
 }: {
-  statement: any;
+  statement: Delta;
   meta: Meta;
 }) => {
   const navigate = useNavigate();
-  const user = useSelector((state: any) => state.user);
+  const user = useSelector((state: { user: UserToken }) => state.user);
 
   useEffect(() => {
     const q = new Quill("#statement", {
@@ -47,7 +49,12 @@ const ProblemStatement = ({
         </p>
         <div className="flex items-center justify-between gap-5">
           {meta.authorid === user?.id && (
-            <a className=" cursor-pointer hover:text-primary" onClick={() => navigate(`/problems/${meta.id}/edit`)}>Edit</a>
+            <a
+              className=" cursor-pointer hover:text-primary"
+              onClick={() => navigate(`/problems/${meta.id}/edit`)}
+            >
+              Edit
+            </a>
           )}
           <Badge
             className={`ml-5 ${

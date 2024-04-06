@@ -12,10 +12,10 @@ const CodeEditor = ({
   submitCode,
   explainCode,
 }: {
-  runCode: Function;
+  runCode: (code: string, language: string) => Promise<unknown>;
   code: string;
-  submitCode: Function;
-  explainCode: Function;
+  submitCode: (code: string, language: string, time: number) => Promise<unknown>;
+  explainCode: (code: string) => void;
 }) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);

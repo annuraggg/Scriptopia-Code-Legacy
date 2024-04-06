@@ -5,7 +5,7 @@ type Meta = {
   votes: number;
   tags: string[];
   author: string;
-  authorid: number;
+  authorid: string;
 };
 
 export default Meta;

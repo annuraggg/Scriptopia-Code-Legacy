@@ -14,16 +14,14 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import Problem from "@/types/Problem";
 import { Badge } from "@/components/ui/badge";
-import { Delta } from "quill/core";
+import { Op } from "quill/core";
 import axios from "axios";
 import CreateProblem from "./Question/CreateProblem";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 const Questions = ({
@@ -78,7 +76,7 @@ const Questions = ({
                   <h3>{question.title}</h3>
                   <p className="w-[95%] line-clamp-2">
                     {question.description?.ops
-                      ?.map((op: Delta) => op.insert)
+                      ?.map((op: Op) => op.insert)
                       .join("")}
                   </p>
                 </div>
@@ -189,7 +187,7 @@ const Questions = ({
                       </div>
                       <p className=" line-clamp-2 text-sm mt-2">
                         {question?.description?.ops
-                          ?.map((op: Delta) => op.insert)
+                          ?.map((op: Op) => op.insert)
                           .join("")}
                       </p>
                       <div className="flex gap-2 items-center my-3">
@@ -243,8 +241,11 @@ const Questions = ({
           <div className="">
             <CreateProblem
               addQuest={(q: Problem) => {
-                setSelectedQuestions((prev) => {
-                  const index = prev.findIndex((quest) => quest._id === q._id);
+                // @ts-expect-error - fix this
+                setSelectedQuestions((prev: Problem[]) => {
+                  const index = prev.findIndex(
+                    (quest: Problem) => quest._id === q._id
+                  );
                   if (index !== -1) {
                     prev[index] = q;
                     return prev;

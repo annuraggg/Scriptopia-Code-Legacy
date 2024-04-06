@@ -5,7 +5,6 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
-import User from "./types/User";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import axios from "axios";
 import { Routes as ProtectedRoutes } from "./ProtectedRoutes";
@@ -14,6 +13,7 @@ import { Button } from "./components/ui/button";
 import Screening from "./pages/assessments/id/Screening";
 import Main from "./pages/assessments/id/Main";
 import Editor from "./pages/assessments/id/Editor/Editor";
+import UserToken from "./types/UserToken";
 
 const router = createBrowserRouter([
   {
@@ -60,12 +60,12 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      const decodedToken: User = jwtDecode(token);
+      const decodedToken: UserToken = jwtDecode(token);
       dispatch(setUser(decodedToken));
     } else {
       dispatch(clearUser());
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

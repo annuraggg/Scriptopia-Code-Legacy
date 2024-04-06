@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Input } from "@/components/ui/input";
 import Quill from "quill";
 import "quill/dist/quill.core.css";
@@ -21,7 +22,7 @@ const DetailsComponent = ({
   data
 }: {
   requestNext: boolean;
-  respondNext: (allowed: boolean, data: any) => void;
+  respondNext: (allowed: boolean, data: unknown) => void;
   data: {
     name: string;
     time: string;

@@ -1,5 +1,3 @@
-import { Document, Schema, Types } from 'mongoose';
-
 interface Tutorial {
   title: string;
   description?: string;
@@ -9,7 +7,7 @@ interface Tutorial {
 }
 
 interface Problem {
-  problemId: Types.ObjectId;
+  problemId: string;
   title: string;
   description?: string;
   difficulty?: string;
@@ -22,7 +20,7 @@ interface Question {
 }
 
 interface Quiz {
-  quizId: Types.ObjectId;
+  quizId: string;
   title: string;
   questions: Question[];
 }
@@ -30,7 +28,7 @@ interface Quiz {
 interface Module {
   moduleName: string;
   moduleDesc?: string;
-  prerequisites?: Types.ObjectId[];
+  prerequisites?: string;
   tutorials?: Tutorial[];
   problems?: Problem[];
   quizzes?: Quiz[];

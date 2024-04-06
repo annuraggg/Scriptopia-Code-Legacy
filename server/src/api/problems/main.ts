@@ -45,7 +45,7 @@ router.post("/:probID", async (req, res) => {
       res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.returnType});
     }
   } catch (err) {
-    logger.error(err);
+    logger.error({ code: "HOM_MAI_001", message: error });
     res.status(500).json({ error: "Something went wrong!" });
   }
 });
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
     const problems = await Problem.find({}).exec();
     res.status(200).json(problems);
   } catch (err) {
-    logger.error(err);
+    logger.error({ code: "HOM_MAI_002", message: err });
     res.status(500).json({ error: "Something went wrong!" });
   }
 });

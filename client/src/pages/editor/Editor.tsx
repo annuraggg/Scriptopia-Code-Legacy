@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import Explain from "./Explain";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Submissions from "./Submissions";
+import PageLoading from "@/components/PageLoading";
+import { Delta } from "quill/core";
 
 interface Submission {
   _id: string;
@@ -22,18 +24,34 @@ interface Submission {
   code: string;
   language: string;
   status: string;
-  output: Record<string, any>; // Assuming the output can be any object type
+  output: Record<string, string>;
+}
+
+interface OutputType {
+  output: string[];
+  runtime: number;
+  memoryUsage: number;
+  internalStatus: string;
+  failedCase: Case;
+  failedCaseNumber: number;
+  error: string;
 }
 
 function App() {
-  const [statement, setStatement] = useState<any>({});
+  const [statement, setStatement] = useState<Delta>({} as Delta);
   const [meta, setMeta] = useState<Meta>({} as Meta);
   const [code, setCode] = useState<string>("");
   const [cases, setCases] = useState<Case[]>([]);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
-  const [vars, setVars] = useState<any>({});
+  const [vars, setVars] = useState<
+    {
+      key: string;
+      type: string;
+    }[]
+  >([]);
   const [fn, setFn] = useState<string>("");
-  const [output, setOutput] = useState<any>("" as any);
+  const [output, setOutput] = useState<OutputType>({} as OutputType);
+  const [loading, setLoading] = useState(true);
 
   const [running, setRunning] = useState(false);
   const [runs, setRuns] = useState<number>(0);
@@ -84,13 +102,16 @@ function App() {
       .catch((err) => {
         console.log(err);
         toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   const runCode = async (code: string, language: string) => {
     setRunning(true);
     setTotalRuns((prev) => prev + 1);
-    let err = false;
+    let error = false;
     axios
       .post(
         `${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`,
@@ -111,14 +132,14 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
-        err = true;
+        error = true;
       })
       .finally(() => {
         setRunning(false);
       });
 
     return new Promise((_resolve, reject) => {
-      if (err) {
+      if (error) {
         reject("Something went wrong!");
       } else {
         _resolve("");
@@ -128,7 +149,7 @@ function App() {
 
   const submitCode = async (code: string, language: string, timer: number) => {
     setRunning(true);
-    let err = false;
+    let error = false;
     await axios
       .post(
         `${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/submit`,
@@ -163,7 +184,7 @@ function App() {
       .catch((err) => {
         console.log(err);
         toast.error("Something went wrong!");
-        err = true;
+        error = true;
       })
       .finally(() => {
         setRunning(false);
@@ -171,7 +192,7 @@ function App() {
       });
 
     return new Promise((_resolve, reject) => {
-      if (err) {
+      if (error) {
         reject("Something went wrong!");
       } else {
         _resolve("");
@@ -227,6 +248,9 @@ function App() {
     }
   }, [output, runs, running, cases]);
 
+  if (loading) {
+    return <PageLoading />;
+  }
   return (
     <div vaul-drawer-wrapper="">
       <div

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -87,7 +88,7 @@ const AddCase = ({
 
   useEffect(() => {
     setTestCases(data);
-  }, []);
+  }, [data]);
 
   const submitProblem = () => {
     if (verifyFields()) {
@@ -151,13 +152,13 @@ const AddCase = ({
 
     if (
       finalStr.some(
-        // @ts-ignore
-        (item: any) => typeof item === "object" || typeof item === "array"
+        // eslint-disable-next-line valid-typeof
+        (item: any) => typeof item === "object"
       )
     ) {
       finalStr = finalStr.map((item: any) => {
-        // @ts-expect-error
-        if (typeof item === "object" || typeof item === "array") {
+        // eslint-disable-next-line valid-typeof
+        if (typeof item === "object") {
           return JSON.stringify(item);
         } else {
           return item;

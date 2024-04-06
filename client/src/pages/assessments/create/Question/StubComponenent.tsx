@@ -38,7 +38,7 @@ const StubComponenent = ({
         key: string;
         type: "int" | "string" | "float" | "double" | "char" | "boolean";
       }[];
-    }
+    } | null
   ) => void;
   data: {
     functionName: string;
@@ -54,6 +54,7 @@ const StubComponenent = ({
     if (requestNext) {
       goToNext();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestNext]);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const StubComponenent = ({
       respondNext(true, data);
       return true;
     }
-    respondNext(false, null as any);
+    respondNext(false, null);
     return false;
   };
 
@@ -131,7 +132,7 @@ const StubComponenent = ({
           <div>
             <p className="mb-3">Function Return Type</p>
             <Select
-              onValueChange={(value) => setReturnType(value as any)}
+              onValueChange={(value) => setReturnType(value as "int" | "string" | "float" | "double" | "char" | "boolean")}
               value={returnType}
             >
               <SelectTrigger>
@@ -178,7 +179,7 @@ const StubComponenent = ({
                 onValueChange={(value) =>
                   setArgs((prev) =>
                     prev.map((arg, i) =>
-                      i === index ? { ...arg, type: value as any } : arg
+                      i === index ? { ...arg, type: value as "int" | "string" | "float" | "double" | "char" | "boolean" } : arg
                     )
                   )
                 }

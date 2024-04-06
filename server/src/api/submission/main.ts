@@ -25,8 +25,7 @@ router.post("/", verifyJWT, async (req, res) => {
       res.status(200).json({ desc, meta, submission });
     }
   } catch (err) {
-    console.log(err);
-    logger.error(err);
+    logger.error({ code: "SUB_MAI_001", message: err });
   }
 });
 

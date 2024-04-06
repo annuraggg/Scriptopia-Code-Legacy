@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import verifyJWT from "@/middlewares/verifyJWT";
 import Organization from "@/schemas/OrganizationSchema";
 import User from "@/schemas/UserSchema";
@@ -48,11 +49,11 @@ router.post("/", verifyJWT, async (req, res) => {
       organization: org,
     });
   } catch (err) {
+    logger.error({ code: "ORG_CREATE_001", message: err });
     res.status(500).json({
       success: false,
       message: "Failed to create organization",
     });
-    console.log(err);
   }
 });
 

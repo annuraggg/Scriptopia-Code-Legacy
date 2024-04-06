@@ -6,8 +6,6 @@ const router = express.Router();
 router.post("/", verifyJWT, async (req, res) => {
     // @ts-ignore
     const user = await User.findById(req?.user?.id);
-
-    console.log(user);
     return res.status(200).json({ user });
 })
 

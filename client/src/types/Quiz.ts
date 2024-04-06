@@ -1,5 +1,3 @@
-import { Document, Types } from "mongoose";
-
 interface Question {
   question: string;
   options?: string[];
@@ -7,7 +5,7 @@ interface Question {
 }
 
 interface Quiz extends Document {
-  _id: Types.ObjectId;
+  _id:  string;
   lang: string;
   questions: Question[];
 }

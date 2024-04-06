@@ -64,7 +64,7 @@ const selectLangAndRun = async (
         };
     }
   } catch (error) {
-    logger.error({ code: "COMPILER-SUBMIT-SELECTLANGANDRUN", message: error });
+    logger.error({ code: "SCR-END-001", message: error });
     return {
       timeStamp: "",
       status: "FAILED",
@@ -84,7 +84,6 @@ const selectLangAndRun = async (
 
 router.post("/", async (req, res) => {
   const { email, name, sessionUrl, screeningID, submission } = req.body;
-  console.log(submission);
   const submissionResults = [];
 
   for (const sub of submission) {
@@ -131,7 +130,8 @@ router.post("/", async (req, res) => {
     .then(() => {
       res.status(200).send("Screening ended successfully");
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error({ code: "SCR_END_002", message: err });
       res.status(500).send("Error ending screening");
     });
 });

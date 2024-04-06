@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../theme-provider";
-import { useSelector } from "react-redux";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Button } from "./button";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
@@ -18,7 +17,6 @@ import {
 export const Navbar = () => {
   const navigate = useNavigate();
   const { setTheme, theme } = useTheme();
-  const userSelector = useSelector((state) => state?.user);
 
   const changeTheme = () => {
     if (theme === "dark") {

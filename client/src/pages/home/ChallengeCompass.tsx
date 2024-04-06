@@ -55,7 +55,7 @@ const ChallengeCompass = ({
   setCurrentPage: (value: number) => void;
   setPrevPage: (value: number) => void;
   loading: boolean;
-  filter: Function;
+  filter: (difficulty: string, search: string) => void;
 }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");

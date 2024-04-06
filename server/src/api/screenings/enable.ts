@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import verifyJWT from "@/middlewares/verifyJWT";
 import User from "@/schemas/UserSchema";
 import express from "express";
@@ -36,7 +37,7 @@ router.post("/", verifyJWT, async (req, res) => {
 
     res.json({ message: "Job Preferences updated successfully" });
   } catch (err) {
-    console.log(err);
+    logger.error({ code: "SCR_ENA_001", message: err });
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

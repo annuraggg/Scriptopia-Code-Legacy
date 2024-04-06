@@ -18,7 +18,10 @@ const Descriptor = ({
   consoleOutput: string[];
   running: boolean;
   runs: number;
-  vars: any;
+  vars: {
+    key: string;
+    type: string;
+  }[];
   output: string[];
   error: string;
   failedCaseNumber: number;
@@ -31,7 +34,7 @@ const Descriptor = ({
       setCurrTab("tests");
       console.log(cases);
     }
-  }, [runs]);
+  }, [cases, runs]);
 
   return (
     <div className={`rounded bg-secondary h-[45vh] overflow-y-auto relative`}>

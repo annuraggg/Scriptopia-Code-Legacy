@@ -28,6 +28,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import TagsInput from "react-tagsinput";
+import Organization from "@/types/Organization";
 
 interface City {
   id: number;
@@ -41,14 +42,13 @@ const Screenings = () => {
   const [loading, setLoading] = useState(true);
 
   const [enabledScreening, setEnabledScreening] = useState(false);
-  const [organization, setOrganization] = useState({} as any);
+  const [organization, setOrganization] = useState({} as Organization);
   const [openModal, setOpenModal] = useState(false);
   const [cities, setCities] = useState<City[]>([] as City[]);
 
   const [experience, setExperience] = useState(0);
   const [selectedCities, setSelectedCities] = useState<City[]>([] as City[]);
   const [selectedRoles, setSelectedRoles] = useState([]);
-  const [_currentCity, setCurrentCity] = useState<City>({} as City);
 
   const [citiesOpen, setCitiesOpen] = useState(false);
 
@@ -80,7 +80,7 @@ const Screenings = () => {
       });
   }, []);
 
-  const searchCities = (e: any) => {
+  const searchCities = (e: React.ChangeEvent<HTMLInputElement>) => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/api/cities`, {
         search: e.target.value,
@@ -235,7 +235,9 @@ const Screenings = () => {
                       >
                         <CommandInput
                           placeholder="Enter a City Name..."
-                          onChangeCapture={(e) => searchCities(e)}
+                          onChangeCapture={(
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => searchCities(e)}
                         />
                         <CommandList>
                           <CommandEmpty>No results found.</CommandEmpty>
@@ -245,7 +247,6 @@ const Screenings = () => {
                                 key={city.id}
                                 onSelect={() => {
                                   setSelectedCities([...selectedCities, city]);
-                                  setCurrentCity(city);
                                   setCitiesOpen(false);
                                 }}
                               >
@@ -318,7 +319,10 @@ const Screenings = () => {
                         screenings.
                         <br />
                         <br />
-                        <a href="/organization" className="text-primary cursor-pointer">
+                        <a
+                          href="/organization"
+                          className="text-primary cursor-pointer"
+                        >
                           Click here to create or join an organization
                         </a>
                       </AlertDescription>

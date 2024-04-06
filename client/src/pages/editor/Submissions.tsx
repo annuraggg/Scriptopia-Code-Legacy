@@ -7,7 +7,7 @@ interface Submission {
   code: string;
   language: string;
   status: string;
-  output: Record<string, any>; // Assuming the output can be any object type
+  output: Record<string, string>; 
 }
 
 const Submissions = ({ submissions }: { submissions: Submission[] }) => {

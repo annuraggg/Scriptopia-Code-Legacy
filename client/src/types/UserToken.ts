@@ -6,6 +6,8 @@ interface UserToken {
   email: string;
   accountType: string;
   sessionID: string;
+  iat: number;
+  exp: number
 }
 
 export default UserToken;

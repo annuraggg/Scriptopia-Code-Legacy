@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import Loader from "../../components/Loader"
 
 
 
-const leaderboard = () => {
+const Leaderboards = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -70,4 +70,4 @@ const leaderboard = () => {
   )
 }
 
-export default leaderboard
+export default Leaderboards

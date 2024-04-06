@@ -1,17 +1,14 @@
-import { Document, Schema, Types } from "mongoose";
-
 interface Organization extends Document {
   name: string;
   description: string;
   website: string;
-  screeners: Types.ObjectId[];
+  screeners: string;
   ratings: Record<string, number>;
-  admins: Types.ObjectId[];
+  admins: string;
   code: string;
   email: string;
   phone: string;
-  requesters: Types.ObjectId[];
+  requesters: string;
 }
 
 export default Organization;
-

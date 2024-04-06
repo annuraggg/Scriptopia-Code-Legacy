@@ -1,14 +1,12 @@
-import { Document, Types } from "mongoose";
-
 interface AchievementReceivables {
-  achievementId: Types.ObjectId;
+  achievementId: string;
   name: string;
   description?: string;
   receivedOn?: Date;
 }
 
 interface SolvedProblem {
-  problemId: Types.ObjectId;
+  problemId: string;
   title: string;
   score?: number;
   internalScore?: number;
@@ -19,13 +17,13 @@ interface LearningPathModule {
   moduleDescription?: string;
   tutorials: string[];
   problems: {
-    problemId: Types.ObjectId;
+    problemId: string;
     title: string;
     solved: boolean;
     solvedOn?: Date;
     score?: number;
   }[];
-  quizzes: Types.ObjectId[];
+  quizzes: string[];
 }
 
 interface LoginHistory {
@@ -44,7 +42,7 @@ interface tfa {
   createdAt: Date;
   recoveryCodes: [
     {
-      code: Number;
+      code: number;
       used: boolean;
     }
   ];
@@ -81,7 +79,7 @@ interface User extends Document {
   learningPath: LearningPathModule[];
   tagsSolved: string[];
   loginHistory: LoginHistory[];
-  streak: string[]
+  streak: string[];
 }
 
 export default User;

@@ -1,22 +1,20 @@
-import { Types } from "mongoose";
-
 interface Reply {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
+  _id: string;
+  userId: string;
   content: string;
   timestamp?: Date;
 }
 
 interface Message {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
+  _id: string;
+  userId: string;
   content: string;
   timestamp?: Date;
   replies: Reply[];
 }
 
 interface Forum {
-  postId: Types.ObjectId;
+  postId: string;
   messages: Message[];
 }
 

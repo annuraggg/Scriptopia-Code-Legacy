@@ -18,7 +18,10 @@ const Descriptor = ({
   consoleOutput: string[];
   running: boolean;
   runs: number;
-  vars: any;
+  vars: {
+    key: string;
+    type: string;
+  }[];
   output: string[];
   error: string;
   failedCaseNumber: number;
@@ -29,7 +32,6 @@ const Descriptor = ({
   useEffect(() => {
     if (runs > 0) {
       setCurrTab("tests");
-      console.log(cases);
     }
   }, [runs]);
 

@@ -84,8 +84,6 @@ router.post("/:probid/save", async (req, res) => {
       return res.status(404).json({ message: "Problem Not Found" });
     }
 
-    console.log(testCases)
-    
     problem.title = name;
     problem.recommendedTime = time;
     problem.description = description;
@@ -101,7 +99,7 @@ router.post("/:probid/save", async (req, res) => {
 
     res.status(201).json({ message: "Problem Updated Successfully", id: problem._id});
   } catch (err) {
-    console.log(err);
+    logger.error({ code: "PRO_EDI_00", message: err });
     res.status(500).json({ message: "Error Creating Problem" });
   }
 });

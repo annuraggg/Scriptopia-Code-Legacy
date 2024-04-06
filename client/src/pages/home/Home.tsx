@@ -40,7 +40,7 @@ const Home = () => {
         exclude: excludedIDs,
       })
       .then((res) => {
-        let prob = problems;
+        const prob = problems;
         prob[currentPage - 1] = res.data.problems;
         setProblems(prob);
         setExcludedIDs(res.data.exclude);
@@ -52,13 +52,13 @@ const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage]);
+  }, [currentPage, excludedIDs, prevPage, problems]);
 
   useEffect(() => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home`)
       .then((res) => {
-        let prob = problems;
+        const prob = problems;
         prob[currentPage - 1] = res.data.problems;
         setProblems(prob);
         setPages(res.data.pages);
@@ -76,7 +76,7 @@ const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [currentPage, problems]);
 
   useEffect(() => {
     const newAcc = searchParams.get("new");
@@ -98,7 +98,7 @@ const Home = () => {
         exclude: excludedIDs,
       })
       .then((res) => {
-        let prob = problems;
+        const prob = problems;
         prob[currentPage - 1] = res.data.problems;
         setProblems(prob);
         setPages(res.data.pages);

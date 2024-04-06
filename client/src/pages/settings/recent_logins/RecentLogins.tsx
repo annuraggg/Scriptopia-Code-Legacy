@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { IoMdArrowBack } from "react-icons/io";
-import Loader from "../../../components/Loader"
-
-
+import Loader from "../../../components/Loader";
+import UserToken from "@/types/UserToken";
 
 interface location {
   location: string;
@@ -19,7 +18,7 @@ interface location {
 
 const RecentLogins = () => {
   const [logins, setLogins] = useState<location[]>([]);
-  const user = useSelector((state: any) => state.user);
+  const user = useSelector((state: { user: UserToken }) => state.user);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,52 +50,57 @@ const RecentLogins = () => {
 
   return (
     <>
-      {
-        loading ? <Loader />
-          :
-          <>
-            <Navbar />
-            <IoMdArrowBack className="text-2xl mt-5 cursor-pointer ml-10" onClick={() => history.back()} />
-            <div className="container mx-auto mt-10 flex justify-center flex-col items-center">
-              <h1 className="text-2xl font-bold">Recent Logins</h1>
-              <div>
-                <p className="mt-5 text-center mb-5">
-                  If you suspect any unauthorized activity,{" "}
-                  <a
-                    href="/accounts/password"
-                    className="underline hover:text-primary"
-                  >
-                    change your password
-                  </a>
-                </p>
-              </div>
-              {logins.map((login) => (
-                <div
-                  key={login._id}
-                  className="flex justify-between items-center w-[50%] border my-2 py-2 px-5 rounded"
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Navbar />
+          <IoMdArrowBack
+            className="text-2xl mt-5 cursor-pointer ml-10"
+            onClick={() => history.back()}
+          />
+          <div className="container mx-auto mt-10 flex justify-center flex-col items-center">
+            <h1 className="text-2xl font-bold">Recent Logins</h1>
+            <div>
+              <p className="mt-5 text-center mb-5">
+                If you suspect any unauthorized activity,{" "}
+                <a
+                  href="/accounts/password"
+                  className="underline hover:text-primary"
                 >
-                  <div>
-                    <h5>
-                      {login.location}
-                      {user.sessionID === login.sessionID ? (
-                        <span className="text-green-500 ml-2">(This Device)</span>
-                      ) : (
-                        ""
-                      )}
-                    </h5>
-                    <p className="text-xs mt-1">{convertDateToLocale(login.date)}</p>
-                    <p className="text-xs mt-4">IP: {login.ip}</p>
-                  </div>
-                  <div>
-                    <a href="" className="text-red-500">
-                      Logout
-                    </a>
-                  </div>
-                </div>
-              ))}
+                  change your password
+                </a>
+              </p>
             </div>
-          </>
-      }
+            {logins.map((login) => (
+              <div
+                key={login._id}
+                className="flex justify-between items-center w-[50%] border my-2 py-2 px-5 rounded"
+              >
+                <div>
+                  <h5>
+                    {login.location}
+                    {user.sessionID === login.sessionID ? (
+                      <span className="text-green-500 ml-2">(This Device)</span>
+                    ) : (
+                      ""
+                    )}
+                  </h5>
+                  <p className="text-xs mt-1">
+                    {convertDateToLocale(login.date)}
+                  </p>
+                  <p className="text-xs mt-4">IP: {login.ip}</p>
+                </div>
+                <div>
+                  <a href="" className="text-red-500">
+                    Logout
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 };

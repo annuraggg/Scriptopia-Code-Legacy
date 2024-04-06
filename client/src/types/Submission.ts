@@ -1,12 +1,10 @@
-import { Document, Schema, Types } from 'mongoose';
-
 interface Submission extends Document {
-  problemID: Types.ObjectId;
-  userID: Types.ObjectId;
+  problemID: string;
+  userID: string;
   code: string;
   language: string;
   status: string;
-  output: Record<string, any>; // Assuming the output can be any object type
+  output: Record<string, string>; // Assuming the output can be any object type
 }
 
 export default Submission;

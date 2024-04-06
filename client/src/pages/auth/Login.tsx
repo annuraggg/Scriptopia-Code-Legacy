@@ -147,8 +147,9 @@ const Login = () => {
     setIsTfa(!isTfa);
   };
 
-  const listenEnter = (e: any) => {
-    setPassword(e.target.value);;
+  const listenEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement; 
+    setPassword(target.value);
     if (e.key === "Enter") {
       handleLogin();
     }

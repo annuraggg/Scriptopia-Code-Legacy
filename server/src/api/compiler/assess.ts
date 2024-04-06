@@ -2,7 +2,6 @@ import UserToken from "@/Interfaces/UserToken";
 import Problem from "@/schemas/ProblemSchema";
 import Submission from "@/schemas/SubmissionSchema";
 import processedData from "@/schemas/processedData";
-import { title } from "process";
 
 const generateAssessment = async (
   code: string,
@@ -45,29 +44,19 @@ const generateAssessment = async (
 
     const timeArray = otherTimes.map((time) => time.output.runtime);
     const memoryArray = otherTimes.map((memory) => memory.output.memoryUsage);
-    
+
     const forTitle = await Problem.findOne({ _id: probID });
 
+    if (!forTitle) return console.log("Problem not found");
 
     const processeddata = {
       userID: user.id,
       probID,
       title: forTitle.title,
       tags: prob.tags,
-      // similarTaggedProblems,
-
-      // recommendedSolvingTime: prob.recommendedTime,
-      // userSolvingTime: timer,
-
-      // allExecutionTime: timeArray,
-      // userExecutionTime: result.runtime,
-
-      // allMemory: memoryArray,
-      // userMemory: result.memoryUsage,
-
       difficulty: prob.difficulty,
     };
-   processedData.create(processeddata)
+    processedData.create(processeddata);
     console.log("PROCESSED DATA: ");
     console.log(processeddata);
   } catch (error) {

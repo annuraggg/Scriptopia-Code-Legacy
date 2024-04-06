@@ -9,7 +9,7 @@ const CodeEditor = ({
   explainCode,
 }: {
   code: string;
-  explainCode: Function;
+  explainCode: (code: string) => void;
 }) => {
   const [value, setValue] = useState("");
   useEffect(() => {

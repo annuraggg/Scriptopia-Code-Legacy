@@ -81,6 +81,7 @@ const CreateProblem = () => {
     setRequestNext(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveData = (data: any) => {
     if (active === 0) {
       setName(data.name);
@@ -99,7 +100,7 @@ const CreateProblem = () => {
     }
   };
 
-  const goToNext = (allowed?: boolean, data?: any) => {
+  const goToNext = (allowed?: boolean, data?: unknown) => {
     setRequestNext(false);
     if (allowed) {
       saveData(data);
@@ -111,7 +112,7 @@ const CreateProblem = () => {
     }
   };
 
-  const submit = (allowed: boolean, data: any) => {
+  const submit = (allowed: boolean, data: unknown) => {
     setSaving(true);
     if (allowed) {
       saveData(data);
@@ -198,7 +199,14 @@ const CreateProblem = () => {
     },
     {
       title: "Test Cases",
-      component: <AddCase respondNext={submit} data={testCases} args={args} saving={saving} />,
+      component: (
+        <AddCase
+          respondNext={submit}
+          data={testCases}
+          args={args}
+          saving={saving}
+        />
+      ),
     },
   ];
 

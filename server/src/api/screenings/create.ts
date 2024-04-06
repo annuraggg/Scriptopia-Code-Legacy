@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import verifyJWT from "@/middlewares/verifyJWT";
 import Redirect from "@/schemas/RedirectSchema";
 import Screening from "@/schemas/ScreeningSchema";
@@ -43,7 +44,7 @@ router.post("/", verifyJWT ,async (req, res) => {
 
     res.status(200).json({ link: shortLink });
   } catch (err) {
-    console.error(err);
+    logger.error({ code: "SCR_CRE_001", message: err });
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

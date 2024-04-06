@@ -94,8 +94,7 @@ const Editor = () => {
 
   useEffect(() => {
     if (tabChange > 0) {
-      // ! SET TO TRUE
-      setTabChangeOpen(false);
+      setTabChangeOpen(true);
     }
   }, [tabChange]);
 

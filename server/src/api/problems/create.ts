@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import Problem from "@/schemas/ProblemSchema.js";
 import express from "express";
 
@@ -52,7 +53,7 @@ router.post("/", async (req, res) => {
       .status(201)
       .json({ message: "Problem Created Successfully", id: prob._id });
   } catch (err) {
-    console.error(err);
+    logger.error({ code: "PRO_CRE_001", message: err });
     res.status(500).json({ message: "Error Creating Problem" });
   }
 });

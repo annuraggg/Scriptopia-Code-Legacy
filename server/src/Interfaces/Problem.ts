@@ -26,7 +26,6 @@ interface Problem extends Document {
   isPrivate?: boolean;
   lastUpdated: Date;
   chatId?: Types.ObjectId | null;
-  __v: number;
 }
 
 export default Problem;

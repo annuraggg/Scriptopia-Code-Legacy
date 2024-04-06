@@ -15,14 +15,18 @@ import CreateScreening from "./pages/assessments/create/CreateScreening";
 import Organization from "./pages/organization/Organization";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-import User from "./types/User";
 import { jwtDecode } from "jwt-decode";
 import { clearUser, setUser } from "./states/user/UserSlice";
 import { useDispatch } from "react-redux";
 import ErrB from "./ErrorBoundary";
-import Leaderboards from "./pages/leaderboards/leaderboards";
+import Leaderboards from "./pages/leaderboards/Leaderboards";
 import RedirectScreening from "./pages/Redirects/Redirects";
+import Results from "./pages/assessments/results/Results";
+import CandidateReport from "./pages/assessments/results/candidate/CandidateReport";
+import SubmissionReport from "./pages/assessments/results/submission/Submission";
+import UserToken from "./types/UserToken";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Routes = [
   {
     element: <ErrB />,
@@ -37,6 +41,9 @@ export const Routes = [
 
       { path: "/screenings", Component: Assessments },
       { path: "/screenings/create", Component: CreateScreening },
+      { path: "/screenings/:id/results", Component: Results },
+      { path: "/screenings/:screenId/results/c/:candidateId", Component: CandidateReport},
+      { path: "/screenings/:screenId/results/c/:candidateId/s/:sid", Component: SubmissionReport},
 
       { path: "/r/:id", Component: RedirectScreening },
 
@@ -65,7 +72,7 @@ export default function ProtectedRoutes() {
     ];
     const token = Cookies.get("token");
     if (token) {
-      const decodedToken: User = jwtDecode(token);
+      const decodedToken: UserToken = jwtDecode(token);
       dispatch(setUser(decodedToken));
     } else {
       const currentPath = window.location.pathname;

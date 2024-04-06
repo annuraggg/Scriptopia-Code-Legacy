@@ -1,3 +1,4 @@
+import logger from "@/config/logger";
 import Case from "@/Interfaces/Case.js";
 import Problem from "@/Interfaces/Problem";
 
@@ -143,7 +144,7 @@ const fetchOutput = async (code: string, cases: Case[]) => {
 
     return dataobj;
   } catch (error) {
-    console.error(error);
+    logger.error({ code: "LANGTEMP_JS_001", message: error });
   }
 };
 

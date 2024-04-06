@@ -80,7 +80,7 @@ const selectLangAndRun = async (
       output: [],
       internalStatus: "FAILED",
       failedCaseNumber: -1,
-      failedCase: {} as Case,
+      failedCase: {} as Case, 
       error: "Internal error",
       language: "unsupported",
       info: "",
