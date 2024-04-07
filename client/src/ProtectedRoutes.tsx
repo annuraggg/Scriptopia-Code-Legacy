@@ -25,6 +25,7 @@ import Results from "./pages/assessments/results/Results";
 import CandidateReport from "./pages/assessments/results/candidate/CandidateReport";
 import SubmissionReport from "./pages/assessments/results/submission/Submission";
 import UserToken from "./types/UserToken";
+import Contact from "./pages/settings/contact/Contact";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const Routes = [
@@ -34,10 +35,12 @@ export const Routes = [
       { path: "/editor/:id", Component: Editor },
       { path: "/problems/create", Component: CreateProblem },
       { path: "/problems/:id/edit", Component: CreateProblem },
+
       { path: "/settings", Component: Settings },
       { path: "/settings/logins", Component: RecentLogins },
       { path: "/settings/password", Component: ChangePassword },
       { path: "/settings/two-factor", Component: TFA },
+      { path: "/settings/contact", Component: Contact},
 
       { path: "/screenings", Component: Assessments },
       { path: "/screenings/create", Component: CreateScreening },
@@ -48,12 +51,17 @@ export const Routes = [
       { path: "/r/:id", Component: RedirectScreening },
 
       { path: "/organization", Component: Organization },
+      
       { path: "/u/:id", Component: Profile },
+
       { path: "/learn", Component: Learn },
       { path: "/course", Component: Course },
       { path: "/course/:courseName", Component: CourseName },
+
       { path: "/submission/:id", Component: Submission },
+
       { path: "/", Component: Home },
+
       { path: "/leaderboards", Component: Leaderboards },
     ],
   },

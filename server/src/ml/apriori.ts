@@ -1,40 +1,27 @@
 import Problem from "@/schemas/ProblemSchema";
 import Submission from "@/schemas/SubmissionSchema";
 import User from "@/schemas/UserSchema";
-import { spawn } from "child_process";
+import ProblemType from "@/Interfaces/Problem";
 
-/*
-    // Construct the dataframe
-    const df = {
-      userID: Object.keys(data),
-      ...data,
-    };
-
-    const pythonProcess = spawn("python", [
-      "src/ml/index.py",
-      userID,
-      JSON.stringify(df),
-    ]);
-
-    const onDataReceived = new Promise((resolve, reject) => {
-      pythonProcess.stdout.on("data", async (data) => {
-        const validJsonString = await data
-          .toString()
-          .replace(/True/g, "true")
-          .replace(/False/g, "false")
-          .replace(/'/g, '"');
-        const result = JSON.parse(validJsonString);
-        resolve(result);
-      });
-    });
-
-    const result = await onDataReceived;
-    return result;*/
-
-const generateRecommendation = async (userID: string) => {
+const generateRecommendation = async (selectedUserID: string) => {
   try {
     const users = await User.find().select("_id");
-    const problems = await Problem.find().select("_id");
+
+    const problemsAll = await Problem.find().select("_id");
+    const userProfile = await User.findOne({ _id: selectedUserID });
+
+    const problems: ProblemType[] = [];
+
+    if (!userProfile) throw new Error("User not found");
+    if (!problemsAll) throw new Error("Problems not found");
+
+    problemsAll.forEach((problem) => {
+      // @ts-expect-error - userProfile.solvedProblems is an array of strings
+      if (!userProfile.solvedProblems.includes(problem._id)) {
+        problems.push(problem);
+      }
+    });
+
     const submissions = await Submission.find().select(
       "problemID userID status"
     );
@@ -42,8 +29,7 @@ const generateRecommendation = async (userID: string) => {
     const userIDs = users.map((user) => user._id.toString());
     const problemIDs = problems.map((problem) => problem._id.toString());
 
-    const data: { [key: string]: number[] } = {
-      // @ts-expect-error
+    const data: { [key: string]: string[] } = {
       userID: userIDs,
     };
 
@@ -64,10 +50,25 @@ const generateRecommendation = async (userID: string) => {
       }
     });
 
-    const df = {
-      userID: Object.keys(data),
+    let df = {
       ...data,
     };
+
+    const newUIDs: string[] = [];
+    df.userID.forEach((uid) => {
+      newUIDs.push("a" + uid);
+    });
+
+    Object.keys(df).forEach((key) => {
+      if (key !== "userID") {
+        const newKey = "p" + key;
+        df[newKey] = df[key];
+        delete df[key];
+      }
+    });
+
+    df.userID = newUIDs;
+    let response: unknown = null;
 
     await fetch("http://localhost:5000/api/recommend", {
       method: "POST",
@@ -75,17 +76,19 @@ const generateRecommendation = async (userID: string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userID,
-        df,
+        userID: "a" + selectedUserID,
+        df: JSON.stringify(df),
       }),
     })
       .then(async (res) => {
-        const resp = await res.json();
-        return resp;
+        const resp: unknown = await res.json();
+        response = { error: false, response: resp };
       })
       .catch((err) => {
-        throw new Error(err);
+        response = { error: true, response: err };
       });
+
+    return response;
   } catch (error: any) {
     return { error: error.message };
   }

@@ -10,6 +10,16 @@ router.post("/", verifyJWT, async (req, res) => {
   try {
     // @ts-ignore
     const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const emailVerified = user.emailVerified;
+    const phoneVerified = user.phoneVerified;
+
     if (user?.organization) {
       const organization = await Organization.findById(user.organization);
       const admins = [];
@@ -54,6 +64,7 @@ router.post("/", verifyJWT, async (req, res) => {
             requesters.push({
               name: requesterUser.firstName + " " + requesterUser.lastName,
               email: requesterUser.email,
+              username: requesterUser.username,
               id: requesterUser._id,
               phone: requesterUser.phone,
             });
@@ -75,12 +86,16 @@ router.post("/", verifyJWT, async (req, res) => {
           screeners,
           requesters,
           isAdmin: organization.admins.includes(user.id),
+          emailVerified,
+          phoneVerified,
         },
       });
     } else {
       res.status(200).json({
         success: false,
         message: "User not associated with any organization",
+        emailVerified: emailVerified,
+        phoneVerified: phoneVerified,
       });
     }
   } catch (err) {

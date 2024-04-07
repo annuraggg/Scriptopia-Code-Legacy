@@ -1,7 +1,7 @@
 import UserToken from "@/Interfaces/UserToken";
 import Problem from "@/schemas/ProblemSchema";
 import Submission from "@/schemas/SubmissionSchema";
-import processedData from "@/schemas/processedData";
+import processedData from "@/schemas/ProcessedDataSchema";
 
 const generateAssessment = async (
   code: string,

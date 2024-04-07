@@ -11,6 +11,7 @@ const runJS = async (
   const jsCode = createJSFunction(code, fnName, cases, problem);
   const result = await fetchOutput(jsCode, cases);
 
+  console.log(result);
   return result;
 };
 
@@ -20,6 +21,8 @@ const createJSFunction = (
   cases: Case[],
   problem: Problem
 ) => {
+  const onlyCaseInputs = cases.map((c) => c.input);
+
   let jsCodeString: string = ``;
   jsCodeString += `
   const vanillaLog = console.log;
@@ -59,12 +62,14 @@ const createJSFunction = (
     const args = cases[i].input.map((value, index) => {
       return parseArgument(value, argTypes[index].type);
     });
-  
     let result = ${fnName}(...args);
-  
+
     if (typeof result === "object" || typeof result === "array") {
       result = JSON.stringify(result);
     }
+
+    console.log(result);
+    console.log(cases[i].output);
   
     if (result == cases[i].output) {
       output.push(result);
@@ -118,6 +123,7 @@ const fetchOutput = async (code: string, cases: Case[]) => {
       timeStamp: string;
       status: string;
       output: string[];
+      expectedOutput: string[];
       internalStatus: string;
       failedCaseNumber: number;
       failedCase: Case;
@@ -131,6 +137,7 @@ const fetchOutput = async (code: string, cases: Case[]) => {
       timeStamp: data.timeStamp,
       status: data.status,
       output: output.output,
+      expectedOutput: cases.map((c) => c.output),
       internalStatus: output.passed ? "PASSED" : "FAILED",
       failedCaseNumber: output.failedCase,
       failedCase: output.failedCase === -1 ? {} as Case : cases[output.failedCase],

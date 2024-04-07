@@ -1,12 +1,14 @@
-const CodeFlow = ({ codeFlow }: { codeFlow: boolean[] }) => {
+const CodeFlow = ({ codeFlow, tsp }: { codeFlow: number[], tsp: number }) => {
   const daysIndex = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  const getStatusClassName = (status: boolean) => {
+  const getStatusClassName = (status: number) => {
     switch (status) {
-      case true:
+      case 1:
         return "bg-[#15B8A7]";
-      case false:
+      case 0:
         return "bg-[#EE4445]";
+      case -1:
+        return "bg-background border-primary border";
       default:
         return "bg-background border-primary border";
     }
@@ -23,9 +25,9 @@ const CodeFlow = ({ codeFlow }: { codeFlow: boolean[] }) => {
             h-20 w-full rounded-sm flex items-center justify-around flex-col            `}
           >
             <p>{daysIndex[index]}</p>
-            {status === true ? (
+            {status === 1 ? (
               <i className="fa-regular fa-circle-check"></i>
-            ) : status === false ? (
+            ) : status === 0 ? (
               <i className="fa-regular fa-circle-xmark"></i>
             ) : null}
           </div>
@@ -33,8 +35,7 @@ const CodeFlow = ({ codeFlow }: { codeFlow: boolean[] }) => {
       </div>
 
       <div className="flex text-xs mt-5 justify-between">
-        <p>Problem Solved: 50</p>
-        <p>Time Taken: 360 mins.</p>
+        <p>Problem Solved: {tsp}</p>
       </div>
     </div>
   );

@@ -116,6 +116,23 @@ const createJWT = (user: UserType, sessID: string) => {
   }
 };
 
+const addStreak = async (id: string) => {
+  try {
+    const user = await User.findById(id).exec();
+    if (user) {
+      const d = new Date().toISOString();
+      const formattedDate = d.slice(0, d.indexOf("T"));
+      console.log(formattedDate);
+      if (user.streak.includes(formattedDate)) return;
+      user.streak.push(formattedDate);
+      await user.save();
+    }
+  } catch (error) {
+    logger.error({ code: "AUTH-ADDSTREAK", message: error });
+    throw new Error("Error adding streak");
+  }
+};
+
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
@@ -131,6 +148,7 @@ router.post("/login", async (req, res) => {
               const sessID = crypto.randomUUID();
               performSecurityLogs(req, user as unknown as UserType, sessID);
               const token = createJWT(user as unknown as UserType, sessID);
+              addStreak(user._id.toString());
 
               res
                 .status(200)
@@ -149,9 +167,7 @@ router.post("/login", async (req, res) => {
                   expiresIn: "5m",
                 }
               );
-              res
-                .status(200)
-                .json({ tfa: true, id: user._id, token: idJwt });
+              res.status(200).json({ tfa: true, id: user._id, token: idJwt });
             }
           } else {
             res.status(401).send();
@@ -240,6 +256,7 @@ router.post("/google", async (req, res) => {
           const sessID = crypto.randomUUID();
           const token = createJWT(user as unknown as UserType, sessID);
           performSecurityLogs(req, user as unknown as UserType, sessID);
+          addStreak(user._id.toString());
 
           res
             .status(200)

@@ -33,7 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IoIosAlert } from "react-icons/io";
+import { IoIosNotifications } from "react-icons/io";
 import {
   Tooltip,
   TooltipContent,
@@ -41,6 +41,27 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CiSettings } from "react-icons/ci";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useNavigate } from "react-router-dom";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import { useSelector } from "react-redux";
+import UserToken from "@/types/UserToken";
 
 interface Organization {
   name: string;
@@ -57,14 +78,17 @@ interface Organization {
     email: string;
     id: string;
     phone: string;
+    username: string;
   }[];
   screeners: {
     name: string;
     email: string;
     id: string;
     phone: string;
+    username: string;
   }[];
   requesters: {
+    username: string;
     name: string;
     email: string;
     id: string;
@@ -74,6 +98,10 @@ interface Organization {
 }
 
 const Organization = () => {
+  const navigate = useNavigate();
+
+  const user = useSelector((state: { user: UserToken }) => state.user);
+
   const [loading, setLoading] = useState(true);
   const [organization, setOrganization] = useState<Organization>(
     {} as Organization
@@ -92,13 +120,33 @@ const Organization = () => {
   const [createEmail, setCreateEmail] = useState("");
   const [createPhone, setCreatePhone] = useState("");
 
+  const [addScreenOpen, setAddScreenOpen] = useState(false);
+
   const [reload, setReload] = useState(false);
+
+  const [emailVerified, setEmailVerified] = useState(false);
+  // const [phoneVerified, setPhoneVerified] = useState(false);
+
+  const [verifyInfoOpen, setVerifyInfoOpen] = useState(false);
+
+  const [requestsOpen, setRequestsOpen] = useState(false);
+
+  const [adminSheetOpen, setAdminSheetOpen] = useState(false);
+
+  const [confirmScreenerRemove, setConfirmScreenerRemove] = useState(false);
+  const [confirmAdminRemove, setConfirmAdminRemove] = useState(false);
+  const [confirmAdminDemote, setConfirmAdminDemote] = useState(false);
+  const [confirmAdminAdd, setConfirmAdminAdd] = useState(false);
+  const [currentSelectedScreener, setCurrentSelectedScreener] = useState("");
+  const [currentSelectedAdmin, setCurrentSelectedAdmin] = useState("");
 
   useEffect(() => {
     axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/organization/get`)
+      ?.post(`${import.meta.env.VITE_BACKEND_ADDRESS}/organization/get`)
       .then((res) => {
-        setOrganization(res.data.organization);
+        setOrganization(res?.data?.organization);
+        setEmailVerified(res?.data?.emailVerified);
+        // setPhoneVerified(res?.data?.phoneVerified);
       })
       .catch((err) => {
         console.error(err);
@@ -123,12 +171,12 @@ const Organization = () => {
         setJoinOpen(false);
       })
       .catch((err) => {
-        if (err.response.status === 404) {
+        if (err?.response?.status === 404) {
           toast("Organization not found");
           return;
         }
         console.error(err);
-        toast("Failed to join organization");
+        toast(err.response?.data?.message || "Failed to join organization");
       })
       .finally(() => {
         setJoinButtonLoading(false);
@@ -171,11 +219,121 @@ const Organization = () => {
   const calculateRating = () => {
     let total = 0;
     let count = 0;
-    for (const key in organization.ratings) {
-      total += organization.ratings[key];
+    for (const key in organization?.ratings) {
+      total += organization?.ratings[key];
       count++;
     }
     return total / count;
+  };
+
+  const rejectCandidate = (id: string) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/organization/candidate/reject`,
+        {
+          id,
+        }
+      )
+      .then(() => {
+        setReload(!reload);
+        toast("Candidate rejected successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to reject candidate");
+      });
+  };
+
+  const acceptCandidate = (id: string) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/organization/candidate/accept`,
+        {
+          id,
+        }
+      )
+      .then(() => {
+        setReload(!reload);
+        toast("Candidate accepted successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to accept candidate");
+      });
+  };
+
+  const addAdmin = () => {
+    setAdminSheetOpen(true);
+  };
+
+  const addAsAdmin = (id: string) => {
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/organization/admin/add`, {
+        id,
+      })
+      .then(() => {
+        setReload(!reload);
+        toast("Admin added successfully");
+        setAdminSheetOpen(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to add admin");
+      });
+  };
+
+  const removeAdmin = (id: string) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/organization/admin/remove`,
+        {
+          id,
+        }
+      )
+      .then(() => {
+        setReload(!reload);
+        toast("Admin removed successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to remove admin");
+      });
+  };
+
+  const removeScreener = (id: string) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/organization/screener/remove`,
+        {
+          id,
+        }
+      )
+      .then(() => {
+        setReload(!reload);
+        toast("Screener removed successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to remove screener");
+      });
+  };
+
+  const demoteAdmin = (id: string) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/organization/admin/demote`,
+        {
+          id,
+        }
+      )
+      .then(() => {
+        setReload(!reload);
+        toast("Admin demoted successfully");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast("Failed to demote admin");
+      });
   };
 
   if (!loading) {
@@ -185,57 +343,60 @@ const Organization = () => {
         <div className="py-5 px-10">
           {organization ? (
             <div className="flex gap-10">
-              <div className="w-[160%]">
+              <div className="w-[140%]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3>{organization.name}</h3>
+                    <h3>{organization?.name}</h3>
                     <p className="text-gray-400 text-sm">
-                      Code: {organization.code.toUpperCase()}
+                      Code: {organization?.code?.toUpperCase()}
                     </p>
                   </div>
 
-                  {organization.isAdmin &&
-                    organization.requesters.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    {organization?.isAdmin &&
+                      organization?.requesters?.length > 0 && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {" "}
+                              <IoIosNotifications
+                                size={20}
+                                color="red"
+                                className="cursor-pointer"
+                                onClick={() => setRequestsOpen(true)}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>You have pending requests</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+
+                    {organization?.isAdmin && (
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            {" "}
-                            <IoIosAlert
-                              size={30}
-                              color="orange"
-                              className="cursor-pointer"
-                            />
+                            <CiSettings size={25} className=" cursor-pointer" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>You have pending requests</p>
+                            <p>Settings</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     )}
-
-                  {organization.isAdmin && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <CiSettings size={25} className=" cursor-pointer" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Settings</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                  </div>
                 </div>
                 <p className="mt-3 text-gray-400 border rounded-lg p-5">
-                  {organization.description}
+                  {organization?.description}
                 </p>
                 <div className="flex gap-5">
-                  <Card className="mt-5 w-[33.33%]">
+                  <Card className="mt-5 w-[33?.33%]">
                     <CardHeader>
                       <CardTitle>Total Organization Screening's</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>{organization.screenings || 0}</p>
+                      <p>{organization?.screenings || 0}</p>
                     </CardContent>
                   </Card>
 
@@ -243,7 +404,7 @@ const Organization = () => {
                     <CardHeader>
                       <CardTitle>Total Organization Candidates's</CardTitle>
                     </CardHeader>
-                    <CardContent>{organization.candidates || 0}</CardContent>
+                    <CardContent>{organization?.candidates || 0}</CardContent>
                   </Card>
 
                   <Card className="mt-5 w-[33.33%]">
@@ -260,7 +421,7 @@ const Organization = () => {
                   <CardHeader>
                     <div className="flex justify-between items-center">
                       <CardTitle>Organization Details</CardTitle>
-                      {organization.isAdmin && (
+                      {organization?.isAdmin && (
                         <Button variant="link">Edit</Button>
                       )}
                     </div>
@@ -269,20 +430,20 @@ const Organization = () => {
                     <CardDescription>
                       <a
                         href={
-                          organization.website.startsWith("http")
-                            ? organization.website
-                            : `http://${organization.website}`
+                          organization?.website?.startsWith("http")
+                            ? organization?.website
+                            : `http://${organization?.website}`
                         }
                         target="_blank"
                         className="hover:text-primary"
                       >
-                        <strong>Website:</strong> {organization.website}
+                        <strong>Website:</strong> {organization?.website}
                       </a>
                       <p>
-                        <strong>Email:</strong> {organization.email}
+                        <strong>Email:</strong> {organization?.email}
                       </p>
                       <p>
-                        <strong>Phone:</strong> {organization.phone}
+                        <strong>Phone:</strong> {organization?.phone}
                       </p>
                     </CardDescription>
                   </CardContent>
@@ -295,8 +456,10 @@ const Organization = () => {
                     <CardHeader>
                       <CardTitle className="flex justify-between items-center">
                         Organization Admins
-                        {organization.isAdmin && (
-                          <Button variant="link">Add Admin</Button>
+                        {organization?.isAdmin && (
+                          <Button variant="link" onClick={addAdmin}>
+                            Add Admin
+                          </Button>
                         )}
                       </CardTitle>
                     </CardHeader>
@@ -308,13 +471,13 @@ const Organization = () => {
                               <TableHead>Name</TableHead>
                               <TableHead>Email</TableHead>
                               <TableHead>Phone</TableHead>
-                              {organization.isAdmin && (
+                              {organization?.isAdmin && (
                                 <TableHead>Actions</TableHead>
                               )}
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {organization.admins.map((admin) => (
+                            {organization?.admins?.map((admin) => (
                               <TableRow key={admin?.id}>
                                 <TableCell>{admin?.name}</TableCell>
                                 <TableCell>{admin?.email}</TableCell>
@@ -322,7 +485,32 @@ const Organization = () => {
                                   <>
                                     <TableCell>{admin?.phone}</TableCell>
                                     <TableCell>
-                                      <Button variant="link">Remove</Button>
+                                      {admin?.id !== user?.id && (
+                                        <>
+                                          <Button
+                                            variant="link"
+                                            onClick={() => {
+                                              setCurrentSelectedAdmin(
+                                                admin?.id
+                                              );
+                                              setConfirmAdminRemove(true);
+                                            }}
+                                          >
+                                            Remove
+                                          </Button>
+                                          <Button
+                                            variant="link"
+                                            onClick={() => {
+                                              setCurrentSelectedAdmin(
+                                                admin?.id
+                                              );
+                                              setConfirmAdminDemote(true);
+                                            }}
+                                          >
+                                            Demote
+                                          </Button>
+                                        </>
+                                      )}
                                     </TableCell>
                                   </>
                                 )}
@@ -338,8 +526,13 @@ const Organization = () => {
                     <CardHeader>
                       <CardTitle className="flex justify-between items-center">
                         Organization Screeners
-                        {organization.isAdmin && (
-                          <Button variant="link">Add Screener</Button>
+                        {organization?.isAdmin && (
+                          <Button
+                            variant="link"
+                            onClick={() => setAddScreenOpen(true)}
+                          >
+                            Add Screener
+                          </Button>
                         )}
                       </CardTitle>
                     </CardHeader>
@@ -350,7 +543,7 @@ const Organization = () => {
                             <TableRow>
                               <TableHead>Name</TableHead>
                               <TableHead>Email</TableHead>
-                              {organization.isAdmin && (
+                              {organization?.isAdmin && (
                                 <>
                                   <TableHead>Phone</TableHead>
                                   <TableHead>Actions</TableHead>
@@ -359,15 +552,25 @@ const Organization = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {organization.screeners.map((screener) => (
+                            {organization?.screeners?.map((screener) => (
                               <TableRow key={screener?.id}>
                                 <TableCell>{screener?.name}</TableCell>
-                                {organization.isAdmin && (
+                                {organization?.isAdmin && (
                                   <>
                                     <TableCell>{screener?.email}</TableCell>
                                     <TableCell>{screener?.phone}</TableCell>
                                     <TableCell>
-                                      <Button variant="link">Remove</Button>
+                                      <Button
+                                        variant="link"
+                                        onClick={() => {
+                                          setCurrentSelectedScreener(
+                                            screener?.id
+                                          );
+                                          setConfirmScreenerRemove(true);
+                                        }}
+                                      >
+                                        Remove
+                                      </Button>
                                     </TableCell>
                                   </>
                                 )}
@@ -393,7 +596,16 @@ const Organization = () => {
 
               <div className="flex gap-5 mt-10 items-center justify-center">
                 <div>
-                  <Button variant="link" onClick={() => setCreateOpen(true)}>
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      if (!emailVerified) {
+                        setVerifyInfoOpen(true);
+                        return;
+                      }
+                      setCreateOpen(true);
+                    }}
+                  >
                     Create Organization
                   </Button>
                 </div>
@@ -401,7 +613,16 @@ const Organization = () => {
                 <p>OR</p>
 
                 <div>
-                  <Button variant="link" onClick={() => setJoinOpen(true)}>
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      if (!emailVerified) {
+                        setVerifyInfoOpen(true);
+                        return;
+                      }
+                      setJoinOpen(true);
+                    }}
+                  >
                     Join Organization
                   </Button>
                 </div>
@@ -421,7 +642,7 @@ const Organization = () => {
                         placeholder="Enter the organization name"
                         className="mt-2"
                         value={createName}
-                        onChange={(e) => setCreateName(e.target.value)}
+                        onChange={(e) => setCreateName(e?.target?.value)}
                       />
                     </div>
 
@@ -431,7 +652,7 @@ const Organization = () => {
                         placeholder="Enter the organization description"
                         className="mt-2"
                         value={createDescription}
-                        onChange={(e) => setCreateDescription(e.target.value)}
+                        onChange={(e) => setCreateDescription(e?.target?.value)}
                       />
                     </div>
 
@@ -442,7 +663,7 @@ const Organization = () => {
                         <Input
                           placeholder="Enter the organization website"
                           value={createWebsite}
-                          onChange={(e) => setCreateWebsite(e.target.value)}
+                          onChange={(e) => setCreateWebsite(e?.target?.value)}
                         />
                       </div>
                     </div>
@@ -455,7 +676,7 @@ const Organization = () => {
                           <Input
                             placeholder="Organization email"
                             value={createEmail}
-                            onChange={(e) => setCreateEmail(e.target.value)}
+                            onChange={(e) => setCreateEmail(e?.target?.value)}
                           />
                         </div>
                       </div>
@@ -467,7 +688,7 @@ const Organization = () => {
                           <Input
                             placeholder="Organization phone"
                             value={createPhone}
-                            onChange={(e) => setCreatePhone(e.target.value)}
+                            onChange={(e) => setCreatePhone(e?.target?.value)}
                           />
                         </div>
                       </div>
@@ -506,7 +727,7 @@ const Organization = () => {
                     <Input
                       placeholder="Enter the code here"
                       value={joinCode}
-                      onChange={(e) => setJoinCode(e.target.value)}
+                      onChange={(e) => setJoinCode(e?.target?.value)}
                     />
                     <Button onClick={joinOrganization}>
                       {joinButtonLoading ? (
@@ -520,7 +741,236 @@ const Organization = () => {
               </DialogHeader>
             </DialogContent>
           </Dialog>
+
+          <Dialog open={addScreenOpen} onOpenChange={setAddScreenOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Screener</DialogTitle>
+                <DialogDescription>
+                  Share the code below with the person you want to add as a
+                  screener. Note that the person will need to verify thier email
+                  and phone number before they can join the organization.
+                </DialogDescription>
+
+                <div className="flex gap-5 flex-col mt-3">
+                  <Input value={organization?.code} readOnly />
+                  <Button
+                    onClick={() => {
+                      navigator?.clipboard?.writeText(organization?.code);
+                      toast("Code copied to clipboard");
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <AlertDialog open={verifyInfoOpen} onOpenChange={setVerifyInfoOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  You need to verify your email first
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  You need to verify your email before you can join an
+                  organization Click Continue to verify your email
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => navigate("/settings/contact")}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
+
+        <Sheet open={requestsOpen} onOpenChange={setRequestsOpen}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Requests</SheetTitle>
+              <SheetDescription>
+                {organization?.requesters?.map((requester) => (
+                  <div
+                    key={requester?.id}
+                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
+                  >
+                    <h3>{requester?.name}</h3>
+                    <p>{requester?.email}</p>
+                    <Separator className="my-4" />
+                    <div className="self-center gap-5 flex items-center justify-center">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          navigate(`/profile/${requester?.username}`)
+                        }
+                      >
+                        View
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => rejectCandidate(requester?.id)}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => acceptCandidate(requester?.id)}
+                      >
+                        Accept
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+
+        <Sheet open={adminSheetOpen} onOpenChange={setAdminSheetOpen}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Add Admin</SheetTitle>
+              <SheetDescription>
+                Select a screener to add as an admin
+              </SheetDescription>
+              <div>
+                {organization?.screeners?.map((screener) => (
+                  <div
+                    key={screener?.id}
+                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
+                  >
+                    <h3>{screener?.name}</h3>
+                    <p>{screener?.email}</p>
+                    <Separator className="my-4" />
+                    <div className="self-center gap-5 flex items-center justify-center">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          navigate(`/profile/${screener?.username}`)
+                        }
+                      >
+                        View
+                      </Button>
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => {
+                          setCurrentSelectedAdmin(screener?.id);
+                          setConfirmAdminAdd(true);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+
+        <AlertDialog
+          open={confirmScreenerRemove}
+          onOpenChange={setConfirmScreenerRemove}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to remove this screener from the
+                organization?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  removeScreener(currentSelectedScreener);
+                  setConfirmScreenerRemove(false);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog
+          open={confirmAdminRemove}
+          onOpenChange={setConfirmAdminRemove}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to remove this admin from the organization?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminRemove(false);
+                  removeAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog
+          open={confirmAdminDemote}
+          onOpenChange={setConfirmAdminDemote}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to demote this admin to a screener?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminDemote(false);
+                  demoteAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog open={confirmAdminAdd} onOpenChange={setConfirmAdminAdd}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to add this user as an admin?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminAdd(false);
+                  addAsAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </>
     );
   } else return <Loader />;

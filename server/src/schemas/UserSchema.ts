@@ -165,6 +165,14 @@ const userSchema = new Schema({
       expires: Date,
     },
   ],
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  phoneVerified: {
+    type: Boolean,
+    default: false,
+  },
   streak: {
     type: [String],
     default: [],

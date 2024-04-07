@@ -5,18 +5,10 @@ import Problem from "@/schemas/ProblemSchema.js";
 import User from "@/schemas/UserSchema.js";
 import ProblemType from "@/Interfaces/Problem.js";
 import logger from "@/config/logger";
+import generateRecommendation from "@/ml/apriori";
 const router = express.Router();
 
 const limit = 8;
-
-function compareDates(date1: Date, date2: Date | null): boolean {
-  if (date2 === null) return false;
-  const isoDate1 = date1.toISOString().split("T")[0];
-  const isoDate2 = date2.toISOString().split("T")[0];
-  if (isoDate1 === isoDate2) return true;
-  else if (isoDate1 < isoDate2) return false;
-  else return false;
-}
 
 router.post("/", verifyJWT, async (req, res) => {
   try {
@@ -37,8 +29,6 @@ router.post("/", verifyJWT, async (req, res) => {
     const probs = await Problem.find({
       _id: { $nin: excludedProblemIDs },
     }).limit(limit);
-
-    const furtherExclude = probs.map((obj) => obj._id.toString());
 
     type Problem = {
       id: string;
@@ -63,33 +53,57 @@ router.post("/", verifyJWT, async (req, res) => {
       _id: { $nin: excludedProblemIDs },
     });
 
-    const pages = Math.ceil(totalProblems / limit);
+    // @ts-ignore
+    const recc: {
+      error: boolean;
+      response: {
+        next_problem: string[];
+        error?: string;
+        confidence?: number;
+      };
+    } = await generateRecommendation(user.id);
 
-    // GET Codeflow
-    const userObj = await User.findOne({ _id: user.id }).select("streak");
+    const recommendedProblems: ProblemType[] | null = await getSuggestions(
+      recc
+    );
+
+    const furtherExclude = problems.map((obj) => obj.id);
+    const evenFurtherExclude = recc?.response.next_problem.map((prob) =>
+      prob.slice(1)
+    );
+
+    const pages = Math.ceil(totalProblems / limit);
+    const userObj = await User.findOne({ _id: user.id });
     const streak = userObj?.streak;
 
-    const streakArr: boolean[] = [];
-    if (streak) {
-      let day = 0;
-      for (let i = 7; i > 0; i--) {
-        const date = new Date(new Date().setDate(new Date().getDate() - day))
-          .toISOString()
-          .toString();
-
-        day++;
-        const date2 = streak[i] ? new Date(streak[i]) : null;
-        streakArr.push(compareDates(new Date(date), date2));
-      }
+    let allProbs = [];
+    if (recommendedProblems) {
+      allProbs = [...recommendedProblems, ...problems];
+    } else {
+      allProbs = problems;
     }
 
-    res.status(200).json({
-      problems,
-      exclude: [...excludedProblemIDs, ...furtherExclude],
-      pages,
-      streak: streakArr,
-    });
+    allProbs = allProbs.slice(0, limit);
+
+    const totalSolvedProblems = userObj?.solvedProblems?.length || 0;
+
+    if (streak) {
+      const newStreakArr = streak.map((date) => convertToRequiredFormat(date));
+      const codeFlow = compareDatesWithStreak(newStreakArr);
+      res.status(200).json({
+        problems: allProbs,
+        pages,
+        exclude: [
+          ...evenFurtherExclude,
+          ...excludedProblemIDs,
+          ...furtherExclude,
+        ],
+        streak: codeFlow,
+        tsp: totalSolvedProblems,
+      });
+    }
   } catch (error) {
+    console.log(error);
     logger.error({ code: "HOM_GET_001", message: error });
     res.status(500).send();
   }
@@ -104,6 +118,7 @@ router.post("/page", verifyJWT, async (req, res) => {
     }
 
     const excludedProblemIDs = req.body.exclude;
+    console.log(excludedProblemIDs);
 
     const page = req.body.page;
     const probs = await Problem.find({ _id: { $nin: excludedProblemIDs } })
@@ -187,5 +202,77 @@ router.post("/filter", verifyJWT, async (req, res) => {
     res.status(500).send();
   }
 });
+
+function getCurrentWeekDates() {
+  const today = new Date();
+  const currentDay = today.getDay();
+  const firstDayOfWeek = new Date(today);
+  firstDayOfWeek.setDate(
+    today.getDate() - currentDay + (currentDay === 0 ? -6 : 1)
+  );
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(firstDayOfWeek);
+    date.setDate(date.getDate() + i);
+    dates.push(date.toISOString().substring(0, 10));
+  }
+  return dates;
+}
+
+function compareDatesWithStreak(streakArr: string[]): number[] {
+  const currentWeekDates = getCurrentWeekDates();
+  const lastSevenStreakDates = streakArr;
+  const streakArrResult: number[] = [];
+  currentWeekDates.forEach((date) => {
+    const index = lastSevenStreakDates.indexOf(date);
+    if (index > -1) {
+      streakArrResult.push(1);
+    } else if (new Date(date) > new Date()) {
+      streakArrResult.push(-1);
+    } else {
+      streakArrResult.push(0);
+    }
+  });
+  return streakArrResult;
+}
+
+function convertToRequiredFormat(dateString: string) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const getSuggestions = async (data: {
+  error: boolean;
+  response: {
+    next_problem: string[];
+    error?: string;
+    confidence?: number;
+  };
+}) => {
+  if (!data) {
+    return null;
+  }
+
+  if (data?.error) {
+    return null;
+  }
+
+  const probArr: ProblemType[] = [];
+
+  for (const prob of data.response.next_problem) {
+    const id = prob.slice(1);
+    const problem = await Problem.findById(id).select(
+      "title difficulty tags lastUpdated"
+    );
+    if (problem) {
+      probArr.push(problem);
+    }
+  }
+
+  return probArr;
+};
 
 export default router;

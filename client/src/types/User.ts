@@ -79,6 +79,8 @@ interface User extends Document {
   learningPath: LearningPathModule[];
   tagsSolved: string[];
   loginHistory: LoginHistory[];
+  emailVerified: boolean;
+  phoneVerified: boolean;
   streak: string[];
 }
 

@@ -24,9 +24,10 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [prevPage, setPrevPage] = useState<number>(1);
   const [excludedIDs, setExcludedIDs] = useState<string[]>([]);
-  const [streak, setStreak] = useState<boolean[]>([]);
+  const [streak, setStreak] = useState<number[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [codeFlowTSP, setCodeFlowTSP] = useState<number>(0);
 
   useEffect(() => {
     if (
@@ -64,6 +65,7 @@ const Home = () => {
         setPages(res.data.pages);
         setExcludedIDs(res.data.exclude);
         setStreak(res.data.streak);
+        setCodeFlowTSP(res.data.tsp);
       })
       .catch((err) => {
         if (err.response.status === 403) {
@@ -76,7 +78,8 @@ const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage, problems]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const newAcc = searchParams.get("new");
@@ -133,7 +136,7 @@ const Home = () => {
             />
           </div>
           <div>
-            <CodeFlow codeFlow={streak} />
+            <CodeFlow codeFlow={streak} tsp={codeFlowTSP} />
           </div>
         </div>
         {modal && <SetUsername setOpen={setOpen} />}

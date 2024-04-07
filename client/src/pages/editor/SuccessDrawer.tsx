@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { MdAccessTime, MdMemory } from "react-icons/md";
+import Problem from "@/types/Problem";
+import { Separator } from "@/components/ui/Separator";
+import { Badge } from "@/components/ui/badge";
 /*import { AxisOptions, Chart } from "react-charts";
 
 import {
@@ -27,11 +30,13 @@ const SuccessDrawer = ({
   timeTaken,
   open,
   setOpen,
+  recommendation,
 }: {
   memoryUsed: number;
   timeTaken: number;
   open: boolean;
   setOpen: (open: boolean) => void;
+  recommendation: Problem;
 }) => {
   const dateAndTime = new Date().toLocaleString();
 
@@ -122,10 +127,27 @@ const SuccessDrawer = ({
                 </div>
               </div>
             </div>
+            <Separator />
+            <div
+              className="flex gap-5"
+              onClick={() => {
+                window.location.href = `/editor/${recommendation?._id}`;
+              }}
+            >
+              <div className="flex flex-col gap-5 items-center justify-center border p-5 rounded-lg w-[30vw] hover:bg-primary-foreground transition-all duration-300 cursor-pointer">
+                <h4>Recommended Problem</h4>
+                <div className="flex gap-5 items-center">
+                  <p>{recommendation?.title}</p>
+                  <Badge>{recommendation?.difficulty}</Badge>
+                </div>
+              </div>
+            </div>
           </div>
         </DrawerHeader>
         <DrawerClose className="flex items-center justify-center mb-8">
-          <Button className=" w-fit" onClick={() => setOpen(false)}>Done</Button>
+          <Button className=" w-fit" onClick={() => setOpen(false)}>
+            Done
+          </Button>
         </DrawerClose>
       </DrawerContent>
     </Drawer>

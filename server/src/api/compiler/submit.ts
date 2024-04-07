@@ -80,7 +80,7 @@ const selectLangAndRun = async (
       output: [],
       internalStatus: "FAILED",
       failedCaseNumber: -1,
-      failedCase: {} as Case, 
+      failedCase: {} as Case,
       error: "Internal error",
       language: "unsupported",
       info: "",
@@ -93,10 +93,6 @@ const selectLangAndRun = async (
 
 router.post("/", verifyJWT, async (req, res) => {
   try {
-    // @ts-ignore
-    const r: any = await generateRecommendation(req.user.id);
-    const sugg = await getSuggestion(r);
-
     const { code, language, fn, probID, timer, totalRuns } = req.body;
     const prob = await Problem.findById(probID);
     if (!prob) {
@@ -138,7 +134,7 @@ router.post("/", verifyJWT, async (req, res) => {
           output: result,
         };
 
-        generateAssessment(
+        /*generateAssessment(
           code,
           language,
           fn,
@@ -148,10 +144,15 @@ router.post("/", verifyJWT, async (req, res) => {
           result,
           // @ts-ignore
           req.user
-        );
+        );*/
 
         Submission.create(submission);
-        res.status(200).json({ console: "", output: result });
+
+        // @ts-ignore
+        const r: any = await generateRecommendation(req.user.id);
+        const sugg = await getSuggestion(r);
+
+        res.status(200).json({ console: "", output: result, suggestion: sugg });
       } else {
         const submission = {
           problemID: probID,
@@ -164,10 +165,11 @@ router.post("/", verifyJWT, async (req, res) => {
         };
 
         Submission.create(submission);
-        res.status(200).json({ output: result, suggestion: sugg});
+        res.status(200).json({ output: result });
       }
     }
   } catch (error) {
+    console.log(error);
     logger.error({ code: "COMPILER-SUBMIT-ROOT", message: error });
     res.status(500).send();
   }
@@ -184,14 +186,24 @@ const fetchCases = async (probID: ProblemType): Promise<Case[]> => {
 };
 
 const getSuggestion = async (data: {
-  next_problem?: string;
-  confidence?: number;
   error: boolean;
+  response: {
+    next_problem: string[];
+    error?: string;
+    confidence?: number;
+  };
 }) => {
-  if (data.error) {
-    throw new Error("Error in generating recommendation");
+  console.log(data);
+  if (!data) {
+    return null;
   }
-  const sugg = await Problem.findById(data.next_problem);
+
+  if (data?.error) {
+    return null;
+  }
+
+  const id = data.response.next_problem[0]?.slice(1);
+  const sugg = await Problem.findById(id);
   return sugg;
 };
 

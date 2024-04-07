@@ -15,6 +15,7 @@ def recommend():
     json_data = data.get('df')
 
     result = recm.recommend_next_problem(user_id, json_data)
+    print(result)
     return jsonify(result)
 
 if __name__ == '__main__':

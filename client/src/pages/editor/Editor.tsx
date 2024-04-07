@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Submissions from "./Submissions";
 import PageLoading from "@/components/PageLoading";
 import { Delta } from "quill/core";
+import Problem from "@/types/Problem";
 
 interface Submission {
   _id: string;
@@ -78,6 +79,10 @@ function App() {
   );
 
   const [error, setError] = useState("");
+
+  const [recommendations, setRecommendations] = useState<Problem>(
+    {} as Problem
+  );
 
   useEffect(() => {
     const probId = window.location.pathname.split("/").pop();
@@ -177,6 +182,7 @@ function App() {
           setSubmitSuccess(true);
           setTimeTaken(res.data.output.runtime);
           setMemoryUsed(res.data.output.memoryUsage);
+          setRecommendations(res.data.suggestion);
           jsConfetti.addConfetti();
           setDrawerOpen(true);
         }
@@ -316,6 +322,7 @@ function App() {
           timeTaken={timeTaken}
           open={drawerOpen}
           setOpen={setDrawerOpen}
+          recommendation={recommendations}
         />
       )}
       <Explain
