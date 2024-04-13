@@ -15,6 +15,7 @@ import Main from "./pages/assessments/id/Main";
 import Editor from "./pages/assessments/id/Editor/Editor";
 import UserToken from "./types/UserToken";
 import ProtectedRoutesFunc from "./ProtectedRoutes";
+import "./App.css";
 
 const router = createBrowserRouter([
   {
@@ -22,9 +23,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/signin", Component: Login },
       { path: "/signup", Component: Signup },
-      { path: "/screenings/:id", Component: Screening},
-      { path: "/screenings/current", Component: Main},
-      { path: "/screening/current/editor", Component: Editor},
+      { path: "/screenings/:id", Component: Screening },
+      { path: "/screenings/current", Component: Main },
+      { path: "/screening/current/editor", Component: Editor },
       { path: "*", Component: fourOhFour },
       ...ProtectedRoutes,
     ],
@@ -55,19 +56,61 @@ function fourOhFour() {
 }
 
 function App() {
+  /*  const isLoading = useIsFetching({
+    predicate: (query) => query.state === "loading",
+  });
+  
+  console.log(isLoading);*/
+
   const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
   ProtectedRoutesFunc();
 
   useEffect(() => {
     const token = Cookies.get("token");
+    const colorPalette = localStorage.getItem("colorPalette");
     if (token) {
       const decodedToken: UserToken = jwtDecode(token);
       dispatch(setUser(decodedToken));
     } else {
       dispatch(clearUser());
     }
+
+    if (colorPalette) {
+      selectTheme(colorPalette);
+    } else {
+      selectTheme("blue");
+    }
   }, [dispatch]);
+
+  const selectTheme = (color: string) => {
+    switch (color) {
+      case "zinc":
+        import("./themes/zinc.css");
+        break;
+      case "blue":
+        import("./themes/blue.css");
+        break;
+      case "green":
+        import("./themes/green.css");
+        break;
+      case "orange":
+        import("./themes/orange.css");
+        break;
+      case "rose":
+        import("./themes/rose.css");
+        break;
+      case "purple":
+        import("./themes/purple.css");
+        break;
+      case "yellow":
+        import("./themes/yellow.css");
+        break;
+      default:
+        import("./themes/blue.css");
+        break;
+    }
+  };
 
   return (
     <>

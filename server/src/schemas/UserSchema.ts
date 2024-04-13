@@ -17,6 +17,20 @@ const userSchema = new Schema({
     default: generateUsername("-", 5),
     unique: true,
   },
+  links : {
+    github: {
+      type: String,
+      required: false,
+    },
+    website: {
+      type: String,
+      required: false,
+    },
+    linkedin: {
+      type: String,
+      required: false,
+    }
+  },
   email: {
     type: String,
     required: true,
@@ -127,6 +141,16 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  score: [
+    {
+      submissionID: {
+        type: Schema.Types.ObjectId,
+        required: true,
+      },
+      timerScore: Number,
+      testCaseScore: Number,
+    },
+  ],
   learningPath: [
     {
       moduleTitle: String,

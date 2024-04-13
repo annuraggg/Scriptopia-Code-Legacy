@@ -11,7 +11,7 @@ const Statement = ({ statement }: { statement: Delta }) => {
       theme: "snow",
     });
 
-    q.setContents(statement);
+    q?.setContents(statement);
   }, [statement]);
 
   return (

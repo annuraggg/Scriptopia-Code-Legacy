@@ -45,7 +45,7 @@ router.post("/:probID", async (req, res) => {
       res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.returnType});
     }
   } catch (err) {
-    logger.error({ code: "HOM_MAI_001", message: error });
+    logger.error({ code: "HOM_MAI_001", message: err });
     res.status(500).json({ error: "Something went wrong!" });
   }
 });

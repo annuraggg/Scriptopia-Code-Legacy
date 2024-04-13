@@ -4,61 +4,51 @@ import Submission from "@/schemas/SubmissionSchema";
 import processedData from "@/schemas/ProcessedDataSchema";
 
 const generateAssessment = async (
-  code: string,
-  language: string,
-  fn: string,
+  _code: string,
+  _language: string,
+  _fn: string,
   probID: string,
   timer: number,
-  totalRuns: number,
+  _totalRuns: number,
   result: any,
-  user: UserToken
+  _user: UserToken
 ) => {
   try {
-    console.log("RAW DATA: ");
-    console.log({
-      code,
-      language,
-      fn,
-      probID,
-      timer,
-      totalRuns,
-      result,
-      user,
-    });
-
     const prob = await Problem.findOne({ _id: probID });
+    let testCaseScore = 0;
 
     if (!prob) {
       console.log("Problem not found");
       return;
     }
 
-    const [otherTimes, similarTaggedProblems] = await Promise.all([
-      Submission.find({
-        userID: { $ne: user.id },
-        problemID: probID,
-        status: "PASSED",
-      }),
-      Problem.find({ tags: { $in: prob.tags }, _id: { $ne: probID } }),
-    ]);
+    if (result.internalStatus === "PASSED" && result.failedCaseNumber === -1) {
+      const score = prob.testCases.reduce((acc, curr) => {
+        return acc + curr.score;
+      }, 0);
 
-    const timeArray = otherTimes.map((time) => time.output.runtime);
-    const memoryArray = otherTimes.map((memory) => memory.output.memoryUsage);
+      testCaseScore = score;
+    } else {
+      const score = prob.testCases.reduce((acc, curr) => {
+        if (curr === result.failedCaseNumber) {
+          return acc;
+        }
+        return acc + curr.score;
+      }, 0);
 
-    const forTitle = await Problem.findOne({ _id: probID });
+      testCaseScore = score;
+    }
 
-    if (!forTitle) return console.log("Problem not found");
+    let timerScore = 0;
+    const recommendedTime = prob?.recommendedTime;
+    if (timer <= recommendedTime) {
+      timerScore += 5;
+    }
 
-    const processeddata = {
-      userID: user.id,
-      probID,
-      title: forTitle.title,
-      tags: prob.tags,
-      difficulty: prob.difficulty,
-    };
-    processedData.create(processeddata);
-    console.log("PROCESSED DATA: ");
-    console.log(processeddata);
+    return {
+      testCaseScore,
+      timerScore,
+    }
   } catch (error) {
     console.log(error);
   }

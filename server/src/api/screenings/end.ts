@@ -5,6 +5,7 @@ import Problem from "@/schemas/ProblemSchema";
 import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema";
 import ProblemType from "@/Interfaces/Problem";
 import express from "express";
+import Screening from "@/schemas/ScreeningSchema";
 const router = express.Router();
 
 const selectLangAndRun = async (
@@ -85,6 +86,13 @@ const selectLangAndRun = async (
 router.post("/", async (req, res) => {
   const { email, name, sessionUrl, screeningID, submission } = req.body;
   const submissionResults = [];
+  const screening = await Screening.findById(screeningID);
+
+  console.log("SESSION URL : ", sessionUrl);
+
+  if (!screening) {
+    return res.status(404).json({ message: "No screening found" });
+  }
 
   for (const sub of submission) {
     const problem = await Problem.findById(sub.probID);
@@ -105,26 +113,40 @@ router.post("/", async (req, res) => {
       sub.code,
       // @ts-expect-error
       problem?.starterFunction,
-      problem?.functionReturn,
+      problem?.testCases,
       sub?.lang,
       problem
     );
+
+    let score = 0;
+    if (result.status === "PASSED") {
+      score = 1;
+    }
+
+    let percent = (score / screening?.questions?.length) * 100;
 
     const finalObj = {
       problemId: sub.probID,
       submission: sub,
       result,
+      score: percent,
     };
-
     submissionResults.push(finalObj);
   }
+
+  let timeTaken = 0;
+  submissionResults.forEach((sub) => {
+    timeTaken += sub.submission.totalTime;
+  });
+
 
   ScreeningSubmission.create({
     userName: name,
     userEmail: email,
     submission: submissionResults,
-    sessionUrl,
+    sessionUrl: sessionUrl,
     screeningId: screeningID,
+    timeTaken: timeTaken,
     status: "completed",
   })
     .then(() => {

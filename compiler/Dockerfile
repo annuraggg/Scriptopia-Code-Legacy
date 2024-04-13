@@ -1,27 +1,26 @@
-FROM ubuntu:18.04
+# Use a lightweight base image
+FROM node:16-alpine
 
-# Create a non-root user
-RUN groupadd -r myuser && useradd -r -g myuser myuser
+# Set environment variables and create a non-root user
+ENV NODE_ENV=production
+RUN addgroup -S myuser && adduser -S myuser -G myuser
 
-# Switch to the non-root user
-USER myuser
-
-# Update and install dependencies
-RUN apt-get update && \
-    apt-get -y --no-install-recommends install gcc mono-mcs golang-go \
-        default-jre default-jdk nodejs npm \
-        python3-pip python3 curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set environment variables, copy files, and set working directory
-ENV NODE_VERSION=16.13.2
+# Set the working directory
 WORKDIR /app
-COPY . /app
 
-# Install dependencies
-RUN npm install && \
+# Install only necessary dependencies
+RUN apk --no-cache add python3 py3-pip gcc g++ make
+
+# Copy package.json and package-lock.json separately
+COPY package*.json ./
+
+# Install dependencies as the non-root user
+USER myuser
+RUN npm install --quiet --no-progress && \
     npm cache clean --force
+
+# Copy the rest of the application code
+COPY . .
 
 # Expose port and specify default command
 EXPOSE 3000

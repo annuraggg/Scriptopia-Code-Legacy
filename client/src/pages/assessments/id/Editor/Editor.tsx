@@ -64,24 +64,24 @@ const Editor = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (timer.seconds === 0) {
-        if (timer.minutes === 0) {
+      if (timer?.seconds === 0) {
+        if (timer?.minutes === 0) {
           clearInterval(interval);
         } else {
           setTimer({
-            minutes: timer.minutes - 1,
+            minutes: timer?.minutes - 1,
             seconds: 59,
           });
         }
       } else {
         setTimer({
-          minutes: timer.minutes,
-          seconds: timer.seconds - 1,
+          minutes: timer?.minutes,
+          seconds: timer?.seconds - 1,
         });
       }
     }, 1000);
 
-    localStorage.setItem("timer", JSON.stringify(timer));
+    localStorage?.setItem("timer", JSON?.stringify(timer));
 
     return () => clearInterval(interval);
   }, [timer]);
@@ -98,27 +98,27 @@ const Editor = () => {
     }
   }, [tabChange]);
 
-  window.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
+  window?.addEventListener("visibilitychange", () => {
+    if (document?.visibilityState === "visible") {
       setTabChange(tabChange + 1);
     }
   });
 
   useEffect(() => {
-    const questionID = window.history.state.usr.id;
-    setScreening(window.history.state.usr.screening);
-    setLanguages(window.history.state.usr.languages);
+    const questionID = window?.history?.state?.usr?.id;
+    setScreening(window?.history?.state?.usr?.screening);
+    setLanguages(window?.history?.state?.usr?.languages);
 
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${questionID}`)
       .then((res) => {
-        console.log(res.data);
-        setQuestion(res.data);
+        console.log(res?.data);
+        setQuestion(res?.data);
         const starter = returnStarter(
           "javascript",
-          res.data?.func,
-          res.data?.returnType,
-          res.data.args ? question?.args : []
+          res?.data?.func,
+          res?.data?.returnType,
+          res?.data?.args ? question?.args : []
         );
         setCode(starter);
       })
@@ -136,8 +136,8 @@ const Editor = () => {
         returnStarter(
           selectedLang,
           question?.func,
-          question.returnType,
-          question.args ? question?.args : []
+          question?.returnType,
+          question?.args ? question?.args : []
         )
       );
     }
@@ -147,11 +147,11 @@ const Editor = () => {
     const saveObj = {
       code,
       lang: selectedLang,
-      probID: question.meta.id,
+      probID: question?.meta?.id,
       totalTime:
-        JSON.parse(initialTimer).minutes * 60 +
-        JSON.parse(initialTimer).seconds -
-        (timer.minutes * 60 + timer.seconds),
+        JSON?.parse(initialTimer)?.minutes * 60 +
+        JSON?.parse(initialTimer)?.seconds -
+        (timer?.minutes * 60 + timer?.seconds),
       runs,
       paste,
       tabChange,
@@ -160,18 +160,18 @@ const Editor = () => {
       error,
     };
 
-    const oldData = localStorage.getItem("submission");
-    const data = oldData ? JSON.parse(oldData) : [];
-    data.push(saveObj);
-    localStorage.setItem("submission", JSON.stringify(data));
+    const oldData = localStorage?.getItem("submission");
+    const data = oldData ? JSON?.parse(oldData) : [];
+    data?.push(saveObj);
+    localStorage?.setItem("submission", JSON?.stringify(data));
 
-    window.history.back();
-    toast.success("Code submitted successfully");
+    window?.history?.back();
+    toast?.success("Code submitted successfully");
   };
 
   const runCode = () => {
     if (!code) {
-      toast.error("Please write some code before running");
+      toast?.error("Please write some code before running");
     }
 
     setRuns((prev) => prev + 1);
@@ -181,15 +181,15 @@ const Editor = () => {
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/run`, {
         code,
         language: selectedLang,
-        cases: question.cases,
-        fn: question.func,
-        probID: question.meta.id,
+        cases: question?.cases,
+        fn: question?.func,
+        probID: question?.meta?.id,
       })
       .then((res) => {
-        console.log(res.data);
-        setConsoleOutput(res.data.output.consoleOP);
-        setOutput(res.data.output);
-        setError(res.data.output.error);
+        console.log(res?.data);
+        setConsoleOutput(res?.data?.output?.consoleOP);
+        setOutput(res?.data?.output);
+        setError(res?.data?.output?.error);
       })
       .catch((err) => {
         console.log(err);
@@ -216,7 +216,7 @@ const Editor = () => {
           Submit
         </Button>
         <p className=" justify-self-start ml-14">
-          Time Left: {timer.minutes} mins {timer.seconds} secs
+          Time Left: {timer?.minutes} mins {timer?.seconds} secs
         </p>
       </div>
       <div className="flex gap-5">
@@ -245,10 +245,10 @@ const Editor = () => {
                 running={running}
                 runs={runs}
                 vars={question?.args}
-                output={output.output}
+                output={output?.output ? output?.output : [] }
                 error={error}
-                failedCase={output.failedCase}
-                failedCaseNumber={output.failedCaseNumber}
+                failedCase={output?.failedCase}
+                failedCaseNumber={output?.failedCaseNumber}
               />
             </Split>
           ) : (

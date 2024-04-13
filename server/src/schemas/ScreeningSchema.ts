@@ -14,6 +14,7 @@ const screeningSchema = new Schema({
     end: Date,
   },
   questions: [Problem],
+  qualifyingScore: Number,
   candidates: [
     {
       name: String,

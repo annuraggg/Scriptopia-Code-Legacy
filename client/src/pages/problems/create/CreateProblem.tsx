@@ -7,6 +7,7 @@ import AddCase from "./AddCase";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 const CreateProblem = () => {
   const navigate = useNavigate();
@@ -116,6 +117,53 @@ const CreateProblem = () => {
     setSaving(true);
     if (allowed) {
       saveData(data);
+
+      const schema = z.object({
+        name: z.string(),
+        time: z.string(),
+        difficulty: z.string(),
+        tags: z.array(z.string()),
+        description: z.string(),
+        selectedLanguages: z.array(z.string()),
+        functionName: z.string(),
+        returnType: z.string(),
+        args: z.array(
+          z.object({
+            key: z.string(),
+            type: z.string(),
+          })
+        ),
+        testCases: z.array(
+          z.object({
+            name: z.string(),
+            difficulty: z.string(),
+            score: z.number(),
+            input: z.array(z.string()),
+            output: z.string(),
+            isSample: z.boolean(),
+          })
+        ),
+      });
+
+      try {
+        schema.parse({
+          name,
+          time,
+          difficulty,
+          tags,
+          description,
+          selectedLanguages,
+          functionName,
+          returnType,
+          args,
+          testCases,
+        });
+      } catch (err) {
+        toast.error("Please fill all the fields", {
+          position: "top-center",
+        });
+        return;
+      }
 
       axios
         .post(

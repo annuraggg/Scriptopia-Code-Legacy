@@ -6,8 +6,10 @@ import Submission from "@/schemas/SubmissionSchema.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
 import ProblemType from "@/Interfaces/Problem";
-import generateAssessment from "./assess";
 import generateRecommendation from "@/ml/apriori";
+import SubmissionType from "@/Interfaces/Submission";
+import generateAssessment from "./assess";
+import User from "@/schemas/UserSchema";
 const router = express.Router();
 
 interface User {
@@ -124,6 +126,49 @@ router.post("/", verifyJWT, async (req, res) => {
         result.internalStatus === "PASSED" &&
         result.failedCaseNumber === -1
       ) {
+        const submissions = await Submission.find({
+          problemID: probID,
+          status: "PASSED",
+        });
+
+        // @ts-ignore
+        const r: any = await generateRecommendation(req.user.id);
+        const sugg = await getSuggestion(r);
+
+        const timeEfficiency: {
+          avg: number;
+          percent: number;
+        } = await getTimeEfficiency(submissions, result.runtime);
+        const spaceEfficiency: {
+          avg: number;
+          percent: number;
+        } = await getSpaceEfficiency(submissions, result.memoryUsage);
+
+        const scoreGet: {
+          testCaseScore: number;
+          timerScore: number;
+        } | undefined = await generateAssessment(
+          code,
+          language,
+          prob.starterFunction,
+          probID,
+          timer,
+          totalRuns,
+          result, // @ts-ignore
+          req.user
+        );
+
+        const score = {
+          submissionID: probID,
+          timerScore: scoreGet?.timerScore,
+          testCaseScore: scoreGet?.testCaseScore,
+        }
+
+        // @ts-ignore
+        const user = await User.findById(req.user.id);
+        user?.score.push(score);
+        await user?.save(); 
+
         const submission = {
           problemID: probID,
           // @ts-ignore
@@ -134,25 +179,15 @@ router.post("/", verifyJWT, async (req, res) => {
           output: result,
         };
 
-        /*generateAssessment(
-          code,
-          language,
-          fn,
-          probID,
-          timer,
-          totalRuns,
-          result,
-          // @ts-ignore
-          req.user
-        );*/
-
         Submission.create(submission);
 
-        // @ts-ignore
-        const r: any = await generateRecommendation(req.user.id);
-        const sugg = await getSuggestion(r);
-
-        res.status(200).json({ console: "", output: result, suggestion: sugg });
+        res.status(200).json({
+          console: "",
+          output: result,
+          suggestion: sugg,
+          timeEfficiency,
+          spaceEfficiency,
+        });
       } else {
         const submission = {
           problemID: probID,
@@ -169,7 +204,6 @@ router.post("/", verifyJWT, async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
     logger.error({ code: "COMPILER-SUBMIT-ROOT", message: error });
     res.status(500).send();
   }
@@ -193,7 +227,6 @@ const getSuggestion = async (data: {
     confidence?: number;
   };
 }) => {
-  console.log(data);
   if (!data) {
     return null;
   }
@@ -205,6 +238,38 @@ const getSuggestion = async (data: {
   const id = data.response.next_problem[0]?.slice(1);
   const sugg = await Problem.findById(id);
   return sugg;
+};
+
+const getTimeEfficiency = async (
+  submissions: SubmissionType[],
+  currentEfficiency: number
+) => {
+  let timeArr = submissions.map((sub) => sub.output.runtime);
+  timeArr = timeArr.filter((time) => time !== undefined && !isNaN(time)); // Filter out undefined and NaN values
+  const totalRuntime = timeArr.reduce((acc, val) => acc + val, 0);
+  const avgRuntime = totalRuntime / timeArr.length;
+  const efficiencyPercentage = (currentEfficiency / avgRuntime) * 100;
+
+  return {
+    avg: avgRuntime,
+    percent: efficiencyPercentage,
+  };
+};
+
+const getSpaceEfficiency = async (
+  submissions: SubmissionType[],
+  currentEfficiency: number
+) => {
+  let spaceArr = submissions.map((sub) => sub.output.memoryUsage);
+  spaceArr = spaceArr.filter((space) => space !== undefined && !isNaN(space));
+  const totalSpace = spaceArr.reduce((acc, val) => acc + val, 0);
+  const avgSpace = totalSpace / spaceArr.length;
+  const efficiencyPercentage = (currentEfficiency / avgSpace) * 100;
+
+  return {
+    avg: avgSpace,
+    percent: efficiencyPercentage,
+  };
 };
 
 export default router;

@@ -55,6 +55,12 @@ interface jobPreferences {
   role: [string];
 }
 
+interface Score {
+  submissionID: number;
+  timerScore: number;
+  testCaseScore: number;
+}
+
 interface User extends Document {
   firstName: string;
   lastName?: string;
@@ -78,12 +84,13 @@ interface User extends Document {
   moderator: boolean;
   createdAt: Date;
   updatedAt: Date;
+  score: Score[];
   learningPath: LearningPathModule[];
   tagsSolved: string[];
   loginHistory: LoginHistory[];
   emailVerified: boolean;
   phoneVerified: boolean;
-  streak: string[]
+  streak: string[];
 }
 
 export default User;

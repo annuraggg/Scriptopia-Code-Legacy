@@ -84,6 +84,16 @@ function App() {
     {} as Problem
   );
 
+  const [memoryData, setMemoryData] = useState({
+    percent: 0,
+    avg: 0,
+  });
+
+  const [timeData, setTimeData] = useState({
+    percent: 0,
+    avg: 0,
+  });
+
   useEffect(() => {
     const probId = window.location.pathname.split("/").pop();
     axios
@@ -175,6 +185,7 @@ function App() {
         setOutput(res.data.output);
         setRuns((prev) => prev + 1);
         setError(res.data.output.error);
+
         if (
           res.data.output.internalStatus === "PASSED" &&
           res.data.output.failedCaseNumber === -1
@@ -183,6 +194,8 @@ function App() {
           setTimeTaken(res.data.output.runtime);
           setMemoryUsed(res.data.output.memoryUsage);
           setRecommendations(res.data.suggestion);
+          setMemoryData(res.data.timeEfficiency);
+          setTimeData(res.data.spaceEfficiency);
           jsConfetti.addConfetti();
           setDrawerOpen(true);
         }
@@ -323,6 +336,8 @@ function App() {
           open={drawerOpen}
           setOpen={setDrawerOpen}
           recommendation={recommendations}
+          memoryData={memoryData}
+          timeData={timeData}
         />
       )}
       <Explain

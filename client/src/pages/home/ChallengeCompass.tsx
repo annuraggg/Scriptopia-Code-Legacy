@@ -30,8 +30,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { current } from "@reduxjs/toolkit";
 
 type Problem = {
   id: string;
@@ -48,6 +50,8 @@ const ChallengeCompass = ({
   setCurrentPage,
   setPrevPage,
   filter,
+  triggerPage,
+  setTriggerPage,
 }: {
   problems: Problem[];
   pages: number;
@@ -56,14 +60,12 @@ const ChallengeCompass = ({
   setPrevPage: (value: number) => void;
   loading: boolean;
   filter: (difficulty: string, search: string) => void;
+  triggerPage: boolean;
+  setTriggerPage: (value: boolean) => void;
 }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("all");
-
-  useEffect(() => {
-    console.log(problems);
-  }, [problems]);
 
   const evalSearch = () => {
     filter(difficulty, search);
@@ -106,7 +108,7 @@ const ChallengeCompass = ({
         </div>
       </div>
 
-      <div className="mt-5 bg-primary-foreground p-5 rounded shadow-md">
+      <div className="mt-5 bg-card p-5 rounded shadow-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -160,8 +162,13 @@ const ChallengeCompass = ({
         <PaginationContent className="cursor-pointer">
           <PaginationPrevious
             onClick={() => {
-              setPrevPage(currentPage);
+              console.log("CURRENTPAGEFROMCOMPASS", currentPage);
+              if (currentPage === 1) {
+                toast.error("You are already on the first page");
+                return;
+              }
               setCurrentPage(currentPage - 1);
+              setPrevPage(currentPage);
             }}
           >
             Previous
@@ -171,7 +178,7 @@ const ChallengeCompass = ({
               className="cursor-pointer"
               key={page}
               onClick={() => {
-                setPrevPage(currentPage);
+                setPrevPage(currentPage - 1);
                 setCurrentPage(page);
               }}
             >
@@ -182,8 +189,13 @@ const ChallengeCompass = ({
           ))}
           <PaginationNext
             onClick={() => {
+              if (currentPage === pages) {
+                toast.error("You are already on the last page");
+                return;
+              }
               setPrevPage(currentPage);
               setCurrentPage(currentPage + 1);
+              setTriggerPage(!triggerPage);
             }}
           >
             Next

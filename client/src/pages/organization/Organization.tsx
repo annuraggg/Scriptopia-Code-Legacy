@@ -59,9 +59,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/ui/Separator";
 import { useSelector } from "react-redux";
 import UserToken from "@/types/UserToken";
+import { z } from "zod";
 
 interface Organization {
   name: string;
@@ -158,8 +159,12 @@ const Organization = () => {
   }, [reload]);
 
   const joinOrganization = () => {
-    if (!joinCode)
-      return toast("Please enter the code to join the organization");
+    const schema = z.string().nonempty();
+    try {
+      schema.parse(joinCode);
+    } catch (err) {
+      return toast("Please enter a valid code");
+    }
 
     setJoinButtonLoading(true);
     axios

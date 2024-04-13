@@ -8,6 +8,14 @@ import logger from "@/config/logger";
 import generateRecommendation from "@/ml/apriori";
 const router = express.Router();
 
+type Problem = {
+  id: string;
+  title: string;
+  difficulty: string;
+  tags: string[];
+  lastUpdated: string;
+};
+
 const limit = 8;
 
 router.post("/", verifyJWT, async (req, res) => {
@@ -29,14 +37,6 @@ router.post("/", verifyJWT, async (req, res) => {
     const probs = await Problem.find({
       _id: { $nin: excludedProblemIDs },
     }).limit(limit);
-
-    type Problem = {
-      id: string;
-      title: string;
-      difficulty: string;
-      tags: string[];
-      lastUpdated: string;
-    };
 
     const problems: Problem[] = probs.map((obj) => {
       return {
@@ -63,9 +63,28 @@ router.post("/", verifyJWT, async (req, res) => {
       };
     } = await generateRecommendation(user.id);
 
-    const recommendedProblems: ProblemType[] | null = await getSuggestions(
-      recc
-    );
+    const rc: ProblemType[] | null = await getSuggestions(recc);
+
+    let recommendedProblems: {
+      id: string;
+      title: string;
+      difficulty: string;
+      tags: string[];
+      lastUpdated: string;
+    }[] = [];
+
+    if (rc) {
+      // @ts-ignore
+      recommendedProblems = rc.map((obj) => {
+        return {
+          id: obj._id.toString(),
+          title: obj.title,
+          difficulty: obj.difficulty,
+          tags: obj.tags,
+          lastUpdated: obj.lastUpdated.toDateString(),
+        };
+      });
+    }
 
     const furtherExclude = problems.map((obj) => obj.id);
     const evenFurtherExclude = recc?.response.next_problem.map((prob) =>
@@ -76,9 +95,15 @@ router.post("/", verifyJWT, async (req, res) => {
     const userObj = await User.findOne({ _id: user.id });
     const streak = userObj?.streak;
 
-    let allProbs = [];
+    let allProbs: Problem[] = [];
     if (recommendedProblems) {
-      allProbs = [...recommendedProblems, ...problems];
+      allProbs = [...recommendedProblems];
+      problems.forEach((prob) => {
+        if (allProbs.includes(prob)) {
+          return;
+        }
+        allProbs.push(prob);
+      });
     } else {
       allProbs = problems;
     }
@@ -118,12 +143,8 @@ router.post("/page", verifyJWT, async (req, res) => {
     }
 
     const excludedProblemIDs = req.body.exclude;
-    console.log(excludedProblemIDs);
-
-    const page = req.body.page;
     const probs = await Problem.find({ _id: { $nin: excludedProblemIDs } })
       .limit(limit)
-      .skip((page - 1) * limit);
 
     const furtherExclude = probs.map((obj) => obj._id.toString());
 
@@ -264,12 +285,12 @@ const getSuggestions = async (data: {
 
   for (const prob of data.response.next_problem) {
     const id = prob.slice(1);
-    const problem = await Problem.findById(id).select(
-      "title difficulty tags lastUpdated"
-    );
+    const problem = await Problem.findById(id);
     if (problem) {
       probArr.push(problem);
     }
+
+    console.log(probArr);
   }
 
   return probArr;

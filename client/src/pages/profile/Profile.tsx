@@ -23,12 +23,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EditIcon } from "lucide-react";
-import AvatarEditor from 'react-avatar-editor'
+import AvatarEditor from "react-avatar-editor";
+import User from "@/types/User";
+import Loader from "@/components/Loader";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/Separator";
 
 const ProgressBar = ({ value, color }: { value: number; color: string }) => {
   return (
@@ -57,6 +60,48 @@ const Profile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [openProfilePicture, setOpenProfilePicture] = useState(false);
 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [profile, setProfile] = useState<User>({} as User);
+
+  const [resumeOpen, setResumeOpen] = useState(false);
+
+  const [skills, setSkills] = useState<string[]>([]);
+
+  const [education, setEducation] = useState<
+    { degree: string; school: string }[]
+  >([]);
+
+  const [experience, setExperience] = useState<
+    { title: string; years: number; company: string }[]
+  >([]);
+
+  const [skillInp, setSkillInp] = useState("");
+
+  const [eduSchool, setEduSchool] = useState("");
+  const [eduDegree, setEduDegree] = useState("");
+
+  const [expTitle, setExpTitle] = useState("");
+  const [expCompany, setExpCompany] = useState("");
+  const [expYears, setExpYears] = useState("");
+
+  const addSkill = () => {
+    setSkills([...skills, skillInp]);
+    setSkillInp("");
+  };
+
+  const addEducation = () => {
+    setEducation([...education, { degree: educationInp, school: "" }]);
+    setEducationInp("");
+  };
+
+  const addExperience = () => {
+    setExperience([
+      ...experience,
+      { title: experienceInp, years: 0, company: "" },
+    ]);
+    setExperienceInp("");
+  };
+
   Chart.register(ArcElement, TooltipChartjs, Legend);
 
   useEffect(() => {
@@ -70,8 +115,20 @@ const Profile = () => {
   useEffect(() => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/profile`)
-      .then(() => {});
+      .then((res) => {
+        setProfile(res.data.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   });
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const data = {
     name: "Anurag Sawant",
@@ -173,7 +230,7 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div className="flex gap-5 py-5 px-10 justify-center items-center">
+      <div className="flex gap-5 py-5 h-[90vh] px-10 justify-center items-center">
         <div>
           <Card className="w-[300px]">
             <CardHeader>
@@ -188,15 +245,15 @@ const Profile = () => {
               </Avatar>
 
               <div className="flex items-center gap-2 justify-start mt-5">
-                <h1>Anurag Sawant</h1>
+                <h1>{profile?.firstName + " " + profile?.lastName}</h1>
                 <img
                   srcSet="https://flagsapi.com/IN/flat/32.png"
                   className="w-5 h-auto self-start"
                 ></img>
               </div>
               <CardDescription>
-                @{data.username}
-                <span className="mt-2 block">{data.bio}</span>
+                @{profile?.username}
+                <span className="mt-2 block">{profile?.bio}</span>
               </CardDescription>
             </CardContent>
           </Card>
@@ -210,36 +267,40 @@ const Profile = () => {
                 <div className="flex items-center gap-2">
                   <FiLink />
                   <a
-                    href={data.links.website}
+                    href={profile?.links?.website}
                     target="_blank"
                     className="truncate"
                   >
-                    {data.links.website}
+                    {profile?.links?.website}
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
                   <FaGithub />
                   <a
-                    href={data.links.github}
+                    href={profile?.links?.github}
                     target="_blank"
                     className="truncate"
                   >
-                    {data.links.github}
+                    {profile?.links?.github}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 overflow-ellipsis">
                   <FaLinkedin />
                   <a
-                    href={data.links.linkedin}
+                    href={profile?.links?.linkedin}
                     target="_blank"
                     className="truncate"
                   >
-                    {data.links.linkedin}
+                    {profile?.links?.linkedin}
                   </a>
                 </div>
               </div>
             </CardContent>
           </Card>
+
+          <Button className="mt-5 w-full" onClick={() => setResumeOpen(true)}>
+            Update Resume
+          </Button>
         </div>
         <div>
           <Heatmap
@@ -383,6 +444,117 @@ const Profile = () => {
               This action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
             </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={resumeOpen} onOpenChange={setResumeOpen}>
+        <DialogContent className="h-[90vh] min-w-[90vw]">
+          <DialogHeader>
+            <DialogTitle>Update Resume</DialogTitle>
+            <DialogDescription>
+              Enter your details to update your resume
+            </DialogDescription>
+            <div className="flex p-5 ">
+              <div className="w-[50%]">
+                <div className="border p-5 rounded-lg">
+                  <h2 className="mb-2">Skills</h2>
+                  {skills.map((skill) => (
+                    <Badge className="mt-2 ml-2">{skill}</Badge>
+                  ))}
+                </div>
+
+                <div className="mt-5 border p-5 rounded-lg">
+                  <h2 className="mb-2">Education</h2>
+                  {education.map((edu) => (
+                    <div>
+                      <p className="mt-2">{edu.degree}</p>
+                      <p className="text-xs text-gray-300">
+                        {edu.school} - <span>Graduated</span>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <div className="mt-5 border p-5 rounded-lg">
+                    <h2 className="mb-2">Experience</h2>
+                    {experience.map((exp) => (
+                      <div>
+                        <p className="mt-2">{exp.title}</p>
+                        <p className="text-xs text-gray-300">
+                          {exp.company} - <span>2 years</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <Separator orientation="vertical" className="mx-10" />
+
+              <div className="w-[50%]">
+                <Input
+                  className="mt-5"
+                  placeholder="Add a skill"
+                  value={skillInp}
+                  onChange={(e) => setSkillInp(e.target.value)}
+                />
+                <Button className="mb-10 mt-3 float-right" onClick={addSkill}>
+                  Add Skill
+                </Button>
+
+                <Input
+                  className="mt-5"
+                  placeholder="Add Education"
+                  value={educationInp}
+                  onChange={(e) => setEducationInp(e.target.value)}
+                />
+                <Input
+                  className="mt-2"
+                  placeholder="School"
+                  value={eduSchool}
+                  onChange={(e) => setEduSchool(e.target.value)}
+                />
+                <Input
+                  className="mt-2"
+                  placeholder="Degree"
+                  value={eduDegree}
+                  onChange={(e) => setEduDegree(e.target.value)}
+                />
+                <Button
+                  className="mb-10 mt-3 float-right"
+                  onClick={addEducation}
+                >
+                  Add Education
+                </Button>
+
+                <Input
+                  className="mt-2"
+                  placeholder="Company"
+                  value={expCompany}
+                  onChange={(e) => setExpCompany(e.target.value)}
+                />
+                <Input
+                  className="mt-2"
+                  placeholder="Title"
+                  value={expTitle}
+                  onChange={(e) => setExpTitle(e.target.value)}
+                />
+                <Input
+                  className="mt-2"
+                  placeholder="Years"
+                  value={expYears}
+                  onChange={(e) => setExpYears(e.target.value)}
+                />
+                <Button
+                  className="mb-10 mt-3 float-right"
+                  onClick={addExperience}
+                >
+                  Add Experience
+                </Button>
+              </div>
+            </div>
           </DialogHeader>
         </DialogContent>
       </Dialog>

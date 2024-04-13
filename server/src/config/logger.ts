@@ -78,7 +78,7 @@ logger.add(
           // Stringify objects
           message = util.inspect(info.message, { depth: null });
         }
-        return `${timestamp} (${level}): ${JSON.stringify(info.message, null, 2)}`;
+        return `${timestamp} (${level}): ${code} > ${message}`;
       })
     ),
   })

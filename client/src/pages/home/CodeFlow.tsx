@@ -15,7 +15,7 @@ const CodeFlow = ({ codeFlow, tsp }: { codeFlow: number[], tsp: number }) => {
   };
 
   return (
-    <div className="bg-primary-foreground w-[25vw] p-5 rounded shadow-md">
+    <div className="bg-card w-[25vw] p-5 rounded shadow-md border">
       <h3>Your Codeflow</h3>
       <div className="flex gap-2 mt-5">
         {codeFlow.map((status, index) => (

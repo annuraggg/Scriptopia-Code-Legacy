@@ -10,8 +10,6 @@ import { Navbar } from "../../components/ui/navbar"
 import Table from "./table"
 import Loader from "../../components/Loader"
 
-
-
 const Leaderboards = () => {
   const [loading, setLoading] = useState(false);
 

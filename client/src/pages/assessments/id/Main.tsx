@@ -30,6 +30,8 @@ const Main = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
+  const [sURL, setSURL] = useState<string>("");
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer?.seconds === 0) {
@@ -109,6 +111,8 @@ const Main = () => {
       localStorage?.getItem("submission") || "[]"
     );
 
+    if (sessionUrl !== undefined) setSURL(sessionUrl);
+
     setEnding(true);
 
     axios
@@ -116,7 +120,7 @@ const Main = () => {
         name,
         email,
         id: sessionStorage?.getItem("id"),
-        sessionUrl: sessionUrl,
+        sessionUrl: sessionUrl ? sessionUrl : sURL,
         screeningID: screening?._id,
         submission,
       })

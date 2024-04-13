@@ -67,7 +67,7 @@ const Descriptor = ({
             <p className="text-red-500">{error}</p>
           ) : (
             <div className="bg-black text-white">
-              {consoleOutput.map((output, i) => {
+              {consoleOutput?.map((output, i) => {
                 return (
                   <p key={i} className="text-gray-400">
                     {output}
@@ -135,7 +135,7 @@ const Descriptor = ({
                       <p>Input</p>
                       <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
                         {c?.input?.map((ci, i2) => {
-                          return vars[i2].key + " = " + ci + " ";
+                          return vars[i2]?.key + " = " + ci + " ";
                         })}
                       </div>
                       <p>Output</p>
@@ -154,12 +154,12 @@ const Descriptor = ({
                 <p>Input</p>
                 <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
                   {failedCase?.input?.map((ci, i2) => {
-                    return vars[i2].key + " = " + ci + " ";
+                    return vars[i2]?.key + " = " + ci + " ";
                   })}
                 </div>
                 <p>Output</p>
                 <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
-                  {failedCase.output}
+                  {failedCase?.output}
                 </div>
                 <p>Expected</p>
                 <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">

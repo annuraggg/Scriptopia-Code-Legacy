@@ -31,12 +31,22 @@ const SuccessDrawer = ({
   open,
   setOpen,
   recommendation,
+  memoryData,
+  timeData,
 }: {
   memoryUsed: number;
   timeTaken: number;
   open: boolean;
   setOpen: (open: boolean) => void;
   recommendation: Problem;
+  memoryData: {
+    percent: number;
+    avg: number;
+  };
+  timeData: {
+    percent: number;
+    avg: number;
+  };
 }) => {
   const dateAndTime = new Date().toLocaleString();
 
@@ -111,18 +121,46 @@ const SuccessDrawer = ({
               </div>
             {*/}
               <div className="flex gap-5">
-                <div className="flex gap-5 items-center justify-center border p-5 rounded-lg w-[230px]">
+                <div
+                  className={`flex gap-5 items-center justify-center p-5 rounded-lg w-[400px] border-2 ${
+                    memoryData?.percent < 30
+                      ? "border-red-800"
+                      : memoryData?.percent < 60
+                      ? "border-yellow-800"
+                      : "border-green-800"
+                  } `}
+                >
                   <MdMemory size="40px" />
                   <div>
                     <h5>Memory Usage</h5>
                     <p>{parseFloat(memoryUsed.toFixed(2))} MB</p>
+                    <p className="text-xs">
+                      Your Solution is {memoryData.percent.toFixed(2)}% more efficient
+                      than others
+                    </p>
+                    <p className="text-xs">Average Memory Usage: {memoryData.avg.toFixed(2)}MB</p>
                   </div>
                 </div>
-                <div className="flex gap-5 items-center justify-center border p-5 rounded-lg w-[230px]">
+                <div
+                  className={`flex gap-5 items-center justify-center p-5 rounded-lg w-[400px] border-2 ${
+                    timeData?.percent < 30
+                      ? "border-red-800"
+                      : timeData?.percent < 60
+                      ? "border-yellow-800"
+                      : "border-green-800"
+                  }`}
+                >
                   <MdAccessTime size="40px" />
                   <div>
                     <h5>Time Taken</h5>
                     <p>{parseFloat(timeTaken.toFixed(2))}ms</p>
+                    <p className="text-xs">
+                      Your Solution is {timeData.percent.toFixed(2)}% more efficient
+                      than others
+                    </p>
+                    <p className="text-xs">
+                      Average Time Taken: {timeData.avg.toFixed(2)}ms
+                    </p>
                   </div>
                 </div>
               </div>

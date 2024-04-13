@@ -20,6 +20,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useHotkeys } from "react-hotkeys-hook";
+import { z } from "zod";
 
 const divStyle = {
   backgroundImage: "url(/assets/wave-bg.png)",
@@ -50,13 +51,27 @@ const Login = () => {
 
   const handleLogin = (): void => {
     setSignInLoading(true);
+
+    const schema = z.object({
+      username: z.string(),
+      password: z.string(),
+    });
+
+    try {
+      schema.parse({ username, password });
+    } catch (err) {
+      console.log(err);
+      toast.error("Please fill in all the fields");
+      setSignInLoading(false);
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/login`, {
         username: username,
         password: password,
       })
       .then((res) => {
-        console.log(res.data);
         if (res.data.tfa) {
           setIsTfa(true);
           setId(res.data.id);
@@ -72,6 +87,7 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
+        console.log(err);
         if (
           err.response.status === 401 ||
           err.response.status === 400 ||
@@ -108,6 +124,7 @@ const Login = () => {
         localStorage.setItem("token", token);
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 404) {
           toast.error("Account does not exist. Please sign up.");
           return;
@@ -119,7 +136,18 @@ const Login = () => {
   };
 
   const verifyCode = () => {
-    console.log(code);
+    const schema = z.object({
+      code: z.string(),
+    });
+
+    try {
+      schema.parse({ code });
+    } catch (err) {
+      console.log(err);
+      toast.error("Please fill in all the fields");
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/tfa/verify`, {
         code,
@@ -135,6 +163,7 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 400) {
           toast.error("Invalid Code");
         } else {
@@ -148,7 +177,7 @@ const Login = () => {
   };
 
   const listenEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement; 
+    const target = e.target as HTMLInputElement;
     setPassword(target.value);
     if (e.key === "Enter") {
       handleLogin();
@@ -228,23 +257,20 @@ const Login = () => {
                 value={code}
                 className="mt-5 mb-5"
                 onComplete={verifyCode}
-                render={({ slots }) => (
-                  <>
-                    <InputOTPGroup>
-                      {slots.slice(0, 3).map((slot, index) => (
-                        <InputOTPSlot key={index} {...slot} />
-                      ))}{" "}
-                    </InputOTPGroup>
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
 
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      {slots.slice(3).map((slot, index) => (
-                        <InputOTPSlot key={index} {...slot} />
-                      ))}
-                    </InputOTPGroup>
-                  </>
-                )}
-              />
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
 
               <Button
                 variant="default"

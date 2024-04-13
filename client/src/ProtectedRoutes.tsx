@@ -5,9 +5,6 @@ import Settings from "./pages/settings/Settings";
 import RecentLogins from "./pages/settings/recent_logins/RecentLogins";
 import ChangePassword from "./pages/settings/change_password/ChangePassword";
 import TFA from "./pages/settings/tfa/TFA";
-import Learn from "./pages/learn/Learn";
-import Course from "./pages/course/Course";
-import CourseName from "./pages/course/{courseName}/CourseName";
 import Assessments from "./pages/assessments/Screenings";
 import Submission from "./pages/submission/Submission";
 import Profile from "./pages/profile/Profile";
@@ -53,10 +50,6 @@ export const Routes = [
       { path: "/organization", Component: Organization },
       
       { path: "/u/:id", Component: Profile },
-
-      { path: "/learn", Component: Learn },
-      { path: "/course", Component: Course },
-      { path: "/course/:courseName", Component: CourseName },
 
       { path: "/submission/:id", Component: Submission },
 

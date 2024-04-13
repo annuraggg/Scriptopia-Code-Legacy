@@ -11,7 +11,9 @@ const runJS = async (
   const jsCode = createJSFunction(code, fnName, cases, problem);
   const result = await fetchOutput(jsCode, cases);
 
-  console.log(result);
+  /*
+  console.log("RESULT FROM COMPILER")
+  console.log(result);*/
   return result;
 };
 
@@ -140,7 +142,8 @@ const fetchOutput = async (code: string, cases: Case[]) => {
       expectedOutput: cases.map((c) => c.output),
       internalStatus: output.passed ? "PASSED" : "FAILED",
       failedCaseNumber: output.failedCase,
-      failedCase: output.failedCase === -1 ? {} as Case : cases[output.failedCase],
+      failedCase:
+        output.failedCase === -1 ? ({} as Case) : cases[output.failedCase],
       error: data.error,
       language: data.language,
       info: data.info,

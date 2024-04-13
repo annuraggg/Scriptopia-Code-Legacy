@@ -85,7 +85,7 @@ const Signup = () => {
   }, []);
 
   const signUp = () => {
-    const nameSchema = z.string().nonempty().min(2).max(50);
+    const nameSchema = z.string().min(2).max(50);
     const emailSchema = z.string().email();
     const passwordSchema = z
       .string()

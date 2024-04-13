@@ -61,8 +61,8 @@ const CodeEditor = ({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const detectPaste = (event: any) => {
-    const currentPaste = event.clipboardData.getData("text/plain");
-    const lastCopy = localStorage.getItem("lastCopy");
+    const currentPaste = event?.clipboardData?.getData("text/plain");
+    const lastCopy = localStorage?.getItem("lastCopy");
 
     if (lastCopy !== currentPaste) {
       setPaste(paste + 1);
@@ -74,8 +74,8 @@ const CodeEditor = ({
       | React.ClipboardEvent<HTMLDivElement>
       | React.ClipboardEvent<HTMLTextAreaElement>
   ) => {
-    const lastCopy = e.clipboardData.getData("text/plain");
-    localStorage.setItem("lastCopy", lastCopy);
+    const lastCopy = e?.clipboardData?.getData("text/plain");
+    localStorage?.setItem("lastCopy", lastCopy);
   };
 
   return (
@@ -89,9 +89,9 @@ const CodeEditor = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {languages.map((lang) => (
+              {languages?.map((lang) => (
                 <SelectItem key={lang} value={lang}>
-                  {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                  {lang?.charAt(0)?.toUpperCase() + lang?.slice(1)}
                 </SelectItem>
               ))}
             </SelectContent>

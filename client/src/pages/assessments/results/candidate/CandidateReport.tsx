@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 import { FaScissors } from "react-icons/fa6";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IoExit } from "react-icons/io5";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/ui/Separator";
 import { Progress } from "@/components/ui/progress";
 import { FaPlay } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
+import Loader from "@/components/Loader";
 
 interface CandidateReport {
   name: string;
@@ -28,6 +31,7 @@ interface CandidateReport {
     [key: string]: {
       score: number;
       outOf: number;
+      outOfHundred: number;
     };
   };
   challengeSolution: {
@@ -35,7 +39,7 @@ interface CandidateReport {
     name: string;
     timeTaken: number;
     difficulty: string;
-    status: string;
+    status: number;
     language: string;
     cheating: {
       detected: boolean;
@@ -48,120 +52,40 @@ interface CandidateReport {
 
 const CandidateReport = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [candidate, setCandidate] = useState<CandidateReport>(
     {} as CandidateReport
   );
 
   useEffect(() => {
-    const data: CandidateReport = {
-      name: "Anurag Sawant",
-      email: "anuragsawant@duck.com",
-      assessmentDate: "2021-09-01",
-      sessionRewind: "https://www.youtube.com/watch?v=9bZkp7q19f0",
-      scores: {
-        average: 80,
-        qualifying: 70,
-        total: 100,
-      },
-      cheating: {
-        detected: true,
-        pastedCode: true,
-        windowSwitch: true,
-      },
-      skillRating: {
-        javascript: {
-          score: 80,
-          outOf: 100,
-        },
-        react: {
-          score: 70,
-          outOf: 100,
-        },
-        nodejs: {
-          score: 90,
-          outOf: 100,
-        },
-        typescript: {
-          score: 85,
-          outOf: 100,
-        },
-      },
-      challengeSolution: [
-        {
-          id: 1,
-          name: "Two Sum",
-          timeTaken: 10,
-          difficulty: "Easy",
-          status: "Accepted",
-          language: "Javascript",
-          cheating: {
-            detected: false,
-            pastedCode: 2,
-            windowSwitch: 4,
-          },
-          score: 100,
-        },
-        {
-          id: 2,
-          name: "Add Two Numbers",
-          timeTaken: 15,
-          difficulty: "Medium",
-          status: "Accepted",
-          language: "Javascript",
-          cheating: {
-            detected: false,
-            pastedCode: 10,
-            windowSwitch: 12,
-          },
-          score: 100,
-        },
-        {
-          id: 3,
-          name: "Longest Substring Without Repeating Characters",
-          timeTaken: 20,
-          difficulty: "Hard",
-          status: "Accepted",
-          language: "Javascript",
-          cheating: {
-            detected: false,
-            pastedCode: 2,
-            windowSwitch: 0,
-          },
-          score: 100,
-        },
-        {
-          id: 4,
-          name: "Median of Two Sorted Arrays",
-          timeTaken: 25,
-          difficulty: "Hard",
-          status: "Accepted",
-          language: "Javascript",
-          cheating: {
-            detected: false,
-            pastedCode: 25,
-            windowSwitch: 12,
-          },
-          score: 100,
-        },
-        {
-          id: 5,
-          name: "Longest Palindromic Substring",
-          timeTaken: 30,
-          difficulty: "Hard",
-          status: "Accepted",
-          language: "Javascript",
-          cheating: {
-            detected: true,
-            pastedCode: 4,
-            windowSwitch: 0,
-          },
-          score: 100,
-        },
-      ],
-    };
-
-    setCandidate(data);
+    const id = window.location.pathname.split("/")[5];
+    const sid = window.location.pathname.split("/")[2];
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/candidate`, {
+        candidateId: id,
+        screeningId: sid,
+      })
+      .then((res) => {
+        setCandidate(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch candidate");
+      })
+      .finally(() => setLoading(false));
   }, []);
+
+  const convertToDate = (date: string) => {
+    return new Date(date).toDateString();
+  };
+
+  const convertToMinsSecs = (time: number) => {
+    const mins = Math?.floor(time / 60);
+    const secs = time % 60;
+    return `${mins}m ${secs}s`;
+  };
+
+  if (loading) return <Loader />;
 
   return (
     <>
@@ -172,11 +96,11 @@ const CandidateReport = () => {
             <h1>{candidate?.name}</h1>
             <p>{candidate?.email}</p>
             <p className="text-sm text-gray-400 mt-5">
-              Assessment given on {candidate?.assessmentDate}
+              Assessment given on {convertToDate(candidate?.assessmentDate)}
             </p>
           </div>
 
-          <div>
+          <div className="w-full">
             <h3>Scores</h3>
             <div className="flex gap-5 mt-5">
               <Card className="w-full rounded-lg">
@@ -194,7 +118,7 @@ const CandidateReport = () => {
                     </p>
                     <p className="flex flex-col justify-center items-end">
                       <p>Total Score</p>
-                      {candidate?.scores?.total}%
+                      {candidate?.scores?.total.toFixed(2)}%
                     </p>
                   </div>
                 </CardHeader>
@@ -250,6 +174,16 @@ const CandidateReport = () => {
               </Card>
             </div>
 
+            {candidate?.scores?.total < candidate?.scores?.qualifying ? (
+              <div className="p-5 border mt-5 rounded-lg flex items-center gap-5 text-red-600">
+                <p>Not Qualified</p>
+              </div>
+            ) : (
+              <div className="p-5 border mt-5 rounded-lg flex items-center gap-5 text-green-600">
+                <p>Qualified</p>
+              </div>
+            )}
+
             <div
               className="p-5 border mt-5 rounded-lg flex items-center gap-5 hover:text-purple-500 cursor-pointer duration-300 transition-all"
               onClick={() => window.open(candidate?.sessionRewind, "_blank")}
@@ -278,8 +212,8 @@ const CandidateReport = () => {
 
                     <div className="flex gap-5 items-center">
                       <Progress
-                        value={candidate?.skillRating[skill]?.score}
-                        max={candidate?.skillRating[skill]?.outOf}
+                        value={candidate?.skillRating[skill]?.outOfHundred}
+                        max={100}
                       />
                       <p>
                         {candidate?.skillRating[skill]?.score}/
@@ -300,9 +234,12 @@ const CandidateReport = () => {
                   <div className="flex flex-col justify-center w-[50%]">
                     <h3>{solution?.name}</h3>
                     <div className="flex gap-5 text-xs mt-2">
-                      <p>{solution?.language}</p>
-                      <p>{solution?.difficulty}</p>
-                      <p>{solution?.timeTaken} mins</p>
+                      <p>{solution?.language.toUpperCase()}</p>
+                      <p>
+                        {solution?.difficulty.slice(0, 1).toUpperCase() +
+                          solution?.difficulty.slice(1)}
+                      </p>
+                      <p>{convertToMinsSecs(solution?.timeTaken)}</p>
                     </div>
                     <Button
                       variant="link"
@@ -317,7 +254,9 @@ const CandidateReport = () => {
                   <Separator orientation="vertical" className="h-20 mx-5" />
 
                   <div className="flex flex-col justify-center w-[50%]">
-                    <p>{solution?.status}</p>
+                    <p>
+                      {solution?.status === 200 ? "Accepted" : "Not Accepted"}
+                    </p>
                     <p
                       className={
                         solution?.cheating?.detected

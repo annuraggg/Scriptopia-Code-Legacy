@@ -1,6 +1,7 @@
 import { io } from "@/config/init";
 import logger from "@/config/logger";
 import Screening from "@/schemas/ScreeningSchema";
+import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema";
 import express from "express";
 const router = express.Router();
 
@@ -48,6 +49,11 @@ router.post("/", async (req, res) => {
     // Check if the screening is closed
     if (screening.openRange.end && screening.openRange.end < new Date()) {
       return res.status(400).json({ message: "Screening is closed" });
+    }
+
+    const submissions = await ScreeningSubmission.find({ userEmail: email });
+    if (submissions.length !== 0) {
+      return res.status(400).json({ message: "You have already taken this screening" });
     }
 
     // Check if the user has already taken the screening
