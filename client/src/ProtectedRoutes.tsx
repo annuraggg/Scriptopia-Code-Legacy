@@ -1,5 +1,6 @@
 import Editor from "./pages/editor/Editor";
 import CreateProblem from "./pages/problems/create/CreateProblem";
+import CreateProblemL from "./pages/problems/create/legacy/CreateProblem";
 import Home from "./pages/home/Home";
 import Settings from "./pages/settings/Settings";
 import RecentLogins from "./pages/settings/recent_logins/RecentLogins";
@@ -32,6 +33,7 @@ export const Routes = [
       { path: "/editor/:id", Component: Editor },
       { path: "/problems/create", Component: CreateProblem },
       { path: "/problems/:id/edit", Component: CreateProblem },
+      { path: "/problems/l/create", Component: CreateProblemL },
 
       { path: "/settings", Component: Settings },
       { path: "/settings/logins", Component: RecentLogins },

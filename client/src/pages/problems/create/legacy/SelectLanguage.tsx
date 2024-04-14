@@ -1,11 +1,45 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import React, { useEffect } from "react";
 
-const SelectLanguage = () => {
+const SelectLanguage = ({
+  requestNext,
+  respondNext,
+  data,
+}: {
+  requestNext: boolean;
+  respondNext: (allowed: boolean, data: string[]) => void;
+  data: string[];
+}) => {
   const [selectedLanguages, setSelectedLanguages] = React.useState<string[]>(
     []
   );
+
+  useEffect(() => {
+    if (requestNext) {
+      goToNext();
+    }
+  }, [requestNext]);
+
+  useEffect(() => {
+    setSelectedLanguages(data);
+  }, []);
+
+  const goToNext = (): boolean => {
+    if (verifyFields()) {
+      respondNext(true, selectedLanguages);
+      return true;
+    }
+    respondNext(false, []);
+    return false;
+  };
+
+  const verifyFields = (): boolean => {
+    if (selectedLanguages.length === 0) return false;
+    return true;
+  };
 
   const languages: {
     name: string;
@@ -132,6 +166,7 @@ const SelectLanguage = () => {
   return (
     <div>
       <h5>Select Languages</h5>
+      <Input placeholder="Search Languages" className="w-[60vw] mt-5" />
       <div className="mt-5 grid grid-cols-5">
         {languages.map((language) => (
           <div className="mb-5" key={language.value}>
@@ -159,6 +194,9 @@ const SelectLanguage = () => {
           </div>
         ))}
       </div>
+      <Button onClick={() => goToNext()} className="mt- float-right">
+        Next
+      </Button>
     </div>
   );
 };

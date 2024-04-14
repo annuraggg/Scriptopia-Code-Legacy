@@ -1,0 +1,43 @@
+:root {
+  --fontColor: #000000;
+}
+
+.ql-toolbar {
+  border: none !important;
+  color: white !important;
+}
+
+.ql-header {
+  fill: none;
+  stroke: var(--fontColor) !important;
+  background-color: var(--fontColor) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.ql-toolbar .ql-stroke {
+  fill: none;
+  stroke: var(--fontColor) !important;
+  background-color: var(--fontColor) !important;
+}
+
+.ql-placeholder {
+  color: var(--fontColor) !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: var(--fontColor) !important;
+}
+.ql-editor {
+  font-family: "PT Sans" !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: var(--fontColor) !important;
+  stroke: none;
+  background-color: var(--fontColor) !important;
+}
+
+.ql-container {
+  border: none !important;
+}

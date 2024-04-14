@@ -21,12 +21,10 @@ import {
 } from "@/components/ui/input-otp";
 import { useHotkeys } from "react-hotkeys-hook";
 import { z } from "zod";
-
-const divStyle = {
-  backgroundImage: "url(/assets/wave-bg.png)",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-};
+import Logo from "@/components/LogoIcon";
+import { useSelector } from "react-redux";
+import { useTheme } from "@/components/theme-provider";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   useHotkeys("enter", () => {
@@ -184,70 +182,139 @@ const Login = () => {
     }
   };
 
+  const color = useSelector(
+    (state: {
+      theme: { colorPalette: string; color: string; theme: string };
+    }) => state.theme
+  );
+
+  const { theme, setTheme } = useTheme();
+
+  const changeTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+
+  const [show, setShow] = useState<boolean>(false);
+  const toggleShow = () => {
+    setShow(!show);
+  };
+
   return (
-    <div
-      className="h-[100vh] flex flex-col items-center justify-center gap-3"
-      style={divStyle}
-    >
-      <img srcSet="assets/img/logo.svg" width="100px" alt="logo" />
-      <h2 className=" mt-5 mb-5 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Welcome, Please Login.
-      </h2>
+    <div>
+      <div className="h-[100vh] flex flex-col items-center justify-center gap-3">
+        <div
+          className="border p-5 flex items-center justify-center rounded-full cursor-pointer"
+          onClick={changeTheme}
+          style={{
+            boxShadow: `0 0 140px 0 ${color.color}`,
+          }}
+        >
+          <Logo height={30} width={30} />
+        </div>
 
-      <Input
-        placeholder="Username"
-        type="text"
-        className="w-[250px]"
-        onChange={(e) => setUsername(e.target.value)}
-        value={username}
-      />
-      <Input
-        placeholder="Password"
-        type="password"
-        className="w-[250px]"
-        onKeyUp={(e) => listenEnter(e)}
-      />
+        <div className="text-center">
+          <h2 className=" font-semibold">Welcome back</h2>
+          <p className="text-sm mt-1 text-gray-400">
+            Please enter your details to sign in.
+          </p>
+        </div>
 
-      <Button
-        className="mt-5 w-[250px]"
-        variant="default"
-        disabled={signInLoading}
-        onClick={handleLogin}
-      >
-        {signInLoading ? (
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <div>Login</div>
-        )}
-      </Button>
+        <div>
+          <div
+            className="w-full flex items-center justify-center py-2"
+            id="btn"
+          >
+            <GoogleLogin
+              onSuccess={continueGoogle}
+              onError={() => toast.error("Something went wrong")}
+              type="standard"
+              theme={color.theme === "dark" ? "filled_black" : "outline"}
+              useOneTap={true}
+              text="continue_with"
+              shape="circle"
+              logo_alignment="left"
+              context="signin"
+              itp_support={true}
+            />
+          </div>
+          <Button className="mt-2 w-[300px] py-5 hidden" variant="outline">
+            Sign in with
+            <img
+              src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-icon-png-transparent-background-osteopathy-16.png"
+              alt="Sign in With Google"
+              className="ml-2 w-5 h-5"
+            />
+          </Button>
+        </div>
 
-      <div>
-        <GoogleLogin
-          onSuccess={continueGoogle}
-          onError={() => toast.error("Something went wrong")}
-          type="standard"
-          theme="filled_black"
-          useOneTap={true}
-          text="continue_with"
-          shape="pill"
-          logo_alignment="left"
-          context="signup"
-          itp_support={true}
-        />
+        <div className="flex gap-5 items-center my-2">
+          <div className="w-[120px] h-0 border"></div>
+          <p>OR</p>
+          <div className="w-[120px] h-0 border"></div>
+        </div>
+
+        <div>
+          <b className="text-sm font-semibold">Username</b>
+          <Input
+            placeholder="Username"
+            className="w-[300px] mt-1"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+        </div>
+
+        <div>
+          <b className="text-sm font-semibold">Password</b>
+          <div className="flex gap-2 items-center justify-center mt-1">
+            <Input
+              placeholder="Password"
+              type={show ? "text" : "password"}
+              className="w-[244px]"
+              onKeyUp={(e) => listenEnter(e)}
+            />
+            <Button variant="outline" onClick={toggleShow}>
+              {show ? <FaEyeSlash /> : <FaEye />}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end w-[300px]">
+          <a
+            href="/forgot"
+            className="text-xs underline underline-offset-[4px]"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <Button
+          className="mt-2 w-[300px] py-5"
+          disabled={signInLoading}
+          onClick={handleLogin}
+        >
+          {signInLoading ? (
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <div>Login</div>
+          )}
+        </Button>
+
+        <p className="text-xs">
+          Dont have an account yet?{" "}
+          <b>
+            <a href="/signup">Sign Up.</a>
+          </b>
+        </p>
       </div>
-
-      <a href="/forgot" className=" text-gray-400 mt-5">
-        Forgot Password?
-      </a>
-
-      <a href="/signup" className="justify-self-end bottom-10 absolute">
-        Create a new <span className="text-blue-500 underline">Account</span>
-      </a>
 
       <Dialog open={isTfa} onOpenChange={setChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="mb-5 font-semibold tracking-normal">
               Enter the 2FA code generated by your app or use a backup code
             </DialogTitle>
             <DialogDescription className="flex flex-col items-center justify-center">

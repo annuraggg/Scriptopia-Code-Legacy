@@ -16,6 +16,8 @@ import Editor from "./pages/assessments/id/Editor/Editor";
 import UserToken from "./types/UserToken";
 import ProtectedRoutesFunc from "./ProtectedRoutes";
 import "./App.css";
+import { selectTheme } from "./states/user/ThemeSlice";
+import { useTheme } from "./components/theme-provider";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +67,7 @@ function App() {
   const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
   ProtectedRoutesFunc();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -76,14 +79,37 @@ function App() {
       dispatch(clearUser());
     }
 
+    let color;
     if (colorPalette) {
-      selectTheme(colorPalette);
+      selectThemeImport(colorPalette);
+      color = selectColor(colorPalette);
     } else {
-      selectTheme("blue");
+      selectThemeImport("blue");
+      color = selectColor("blue");
     }
-  }, [dispatch]);
 
-  const selectTheme = (color: string) => {
+    console.log("theme", theme)
+
+    if (theme === "dark") {
+      import("./dark.css");
+      console.log("imported dark theme")
+    }
+
+    if (theme === "light") {
+      import("./light.css");
+      console.log("imported light theme")
+    }
+
+    dispatch(
+      selectTheme({
+        colorPalette: colorPalette || "blue",
+        color,
+        theme: theme || "light",
+      })
+    );
+  }, [dispatch, theme]);
+
+  const selectThemeImport = (color: string) => {
     switch (color) {
       case "zinc":
         import("./themes/zinc.css");
@@ -109,6 +135,27 @@ function App() {
       default:
         import("./themes/blue.css");
         break;
+    }
+  };
+
+  const selectColor = (color: string) => {
+    switch (color) {
+      case "zinc":
+        return "hsl(240 5.9% 55%)";
+      case "blue":
+        return "hsl(221.2 83.2% 53.3%)";
+      case "green":
+        return "hsl(142.1 76.2% 36.3%)";
+      case "orange":
+        return "hsl(24.6 95% 53.1%)";
+      case "rose":
+        return "hsl(346.8 77.2% 49.8%)";
+      case "purple":
+        return "hsl(262.1 83.3% 57.8%)";
+      case "yellow":
+        return "hsl(47.9 95.8% 53.1%)";
+      default:
+        return "hsl(221.2 83.2% 53.3%)";
     }
   };
 

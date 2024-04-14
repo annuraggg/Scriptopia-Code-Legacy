@@ -1,7 +1,6 @@
-/* @ts-ignore */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  font-family: "Inter", sans-serif;
+}
 
 /* Select the add block button */
 /* Chrome, Safari, Edge, Opera */
@@ -10,7 +9,6 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 
 /* Firefox */
 input[type="number"] {
@@ -237,58 +235,4 @@ input[type="number"] {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foregroundCHover);
-}
-
-.ql-toolbar {
-  border: none !important;
-  color: white !important;
-}
-
-.ql-toolbar .ql-stroke {
-  fill: none;
-  stroke: var(--fontColor) !important;
-  background-color: var(--fontColor) !important;
-}
-
-.ql-placeholder {
-  color: var(--fontColor) !important;
-}
-
-.ql-editor.ql-blank::before {
-  color: var(--fontColor) !important;
-}
-.ql-editor {
-  font-family: "PT Sans" !important;
-}
-
-.ql-toolbar .ql-fill {
-  fill: var(--fontColor) !important;
-  stroke: none;
-  background-color: var(--fontColor) !important;
-}
-
-.ql-container {
-  border: none !important;
-}
-
-
-@layer base {
-  h1 {
-    @apply text-2xl font-bold;
-  }
-  h2 {
-    @apply text-xl font-bold;
-  }
-  h3 {
-    @apply text-lg font-bold;
-  }
-  h4 {
-    @apply text-base font-bold;
-  }
-  h5 {
-    @apply text-sm font-bold;
-  }
-  h6 {
-    @apply text-xs font-bold;
-  }
 }

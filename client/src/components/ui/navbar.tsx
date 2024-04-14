@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { useEffect, useState } from "react";
-import Logo from "../Logo";
+import Logo from "../LogoIcon";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -56,12 +56,7 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    console.log("colorPalette", selectedColor);
-  });
-
-  useEffect(() => {
     const colorPalette = localStorage.getItem("colorPalette");
-    console.log("colorPalette in LS ", colorPalette);
     if (colorPalette) {
       setSelectedColor(colorPalette);
     }
