@@ -2,7 +2,7 @@ const returnStarter = (
   language: string,
   starterFunction: string,
   starterReturnType: string,
-  starterVarArgs: { key: string; type: string }[]
+  starterVarArgs: { key: string; type: string | boolean | number | Array<never>}[]
 ) => {
   switch (language) {
     case "javascript":

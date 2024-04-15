@@ -5,26 +5,83 @@ import StubComponent from "./StubComponent";
 import AddCase from "./AddCase";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Delta } from "quill/core";
+import { Case } from "@/types/TestCase";
 
 const CreateProblem = () => {
   const [active, setActive] = useState(0);
 
+  // * States for DetailsComponent
+  const [questionName, setQuestionName] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy"
+  );
+  const [recommendedTime, setRecommendedTime] = useState<number>(0);
+  const [tags, setTags] = useState<string[]>([]);
+  const [description, setDescription] = useState<Delta>({} as Delta);
+
+  // * States for SelectLanguage
+  const [languages, setLanguages] = useState<string[]>([]);
+
+  // * States for StubComponent
+  const [functionName, setFunctionName] = useState<string>("");
+  const [returnType, setReturnType] = useState<string>("");
+  const [functionArgs, setFunctionArgs] = useState<
+    { key: string; type: number | boolean | string | never[] }[]
+  >([]);
+
+  // * States for AddCase
+  const [testCases, setTestCases] = useState<Case[]>([]);
+
   const steps: { title: string; component?: JSX.Element }[] = [
     {
       title: "Question Details",
-      component: <DetailsComponent />,
+      component: (
+        <DetailsComponent
+          questionName={questionName}
+          setQuestionName={setQuestionName}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          recommendedTime={recommendedTime}
+          setRecommendedTime={setRecommendedTime}
+          tags={tags}
+          setTags={setTags}
+          description={description}
+          setDescription={setDescription}
+        />
+      ),
     },
     {
       title: "Languages",
-      component: <SelectLanguage />,
+      component: (
+        <SelectLanguage
+          selectedLanguages={languages}
+          setSelectedLanguages={setLanguages}
+        />
+      ),
     },
     {
       title: "Code Stub",
-      component: <StubComponent />,
+      component: (
+        <StubComponent
+          functionName={functionName}
+          setFunctionName={setFunctionName}
+          returnType={returnType}
+          setReturnType={setReturnType}
+          args={functionArgs}
+          setArgs={setFunctionArgs}
+        />
+      ),
     },
     {
       title: "Test Cases",
-      component: <AddCase />,
+      component: (
+        <AddCase
+          testCases={testCases}
+          setTestCases={setTestCases}
+          args={functionArgs}
+        />
+      ),
     },
   ];
 

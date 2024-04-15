@@ -2,7 +2,7 @@ type Case = {
   name: string;
   difficulty: string;
   score: number;
-  input: [string];
+  input: string[];
   output: string;
   isSample: boolean;
 };

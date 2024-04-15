@@ -1,12 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import React from "react";
 
-const SelectLanguage = () => {
-  const [selectedLanguages, setSelectedLanguages] = React.useState<string[]>(
-    []
-  );
-
+const SelectLanguage = ({
+  selectedLanguages,
+  setSelectedLanguages,
+}: {
+  selectedLanguages: string[];
+  setSelectedLanguages: (value: string[]) => void;
+}) => {
   const languages: {
     name: string;
     value: string;

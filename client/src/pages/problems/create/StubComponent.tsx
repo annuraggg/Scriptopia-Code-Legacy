@@ -22,12 +22,21 @@ import { java } from "@codemirror/lang-java";
 import { cpp } from "@codemirror/lang-cpp";
 import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
 
-const StubComponent = () => {
-  const [functionName, setFunctionName] = useState<string>("");
-  const [returnType, setReturnType] = useState<string>("");
-
-  const [args, setArgs] = useState<{ key: string; type: string }[]>([]);
-
+const StubComponent = ({
+  functionName,
+  setFunctionName,
+  returnType,
+  setReturnType,
+  args,
+  setArgs,
+}: {
+  functionName: string;
+  setFunctionName: (value: string) => void;
+  returnType: string;
+  setReturnType: (value: string) => void;
+  args: { key: string; type: string | boolean | number | Array<never> }[];
+  setArgs: (value: { key: string; type: string }[]) => void;
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>("javascript");
   const [stub, setStub] = useState<string>("");
@@ -51,14 +60,22 @@ const StubComponent = () => {
           <p className="text-xs">
             Function Name <span className="text-red-500">*</span>
           </p>
-          <Input placeholder="Enter function name" className="w-full" />
+          <Input
+            placeholder="Enter function name"
+            className="w-full"
+            value={functionName}
+            onChange={(e) => setFunctionName(e.target.value)}
+          />
         </div>
 
         <div className="flex flex-col gap-2 w-full">
           <p className="text-xs">
             Function Return Type <span className="text-red-500">*</span>
           </p>
-          <Select>
+          <Select
+            onValueChange={(value) => setReturnType(value)}
+            value={returnType}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Return Type" />
             </SelectTrigger>
@@ -77,6 +94,7 @@ const StubComponent = () => {
           <p>Function Arguments</p>
           <Button
             onClick={() =>
+              // @ts-expect-error - TODO: Fix this
               setArgs((prev) => [...prev, { key: "", type: "string" }])
             }
             className=" ml-10"
@@ -105,14 +123,25 @@ const StubComponent = () => {
                 value={arg.key}
                 onChange={(e) => {
                   const value = e.target.value;
+                  // @ts-expect-error - TODO: Fix this
                   setArgs((prev) =>
-                    prev.map((arg, i) =>
+                    prev.map((arg: { key: string; type: string }, i: number) =>
                       i === index ? { ...arg, key: value } : arg
                     )
                   );
                 }}
               />
-              <Select>
+              <Select
+                onValueChange={(value) => {
+                  // @ts-expect-error - TODO: Fix this
+                  setArgs((prev) =>
+                    prev.map((arg: { key: string; type: string }, i: number) =>
+                      i === index ? { ...arg, type: value } : arg
+                    )
+                  );
+                }}
+                value={arg.type as string}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Type" />
                 </SelectTrigger>
@@ -126,6 +155,7 @@ const StubComponent = () => {
 
               <Button
                 onClick={() =>
+                  // @ts-expect-error - TODO: Fix this
                   setArgs((prev) => prev.filter((_, i) => i !== index))
                 }
                 variant="destructive"

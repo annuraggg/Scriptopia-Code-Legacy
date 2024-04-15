@@ -7,31 +7,60 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Quill from "quill";
-import { ToolbarConfig } from "quill/modules/toolbar";
-import { useEffect, useState } from "react";
+import { Delta } from "quill/core";
+import { useEffect } from "react";
 import TagsInput from "react-tagsinput";
 
-const DetailsComponent = () => {
-  const [tags, setTags] = useState<string[]>([]);
-
+const DetailsComponent = ({
+  questionName,
+  setQuestionName,
+  difficulty,
+  setDifficulty,
+  recommendedTime,
+  setRecommendedTime,
+  tags,
+  setTags,
+  description,
+  setDescription,
+}: {
+  questionName: string;
+  setQuestionName: (value: string) => void;
+  difficulty: "easy" | "medium" | "hard";
+  setDifficulty: (value: "easy" | "medium" | "hard") => void;
+  recommendedTime: number;
+  setRecommendedTime: (value: number) => void;
+  tags: string[];
+  setTags: (value: string[]) => void;
+  description: Delta;
+  setDescription: (value: Delta) => void;
+}) => {
   useEffect(() => {
-    const toolbarOptions: ToolbarConfig = [
-      [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
-      ["bold", "italic", "underline", "strike"], // toggled buttons
-      ["code-block"],
-      ["link", "image"],
-
-      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-      ["clean"],
-    ];
-
-    new Quill("#editor", {
+    const quill = new Quill("#editor", {
       theme: "snow",
       placeholder: "Write your problem description here...",
       modules: {
-        toolbar: toolbarOptions,
+        toolbar: [
+          [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["code-block"],
+          ["link", "image"],
+
+          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+          ["clean"],
+        ],
       },
     });
+
+    quill.setContents(description);
+    quill.on("text-change", () => {
+      console.log("text-change");
+      setDescription(quill.getContents());
+    });
+
+    return () => {
+      quill.off("text-change");
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -40,7 +69,12 @@ const DetailsComponent = () => {
         <p className="text-xs">
           Question Name <span className="text-red-500">*</span>
         </p>
-        <Input placeholder="Enter question name" className="w-full" />
+        <Input
+          placeholder="Enter question name"
+          className="w-full"
+          value={questionName}
+          onChange={(e) => setQuestionName(e.target.value)}
+        />
       </div>
 
       <div className="flex gap-5 mt-5">
@@ -48,7 +82,12 @@ const DetailsComponent = () => {
           <p className="text-xs">
             Difficulty <span className="text-red-500">*</span>
           </p>
-          <Select>
+          <Select
+            value={difficulty}
+            onValueChange={(value) =>
+              setDifficulty(value as "easy" | "medium" | "hard")
+            }
+          >
             <SelectTrigger>
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
@@ -68,6 +107,8 @@ const DetailsComponent = () => {
             placeholder="Enter Recommended Time"
             type="number"
             className="w-full"
+            value={recommendedTime}
+            onChange={(e) => setRecommendedTime(+e.target.value)}
           />
         </div>
 
