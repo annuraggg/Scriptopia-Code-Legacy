@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MdAccessTime, MdMemory } from "react-icons/md";
 import Problem from "@/types/Problem";
-import { Separator } from "@/components/ui/Separator";
+import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 /*import { AxisOptions, Chart } from "react-charts";
 
@@ -105,6 +105,8 @@ const SuccessDrawer = ({
     ],
   };
 */
+
+
   return (
     <Drawer shouldScaleBackground open={open}>
       <DrawerContent>
@@ -133,12 +135,12 @@ const SuccessDrawer = ({
                   <MdMemory size="40px" />
                   <div>
                     <h5>Memory Usage</h5>
-                    <p>{parseFloat(memoryUsed.toFixed(2))} MB</p>
+                    <p>{parseFloat(memoryUsed?.toFixed(2))} MB</p>
                     <p className="text-xs">
-                      Your Solution is {memoryData.percent.toFixed(2)}% more efficient
+                      Your Solution is {memoryData?.percent?.toFixed(2)}% more efficient
                       than others
                     </p>
-                    <p className="text-xs">Average Memory Usage: {memoryData.avg.toFixed(2)}MB</p>
+                    <p className="text-xs">Average Memory Usage: {memoryData?.avg?.toFixed(2)}MB</p>
                   </div>
                 </div>
                 <div
@@ -155,11 +157,11 @@ const SuccessDrawer = ({
                     <h5>Time Taken</h5>
                     <p>{parseFloat(timeTaken.toFixed(2))}ms</p>
                     <p className="text-xs">
-                      Your Solution is {timeData.percent.toFixed(2)}% more efficient
+                      Your Solution is {timeData?.percent?.toFixed(2)}% more efficient
                       than others
                     </p>
                     <p className="text-xs">
-                      Average Time Taken: {timeData.avg.toFixed(2)}ms
+                      Average Time Taken: {timeData?.avg?.toFixed(2)}ms
                     </p>
                   </div>
                 </div>

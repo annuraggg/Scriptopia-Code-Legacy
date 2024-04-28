@@ -28,6 +28,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import papa from "papaparse";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const AddCase = ({
   args,
@@ -204,13 +216,119 @@ const AddCase = ({
     }
   };
 
+  const selectFile = () => {
+    const fileInput: HTMLInputElement | null =
+      document.querySelector("input[type='file']");
+    fileInput?.click();
+  };
+
+  const parseFile = (file: File | undefined) => {
+    if (file) {
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target?.result;
+          const result = papa.parse(text as string, { header: true });
+          console.log(result);
+          const cases = result.data.map(
+            // @ts-expect-error - Type mismatch
+            (item: {
+              name: string;
+              difficulty: string;
+              score: number;
+              input: string;
+              output: string;
+              isSample: string;
+            }) => {
+              console.log(item);
+              return {
+                name: item.name,
+                difficulty: item.difficulty,
+                score: item.score,
+                input: item.input.split(",").map((arg: string) => arg.trim()),
+                output: item.output,
+                isSample: item.isSample === "true" ? true : false,
+              };
+            }
+          );
+          setTestCases([...testCases, ...cases]);
+        };
+        reader.readAsText(file);
+      } catch (error) {
+        toast.error("Invalid File");
+      }
+    }
+  };
+
   return (
     <div>
       <div className="flex gap-5">
         <Button variant="link" onClick={() => setOpen(true)}>
           Add Case
         </Button>
-        <Button>Import From CSV</Button>
+
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <Button>Import From CSV</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                The CSV should be in the following format
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <p>It should Include the Following Columns</p>
+                <p>name, difficulty, score, input, output, isSample</p>
+
+                <p className="mt-5 mb-2">
+                  <strong>Sample CSV</strong>
+                </p>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>name</TableHead>
+                      <TableHead>difficulty</TableHead>
+                      <TableHead>score</TableHead>
+                      <TableHead>input</TableHead>
+                      <TableHead>output</TableHead>
+                      <TableHead>isSample</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Case 1</TableCell>
+                      <TableCell>easy</TableCell>
+                      <TableCell>10</TableCell>
+                      <TableCell>1, 2</TableCell>
+                      <TableCell>3</TableCell>
+                      <TableCell>true</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Case 2</TableCell>
+                      <TableCell>medium</TableCell>
+                      <TableCell>20</TableCell>
+                      <TableCell>2, 3</TableCell>
+                      <TableCell>5</TableCell>
+                      <TableCell>false</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={selectFile}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <input
+          type="file"
+          onChange={(e) => parseFile(e.target.files?.[0])}
+          className="hidden"
+        />
         <Button onClick={() => setIsBulkAddOpen(true)}>Place as Array</Button>
       </div>
 

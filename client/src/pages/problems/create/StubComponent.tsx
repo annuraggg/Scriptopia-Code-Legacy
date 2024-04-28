@@ -168,7 +168,7 @@ const StubComponent = ({
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className=" min-w-fit overflow-auto">
           <DialogHeader>
             <DialogTitle>Code Stub</DialogTitle>
             <DialogDescription>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Input }    from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import Quill from "quill";
 import "quill/dist/quill.core.css";
 import { ToolbarConfig } from "quill/modules/toolbar";
@@ -19,7 +19,7 @@ import { Delta } from "quill/core";
 const DetailsComponent = ({
   requestNext,
   respondNext,
-  data
+  data,
 }: {
   requestNext: boolean;
   respondNext: (allowed: boolean, data: unknown) => void;

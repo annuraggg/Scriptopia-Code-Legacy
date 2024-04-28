@@ -7,12 +7,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Delta } from "quill/core";
 import { Case } from "@/types/TestCase";
+import QualityGate from "./QualityGate";
+import { z } from "zod";
+import axios from "axios";
+import { toast } from "sonner";
 
 const CreateProblem = () => {
   const [active, setActive] = useState(0);
 
   // * States for DetailsComponent
   const [questionName, setQuestionName] = useState<string>("");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [useAllowed, setUseAllowed] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
     "easy"
   );
@@ -33,6 +39,59 @@ const CreateProblem = () => {
   // * States for AddCase
   const [testCases, setTestCases] = useState<Case[]>([]);
 
+  const submit = () => {
+    const schema = z.object({
+      name: z.string(),
+      time: z.number(),
+      difficulty: z.string(),
+      tags: z.array(z.string()),
+      description: z.any(),
+      selectedLanguages: z.array(z.string()),
+      functionName: z.string(),
+      returnType: z.string(),
+      args: z.array(z.object({ key: z.string(), type: z.any() })),
+      testCases: z.array(z.any()),
+      isPrivate: z.boolean(),
+      allowInterview: z.boolean(),
+    });
+
+    const data = {
+      name: questionName,
+      time: recommendedTime,
+      difficulty: difficulty,
+      tags: tags,
+      description: description,
+      selectedLanguages: languages,
+      functionName: functionName,
+      returnType: returnType,
+      args: functionArgs,
+      testCases: testCases,
+      isPrivate: isPrivate,
+      allowInterview: useAllowed,
+    };
+
+    console.log(data);
+
+    const validatedData = schema.parse(data);
+
+    console.log(validatedData);
+
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/create`,
+        validatedData
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        setTimeout(() => {
+          window.location.href = `/editor/${res.data.id}`;
+        }, 500);
+      })
+      .catch(() => {
+        toast.error("Something went Wrong");
+      });
+  };
+
   const steps: { title: string; component?: JSX.Element }[] = [
     {
       title: "Question Details",
@@ -48,6 +107,10 @@ const CreateProblem = () => {
           setTags={setTags}
           description={description}
           setDescription={setDescription}
+          isPrivate={isPrivate}
+          setIsPrivate={setIsPrivate}
+          useAllowed={useAllowed}
+          setUseAllowed={setUseAllowed}
         />
       ),
     },
@@ -83,6 +146,18 @@ const CreateProblem = () => {
         />
       ),
     },
+    {
+      title: "Quality Gate",
+      component: (
+        <QualityGate
+          tags={tags}
+          statement={description}
+          testCases={testCases}
+          isPublic={!isPrivate}
+          submit={submit}
+        />
+      ),
+    },
   ];
 
   const goToTab = (index: number) => {
@@ -101,7 +176,7 @@ const CreateProblem = () => {
       <div className="px-10 py-5">
         <h2>Create Problem</h2>
         <div className="flex gap-10">
-          <div className="flex flex-col justify-center gap-12">
+          <div className="flex flex-col justify-center gap-3">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -137,9 +212,11 @@ const CreateProblem = () => {
                     Previous
                   </Button>
                 )}
-                <Button variant="secondary" onClick={goToNext}>
-                  Next
-                </Button>
+                {active < steps.length - 1 && (
+                  <Button variant="secondary" onClick={goToNext}>
+                    Next
+                  </Button>
+                )}
               </div>
             </div>
             <div className="border p-10 py-5 rounded-b-lg w-full overflow-y-auto h-[75vh]">

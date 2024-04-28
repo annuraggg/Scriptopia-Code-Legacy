@@ -13,7 +13,7 @@ import edit from "./edit.js";
 router.use("/create", verifyJWT, create);
 router.use("/edit", verifyJWT, edit);
 
-router.post("/:probID", async (req, res) => {
+router.post("/:probID", verifyJWT, async (req, res) => {
   try {
     const problem: ProblemType | any = await Problem.findById(
       req.params.probID
@@ -32,15 +32,18 @@ router.post("/:probID", async (req, res) => {
         authorid: author?._id,
       };
       const desc = problem.description;
-      const cases = problem.testCases;
+      const allCases = problem.testCases;
       const func = problem.starterFunction;
       const args = problem.starterVarArgs;
 
+      const cases = allCases.filter((c: any) => c.isSample);
+
       const submissions: SubmissionType[] = await Submission.find({
-        problemID: req.params.probID,
+        problemID: problem._id,
         // @ts-ignore
         userID: req?.user?.id,
       });
+
 
       res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.returnType});
     }

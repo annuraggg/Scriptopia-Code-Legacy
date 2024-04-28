@@ -90,38 +90,22 @@ const Descriptor = ({
           ) : (
             <Tabs defaultValue="case1" className="bg-secondary rounded-t-lg">
               <TabsList className=" bg-secondary ">
-                <TabsTrigger value="case1">
-                  {" "}
-                  <div
-                    className={`${
-                      cases[0]?.output == output[0]
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    } h-1 w-1 mr-2 rounded-full`}
-                  ></div>{" "}
-                  Case 1
-                </TabsTrigger>
-                <TabsTrigger value="case2">
-                  <div
-                    className={`${
-                      cases[1]?.output == output[1]
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    } h-1 w-1 mr-2 rounded-full`}
-                  ></div>
-                  Case 2
-                </TabsTrigger>
-                <TabsTrigger value="case3">
-                  <div
-                    className={`${
-                      cases[2]?.output == output[2]
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    } h-1 w-1 mr-2 rounded-full`}
-                  ></div>
-                  Case 3
-                </TabsTrigger>
-
+                {cases?.map((c, i) => {
+                  if (i < 3) {
+                    return (
+                      <TabsTrigger key={i} value={`case${i + 1}`}>
+                        <div
+                          className={`${
+                            cases[i]?.output == output[i]
+                              ? "bg-green-500"
+                              : "bg-red-500"
+                          } h-1 w-1 mr-2 rounded-full`}
+                        ></div>
+                        Case {i + 1}
+                      </TabsTrigger>
+                    );
+                  }
+                })}
                 {failedCaseNumber >= 3 && (
                   <TabsTrigger value="fc">
                     <div className="bg-red-500 h-1 w-1 mr-2 rounded-full"></div>

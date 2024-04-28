@@ -75,6 +75,10 @@ export const problemSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  allowInterview: {
+    type: Boolean,
+    default: true,
+  },
   lastUpdated: {
     type: Date,
     default: Date.now,

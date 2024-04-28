@@ -31,7 +31,6 @@ const ProblemStatement = ({
       readOnly: true,
       theme: "snow",
     });
-
     q.setContents(statement);
   }, [statement]);
 

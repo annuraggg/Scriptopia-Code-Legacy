@@ -16,7 +16,10 @@ router.post("/", async (req, res) => {
     returnType,
     args,
     testCases,
+    isPrivate,
+    allowInterview
   } = req.body;
+
 
   if (
     !name ||
@@ -47,6 +50,8 @@ router.post("/", async (req, res) => {
       functionReturn: returnType,
       starterVarArgs: args,
       testCases,
+      isPrivate,
+      allowInterview,
     });
 
     res

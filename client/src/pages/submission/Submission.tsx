@@ -9,22 +9,17 @@ import Split from "react-split";
 import Descriptor from "./Descriptor";
 import Explain from "./Explain";
 import { toast } from "sonner";
-import Problem from "@/types/Problem";
-
-interface Submission {
-  _id: string;
-  problemID: string;
-  userID: string;
-  code: string;
-  language: string;
-  status: string;
-  output: Record<string, string>;
-}
+import { Delta } from "quill/core";
+import SubmissionType from "@/types/Submission";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Info from "./Info";
 
 const Submission = () => {
   const [loading, setLoading] = useState(true);
-  const [submission, setSubmission] = useState<Submission>({} as Submission);
-  const [problem, setProblem] = useState<Problem>({} as Problem);
+  const [submission, setSubmission] = useState<SubmissionType>(
+    {} as SubmissionType
+  );
+  const [statement, setStatement] = useState<Delta>({} as Delta);
   const [meta, setMeta] = useState<ProblemMeta>({} as ProblemMeta);
 
   const [openSheet, setOpenValue] = useState(false);
@@ -40,9 +35,9 @@ const Submission = () => {
         id,
       })
       .then((res) => {
-        setSubmission(res.data.submission);
-        setProblem(res.data.desc);
-        setMeta(res.data.meta);
+        setSubmission(res?.data?.submission);
+        setStatement(res?.data?.desc);
+        setMeta(res?.data?.meta);
       })
       .catch((err) => {
         console.log(err);
@@ -57,15 +52,15 @@ const Submission = () => {
     setOpenValue(true);
     setExplainCodeStr(code);
     axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/compiler/explain`, {
+      .post(`${import.meta.env?.VITE_BACKEND_ADDRESS}/compiler/explain`, {
         code: code,
       })
       .then((res) => {
-        setExplainResponse(res.data.response);
+        setExplainResponse(res?.data?.response);
       })
       .catch((err) => {
         toast.error("Something went wrong!");
-        console.error(err.response.data.message);
+        console.error(err?.response?.data?.message);
         setSheetError(true);
       })
       .finally(() => {
@@ -80,16 +75,23 @@ const Submission = () => {
   return (
     <>
       <Navbar />
-      <div className="flex px-10 py-5 items-start justify-center gap-5 w-full">
-        <div className="pl-5 bg-secondary rounded-lg w-[48%]">
-
-          // ! FIX THIS
-          <ProblemStatement statement={problem.description} meta={meta} />
-        </div>
+      <div className="flex px-5 items-start justify-center gap-5 w-full">
+        <Tabs defaultValue="problem" className="w-[50%]">
+          <TabsList>
+            <TabsTrigger value="problem">Problem</TabsTrigger>
+            <TabsTrigger value="meta">Info</TabsTrigger>
+          </TabsList>
+          <TabsContent value="problem">
+            <ProblemStatement statement={statement} meta={meta} />
+          </TabsContent>
+          <TabsContent value="meta">
+            <Info submission={submission} />
+          </TabsContent>
+        </Tabs>
         <div className="w-[48%]">
-          <Split className="w-[100%] h-[85vh] split" direction="vertical">
-            <CodeEditor code={submission.code} explainCode={explainCode} />
-            <Descriptor />
+          <Split className="w-[100%] h-[90vh] split" direction="vertical">
+            <CodeEditor code={submission?.code} explainCode={explainCode} />
+            <Descriptor output={submission?.output?.consoleOP} />
           </Split>
         </div>
         <Explain

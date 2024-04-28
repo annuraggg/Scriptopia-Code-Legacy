@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import Quill from "quill";
 import { Delta } from "quill/core";
 import { useEffect } from "react";
@@ -22,6 +23,10 @@ const DetailsComponent = ({
   setTags,
   description,
   setDescription,
+  isPrivate,
+  setIsPrivate,
+  useAllowed,
+  setUseAllowed,
 }: {
   questionName: string;
   setQuestionName: (value: string) => void;
@@ -33,6 +38,10 @@ const DetailsComponent = ({
   setTags: (value: string[]) => void;
   description: Delta;
   setDescription: (value: Delta) => void;
+  isPrivate: boolean;
+  setIsPrivate: (value: boolean) => void;
+  useAllowed: boolean;
+  setUseAllowed: (value: boolean) => void;
 }) => {
   useEffect(() => {
     const quill = new Quill("#editor", {
@@ -60,7 +69,7 @@ const DetailsComponent = ({
     return () => {
       quill.off("text-change");
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -75,6 +84,25 @@ const DetailsComponent = ({
           value={questionName}
           onChange={(e) => setQuestionName(e.target.value)}
         />
+      </div>
+
+      <div className="flex gap-10">
+        <div className="flex flex-col gap-2 mt-5">
+          <p className="text-xs">
+            Is this a Private Question? <span className="text-red-500">*</span>
+          </p>
+          <Switch onCheckedChange={setIsPrivate} checked={isPrivate} />
+        </div>
+
+        {isPrivate && (
+          <div className="flex flex-col gap-2 mt-5">
+            <p className="text-xs">
+              Allow to be used in interview?{" "}
+              <span className="text-red-500">*</span>
+            </p>
+            <Switch onCheckedChange={setUseAllowed} checked={useAllowed} />
+          </div>
+        )}
       </div>
 
       <div className="flex gap-5 mt-5">
