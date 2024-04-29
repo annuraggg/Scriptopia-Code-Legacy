@@ -1,4 +1,3 @@
-import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
 import {
   Select,
   SelectContent,
@@ -9,6 +8,8 @@ import {
 import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
 import { python, pythonLanguage } from "@codemirror/lang-python";
 import { java, javaLanguage } from "@codemirror/lang-java";
+import { useTheme } from "@/components/theme-provider";
+import ReactCodeMirror from "@uiw/react-codemirror";
 
 const CodeEditor = ({
   languages,
@@ -59,6 +60,8 @@ const CodeEditor = ({
     }
   };
 
+  const { theme } = useTheme();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const detectPaste = (event: any) => {
     const currentPaste = event?.clipboardData?.getData("text/plain");
@@ -101,7 +104,7 @@ const CodeEditor = ({
       <div className=" h-full bg-[#282C34] ">
         <ReactCodeMirror
           value={code}
-          theme={oneDark}
+          theme={theme as "dark" | "light"}
           // @ts-expect-error - CodeMirror types are not up to date
           extensions={syntaxHighlighting ? extension(selectedLang) : []}
           onPasteCapture={

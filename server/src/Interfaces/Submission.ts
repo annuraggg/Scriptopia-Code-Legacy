@@ -15,7 +15,7 @@ interface Submission extends Document {
       name: string;
       difficulty: string;
       score: number;
-      input: string;
+      input: string[];
       output: string;
     };
     error: string;

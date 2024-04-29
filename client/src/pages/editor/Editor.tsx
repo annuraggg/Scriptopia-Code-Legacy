@@ -17,6 +17,7 @@ import Submissions from "./Submissions";
 import PageLoading from "@/components/PageLoading";
 import { Delta } from "quill/core";
 import Problem from "@/types/Problem";
+import { useTheme } from "@/components/theme-provider";
 
 interface Submission {
   _id: string;
@@ -93,6 +94,8 @@ function App() {
     percent: 0,
     avg: 0,
   });
+
+  const { theme } = useTheme();
 
   useEffect(() => {
     const probId = window.location.pathname.split("/").pop();
@@ -270,18 +273,23 @@ function App() {
   if (loading) {
     return <PageLoading />;
   }
+
   return (
     <div vaul-drawer-wrapper="">
       <div
         className={` ${
           !running ? "opacity-100" : "opacity-0"
-        } flex items-center justify-center text-white text-2xl font-bold transition-all duration-500 ease-in-out h-[100vh] absolute w-full`}
+        } flex items-center justify-center text-white text-2xl font-bold transition-all duration-500 ease-in-out h-[100vh] absolute w-full z-[-5]`}
         style={{
           background:
-            bgOverlay === 1
-              ? "radial-gradient(circle, rgba(1,45,9,1) 0%, rgba(2,8,23,1) 100%)"
-              : bgOverlay === 2
-              ? " radial-gradient(circle, rgba(45,1,1,1) 0%, rgba(2,8,23,1) 100%)"
+            bgOverlay === 2
+              ? `radial-gradient(circle, ${
+                  theme === "dark" ? "rgba(0,45,0,1)" : "rgba(0,200,0,.2)"
+                } 0%, rgba(244,8,23,0) 100%)`
+              : bgOverlay === 1
+              ? `radial-gradient(circle, rgba(45,1,1, ${
+                  theme === "dark" ? "1" : ".2"
+                }) 0%, rgba(244,8,23,0) 100%)`
               : "",
         }}
       ></div>
@@ -290,7 +298,7 @@ function App() {
       <div
         className={`flex gap-5 px-5 h-[90vh] overflow-y-auto flex-col md:flex-row`}
       >
-        <div className="md:w-[50%] w-[100%] z-50">
+        <div className="md:w-[50%] w-[100%] z-10">
           <Tabs defaultValue="problem">
             <TabsList>
               <TabsTrigger value="problem">Problem</TabsTrigger>
@@ -307,7 +315,7 @@ function App() {
           </Tabs>
         </div>
         <Split
-          className="md:w-[50%] w-[100%] h-[90vh] split z-50"
+          className="md:w-[50%] w-[100%] h-[90vh] split z-20"
           direction="vertical"
         >
           <CodeEditor

@@ -11,13 +11,17 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  image: {
+    type: String,
+    required: false,
+  },
   username: {
     type: String,
     required: true,
     default: generateUsername("-", 5),
     unique: true,
   },
-  links : {
+  links: {
     github: {
       type: String,
       required: false,
@@ -29,7 +33,7 @@ const userSchema = new Schema({
     linkedin: {
       type: String,
       required: false,
-    }
+    },
   },
   email: {
     type: String,
@@ -147,34 +151,18 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
       },
+      problemID: {
+        type: Schema.Types.ObjectId,
+        required: true,
+      },
       timerScore: Number,
       testCaseScore: Number,
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
-  learningPath: [
-    {
-      moduleTitle: String,
-      moduleDescription: String,
-      tutorials: [String],
-      problems: [
-        {
-          problemId: {
-            type: Schema.Types.ObjectId,
-            required: true,
-          },
-          title: {
-            type: String,
-            required: true,
-          },
-          solved: Boolean,
-          solvedOn: Date,
-          score: Number,
-        },
-      ],
-      quizzes: [Schema.Types.ObjectId],
-    },
-  ],
-  tagsSolved: [String],
   loginHistory: [
     {
       date: {

@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { toast } from "sonner";
 
 interface Submission {
   _id: string;
@@ -28,8 +30,19 @@ const Submissions = ({ submissions }: { submissions: Submission[] }) => {
   const [deleteID, setDeleteID] = useState("");
 
   const deleteSubmission = () => {
-    // delete submission
-    setDeleteOpen(false);
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/submission/delete`, {
+        id: deleteID,
+      })
+      .then(() => {
+        setDeleteOpen(false);
+        toast.success("Submission deleted successfully");
+        window.location.reload();
+      })
+      .catch(() => {
+        setDeleteOpen(false);
+        toast.error("Failed to delete submission");
+      });
   };
 
   return (
@@ -45,20 +58,20 @@ const Submissions = ({ submissions }: { submissions: Submission[] }) => {
               className="flex items-center justify-between p-5 rounded-lg border bg-background"
             >
               <div className="flex gap-5">
-                <p className="text-gray-300">Submission {i + 1}</p>
-                <p className="text-gray-300">{submission?.status}</p>
+                <p className="">Submission {i + 1}</p>
+                <p className="">{submission?.status}</p>
               </div>
               <div className="flex">
                 <Button
                   variant="link"
-                  className="text-gray-300"
+                  className=""
                   onClick={() => navigate(`/submission/${submission?._id}`)}
                 >
                   View
                 </Button>
                 <Button
                   variant="link"
-                  className="text-gray-300"
+                  className=""
                   onClick={() => {
                     setDeleteID(submission?._id);
                     setDeleteOpen(true);

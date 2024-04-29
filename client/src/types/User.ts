@@ -12,20 +12,6 @@ interface SolvedProblem {
   internalScore?: number;
 }
 
-interface LearningPathModule {
-  moduleTitle: string;
-  moduleDescription?: string;
-  tutorials: string[];
-  problems: {
-    problemId: string;
-    title: string;
-    solved: boolean;
-    solvedOn?: Date;
-    score?: number;
-  }[];
-  quizzes: string[];
-}
-
 interface LoginHistory {
   date: Date;
   location?: string;
@@ -53,22 +39,35 @@ interface jobPreferences {
   role: [string];
 }
 
-interface User extends Document {
+interface score {
+  submissionID: string;
+  timerScore: number;
+  testCaseScore: number;
+  date: Date;
+}
+
+interface User {
   firstName: string;
   lastName?: string;
+  image?: string;
   username: string;
+  links: {
+    linkedin?: string;
+    github?: string;
+    website?: string;
+  };
   email: string;
   phone?: string;
   password?: string;
   accountType: string;
-  tfa: tfa;
   googleId?: string;
   organization?: string;
   profilePicture?: string;
-  bio?: string;
   enabledScreening: boolean;
   experience: number;
+  bio?: string;
   jobPreferences: jobPreferences;
+  tfa: tfa;
   achievements: AchievementReceivables[];
   solvedProblems: SolvedProblem[];
   userLevel?: number;
@@ -76,9 +75,8 @@ interface User extends Document {
   moderator: boolean;
   createdAt: Date;
   updatedAt: Date;
-  learningPath: LearningPathModule[];
-  tagsSolved: string[];
   loginHistory: LoginHistory[];
+  score: score[];
   emailVerified: boolean;
   phoneVerified: boolean;
   streak: string[];

@@ -7,9 +7,6 @@ import express from "express";
 const router = express.Router();
 
 router.post("/", verifyJWT, async (req, res) => {
-  // @ts-ignore
-  const id = req?.user?.id;
-
   try {
     const submission = await Submission.findOne({ _id: req.body.id });
     const problem = await Problem.findOne({ _id: submission?.problemID });
@@ -34,6 +31,27 @@ router.post("/", verifyJWT, async (req, res) => {
     }
   } catch (err) {
     logger.error({ code: "SUB_MAI_001", message: err });
+  }
+});
+
+router.post("/delete", verifyJWT, async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const submission = await Submission.findOne({ _id: id });
+    if (!submission) {
+      return res.status(404).json({ message: "Submission not found" });
+    }
+
+    // @ts-ignore
+    if (submission.userID.toString() !== req.user.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    await Submission.deleteOne({ _id: id });
+    res.status(200).json({ message: "Submission deleted successfully" });
+  } catch (err) {
+    logger.error({ code: "SUB_MAI_002", message: err });
   }
 });
 

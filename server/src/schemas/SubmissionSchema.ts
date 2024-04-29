@@ -44,31 +44,31 @@ const submissionSchema = new Schema({
       failedCase: {
         type: {
           name: {
-            type: String,
-            required: true,
+            type: [String],
+            required: false,
           },
           difficulty: {
             type: String,
-            required: true,
+            required: false,
           },
           score: {
             type: Number,
-            required: true,
+            required: false,
           },
           input: {
             type: String,
-            required: true,
+            required: false,
           },
           output: {
             type: String,
-            required: true,
+            required: false,
           },
           isSample: {
             type: Boolean,
-            required: true,
+            required: false,
           },
         },
-        required: true,
+        required: false,
       },
       error: {
         type: String,

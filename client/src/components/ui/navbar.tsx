@@ -64,8 +64,8 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="px-10 flex justify-between items-center py-3">
-        <div className="flex items-center">
+      <div className="px-10 flex justify-between items-center py-3 z-50">
+        <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
           <Logo />
           <div className="flex items-center ml-5">
             <Button variant="link" onClick={() => navigate("/screenings")}>

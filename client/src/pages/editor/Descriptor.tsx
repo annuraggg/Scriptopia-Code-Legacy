@@ -1,3 +1,4 @@
+import { useTheme } from "@/components/theme-provider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Case } from "@/types/TestCase";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -36,6 +37,8 @@ const Descriptor = ({
     }
   }, [cases, runs]);
 
+  const { theme } = useTheme();
+
   return (
     <div className={`rounded bg-secondary h-[45vh] overflow-y-auto relative`}>
       <Tabs
@@ -53,7 +56,11 @@ const Descriptor = ({
         <TabsContent
           value="console"
           className={`px-5 py-2 ${
-            error ? " bg-red-950 bg-opacity-50" : "bg-black"
+            error
+              ? " bg-red-950 bg-opacity-50"
+              : theme === "dark"
+              ? "bg-black"
+              : "bg-white"
           } mx-5 my-2 rounded min-h-[35vh]`}
         >
           {running ? (
@@ -67,7 +74,11 @@ const Descriptor = ({
           ) : error != "" ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            <div className="bg-black text-white">
+            <div
+              className={`${
+                theme === "dark" ? "bg-black" : "bg-white"
+              } text-white`}
+            >
               {consoleOutput.map((output, i) => {
                 return (
                   <p key={i} className="text-gray-400">
@@ -118,17 +129,17 @@ const Descriptor = ({
                   return (
                     <TabsContent key={i} value={`case${i + 1}`}>
                       <p>Input</p>
-                      <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                      <div className="bg-primary-foreground px-5 py-3 my-2 rounded-sm">
                         {c?.input?.map((ci, i2) => {
                           return vars[i2].key + " = " + ci + " ";
                         })}
                       </div>
                       <p>Output</p>
-                      <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                      <div className="bg-primary-foreground px-5 py-3 my-2 rounded-sm">
                         {output[i]}
                       </div>
                       <p>Expected</p>
-                      <div className="bg-gray-700 px-5 py-3 my-2 rounded-sm">
+                      <div className="bg-primary-foreground px-5 py-3 my-2 rounded-sm">
                         {c?.output}
                       </div>
                     </TabsContent>

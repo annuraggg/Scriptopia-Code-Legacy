@@ -1,10 +1,11 @@
-import CodeMirror, { oneDark } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { Button } from "@/components/ui/button";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { BsStars } from "react-icons/bs";
+import { useTheme } from "@/components/theme-provider";
 
 const CodeEditor = ({
   runCode,
@@ -14,7 +15,11 @@ const CodeEditor = ({
 }: {
   runCode: (code: string, language: string) => Promise<unknown>;
   code: string;
-  submitCode: (code: string, language: string, time: number) => Promise<unknown>;
+  submitCode: (
+    code: string,
+    language: string,
+    time: number
+  ) => Promise<unknown>;
   explainCode: (code: string) => void;
 }) => {
   const [value, setValue] = useState("");
@@ -68,6 +73,8 @@ const CodeEditor = ({
     explainCode(value);
   };
 
+  const { theme } = useTheme();
+
   return (
     <div className="overflow-y-auto rounded ">
       <div className="bg-secondary rounded-t sticky z-50 top-0 border p-1 px-7 text-gray-400 flex justify-between">
@@ -104,8 +111,8 @@ const CodeEditor = ({
         height="70vh"
         extensions={[javascript({ jsx: true })]}
         onChange={onChange}
-        theme={oneDark}
         onClick={() => setCodeStarted(true)}
+        theme={theme as "dark" | "light"}
       />
     </div>
   );

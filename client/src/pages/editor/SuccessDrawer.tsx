@@ -106,7 +106,6 @@ const SuccessDrawer = ({
   };
 */
 
-
   return (
     <Drawer shouldScaleBackground open={open}>
       <DrawerContent>
@@ -136,11 +135,17 @@ const SuccessDrawer = ({
                   <div>
                     <h5>Memory Usage</h5>
                     <p>{parseFloat(memoryUsed?.toFixed(2))} MB</p>
-                    <p className="text-xs">
-                      Your Solution is {memoryData?.percent?.toFixed(2)}% more efficient
-                      than others
-                    </p>
-                    <p className="text-xs">Average Memory Usage: {memoryData?.avg?.toFixed(2)}MB</p>
+                    {memoryData?.percent && (
+                      <p className="text-xs">
+                        Your Solution is {memoryData?.percent?.toFixed(2)}% more
+                        efficient than others
+                      </p>
+                    )}
+                    {memoryData?.avg && (
+                      <p className="text-xs">
+                        Average Memory Usage: {memoryData?.avg?.toFixed(2)}MB
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div
@@ -156,35 +161,43 @@ const SuccessDrawer = ({
                   <div>
                     <h5>Time Taken</h5>
                     <p>{parseFloat(timeTaken.toFixed(2))}ms</p>
-                    <p className="text-xs">
-                      Your Solution is {timeData?.percent?.toFixed(2)}% more efficient
-                      than others
-                    </p>
-                    <p className="text-xs">
-                      Average Time Taken: {timeData?.avg?.toFixed(2)}ms
-                    </p>
+                    {timeData?.percent && (
+                      <p className="text-xs">
+                        Your Solution is {timeData?.percent?.toFixed(2)}% more
+                        efficient than others
+                      </p>
+                    )}
+                    {timeData?.avg && (
+                      <p className="text-xs">
+                        Average Time Taken: {timeData?.avg?.toFixed(2)}ms
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
-            <Separator />
-            <div
-              className="flex gap-5"
-              onClick={() => {
-                window.location.href = `/editor/${recommendation?._id}`;
-              }}
-            >
-              <div className="flex flex-col gap-5 items-center justify-center border p-5 rounded-lg w-[30vw] hover:bg-primary-foreground transition-all duration-300 cursor-pointer">
-                <h4>Recommended Problem</h4>
-                <div className="flex gap-5 items-center">
-                  <p>{recommendation?.title}</p>
-                  <Badge>{recommendation?.difficulty}</Badge>
+            </div>{" "}
+            {recommendation && (
+              <>
+                <Separator />
+                <div
+                  className="flex gap-5"
+                  onClick={() => {
+                    window.location.href = `/editor/${recommendation?._id}`;
+                  }}
+                >
+                  <div className="flex flex-col gap-5 items-center justify-center border p-5 rounded-lg w-[30vw] hover:bg-primary-foreground transition-all duration-300 cursor-pointer">
+                    <h4>Recommended Problem</h4>
+                    <div className="flex gap-5 items-center">
+                      <p>{recommendation?.title}</p>
+                      <Badge>{recommendation?.difficulty}</Badge>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </DrawerHeader>
-        <DrawerClose className="flex items-center justify-center mb-8">
+        <DrawerClose className="flex items-center justify-center mb-8 mt-5">
           <Button className=" w-fit" onClick={() => setOpen(false)}>
             Done
           </Button>

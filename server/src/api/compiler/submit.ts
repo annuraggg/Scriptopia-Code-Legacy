@@ -144,10 +144,12 @@ router.post("/", verifyJWT, async (req, res) => {
           percent: number;
         } = await getSpaceEfficiency(submissions, result.memoryUsage);
 
-        const scoreGet: {
-          testCaseScore: number;
-          timerScore: number;
-        } | undefined = await generateAssessment(
+        const scoreGet:
+          | {
+              testCaseScore: number;
+              timerScore: number;
+            }
+          | undefined = await generateAssessment(
           code,
           language,
           prob.starterFunction,
@@ -158,16 +160,7 @@ router.post("/", verifyJWT, async (req, res) => {
           req.user
         );
 
-        const score = {
-          submissionID: probID,
-          timerScore: scoreGet?.timerScore,
-          testCaseScore: scoreGet?.testCaseScore,
-        }
-
         // @ts-ignore
-        const user = await User.findById(req.user.id);
-        user?.score.push(score);
-        await user?.save(); 
 
         const submission = {
           problemID: probID,
@@ -179,7 +172,18 @@ router.post("/", verifyJWT, async (req, res) => {
           output: result,
         };
 
-        Submission.create(submission);
+        const { _id } = await Submission.create(submission);
+
+        const user = await User.findById(req.user.id);
+        const score = {
+          submissionID: _id,
+          problemID: probID,
+          timerScore: scoreGet?.timerScore,
+          testCaseScore: scoreGet?.testCaseScore,
+        };
+
+        user?.score.push(score);
+        await user?.save();
 
         res.status(200).json({
           console: "",
@@ -198,6 +202,13 @@ router.post("/", verifyJWT, async (req, res) => {
           status: "FAILED",
           output: result,
         };
+
+        const user = await User.findById(req.user.id);
+        user?.score.push({
+          submissionID: probID,
+          timerScore: 0,
+          testCaseScore: 0,
+        });
 
         Submission.create(submission);
         res.status(200).json({ output: result });
@@ -235,7 +246,11 @@ const getSuggestion = async (data: {
     return null;
   }
 
-  const id = data.response.next_problem[0]?.slice(1);
+  const id = data?.response?.next_problem?.[0]?.slice(1);
+  if (!id) {
+    return null;
+  }
+
   const sugg = await Problem.findById(id);
   return sugg;
 };

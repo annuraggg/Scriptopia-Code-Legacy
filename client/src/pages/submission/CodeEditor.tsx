@@ -1,8 +1,9 @@
-import CodeMirror, { oneDark } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { BsStars } from "react-icons/bs";
+import { useTheme } from "@/components/theme-provider";
 
 const CodeEditor = ({
   code,
@@ -19,6 +20,8 @@ const CodeEditor = ({
   const generateSummary = () => {
     explainCode(value);
   };
+
+  const { theme } = useTheme();
 
   return (
     <div className="overflow-y-auto rounded w-full">
@@ -37,7 +40,7 @@ const CodeEditor = ({
         value={value}
         height="70vh"
         extensions={[javascript({ jsx: true })]}
-        theme={oneDark}
+        theme={theme as "dark" | "light"}
       />
     </div>
   );

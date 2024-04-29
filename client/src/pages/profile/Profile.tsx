@@ -12,7 +12,7 @@ import { FaLinkedin } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
 import Heatmap from "@uiw/react-heat-map";
 import Tooltip from "@uiw/react-tooltip";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { ArcElement, Chart, Tooltip as TooltipChartjs, Legend } from "chart.js";
 import axios from "axios";
@@ -30,8 +30,26 @@ import { EditIcon } from "lucide-react";
 import AvatarEditor from "react-avatar-editor";
 import User from "@/types/User";
 import Loader from "@/components/Loader";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/Separator";
+import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
+import { ReloadIcon } from "@radix-ui/react-icons";
+
+interface Data {
+  activeDates: {
+    date: string;
+    count: number;
+  }[];
+  totalProblems: {
+    easy: number;
+    medium: number;
+    hard: number;
+  };
+  problems: {
+    easy: number;
+    medium: number;
+    hard: number;
+  };
+}
 
 const ProgressBar = ({ value, color }: { value: number; color: string }) => {
   return (
@@ -58,49 +76,25 @@ const Profile = () => {
   const { theme } = useTheme();
   const [mapColor, setMapColor] = useState("");
   const [editOpen, setEditOpen] = useState(false);
+
+  const [zoom, setZoom] = useState<number[]>([1]);
+  const [profileImage, setProfileImage] = useState<any>(null);
   const [openProfilePicture, setOpenProfilePicture] = useState(false);
+  const [profilePictureLoading, setProfilePictureLoading] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<Data>({} as Data);
   const [profile, setProfile] = useState<User>({} as User);
 
-  const [resumeOpen, setResumeOpen] = useState(false);
+  const [newFirstName, setNewFirstName] = useState<string>("");
+  const [newLastName, setNewLastName] = useState<string>("");
+  const [newBio, setNewBio] = useState<string>("");
+  const [newGithub, setNewGithub] = useState<string>("");
+  const [newLinkedin, setNewLinkedin] = useState<string>("");
+  const [newWebsite, setNewWebsite] = useState<string>("");
 
-  const [skills, setSkills] = useState<string[]>([]);
-
-  const [education, setEducation] = useState<
-    { degree: string; school: string }[]
-  >([]);
-
-  const [experience, setExperience] = useState<
-    { title: string; years: number; company: string }[]
-  >([]);
-
-  const [skillInp, setSkillInp] = useState("");
-
-  const [eduSchool, setEduSchool] = useState("");
-  const [eduDegree, setEduDegree] = useState("");
-
-  const [expTitle, setExpTitle] = useState("");
-  const [expCompany, setExpCompany] = useState("");
-  const [expYears, setExpYears] = useState("");
-
-  const addSkill = () => {
-    setSkills([...skills, skillInp]);
-    setSkillInp("");
-  };
-
-  const addEducation = () => {
-    setEducation([...education, { degree: educationInp, school: "" }]);
-    setEducationInp("");
-  };
-
-  const addExperience = () => {
-    setExperience([
-      ...experience,
-      { title: experienceInp, years: 0, company: "" },
-    ]);
-    setExperienceInp("");
-  };
+  const ppRef = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<any>(null);
 
   Chart.register(ArcElement, TooltipChartjs, Legend);
 
@@ -117,6 +111,20 @@ const Profile = () => {
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/profile`)
       .then((res) => {
         setProfile(res.data.user);
+        const activeDates = res.data.user?.score?.map(
+          (score: { date: string }) => {
+            return {
+              date: new Date(score.date).toLocaleDateString(),
+              count: 1,
+            };
+          }
+        );
+
+        setData({
+          activeDates: activeDates,
+          totalProblems: res.data.data.totalProblems,
+          problems: res.data.data.solvedProblems,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -124,108 +132,70 @@ const Profile = () => {
       .finally(() => {
         setLoading(false);
       });
-  });
+  }, []);
+
+  const selectPhoto = () => {
+    ppRef.current?.click();
+  };
+
+  const setPhotoInEditor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    setProfileImage(e.target.files[0]);
+    setOpenProfilePicture(true);
+  };
+
+  const updatePicture = () => {
+    setProfilePictureLoading(true);
+    const canvas = editorRef.current.getImageScaledToCanvas();
+    const base64 = canvas.toDataURL("image/png");
+
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/profile/picture`, {
+        newImage: base64,
+      })
+      .then(() => {
+        toast.success("Profile picture updated successfully");
+        setOpenProfilePicture(false);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to update profile picture");
+      })
+      .finally(() => {
+        setProfilePictureLoading(false);
+      });
+  };
+
+  const updateProfile = () => {
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/profile/update`, {
+        firstName: newFirstName || profile?.firstName,
+        lastName: newLastName || profile?.lastName,
+        bio: newBio || profile?.bio,
+        github: newGithub || profile?.links?.github,
+        linkedin: newLinkedin || profile?.links?.linkedin,
+        website: newWebsite || profile?.links?.website,
+      })
+      .then(() => {
+        toast.success("Profile updated successfully");
+        setEditOpen(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to update profile");
+      });
+  };
 
   if (loading) {
     return <Loader />;
   }
-
-  const data = {
-    name: "Anurag Sawant",
-    country: "in",
-    image: "",
-    username: "annuraggg",
-    bio: "I am a full stack developer. lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.",
-    links: {
-      github: "https://www.github.com/annuraggg",
-      linkedin: "https://www.linkedin.com/in/annuraggg",
-      website: "https://www.anuragsawant.tech",
-    },
-    activeDates: [
-      {
-        date: "03/19/2024",
-        count: 1,
-      },
-      {
-        date: "03/20/2024",
-        count: 2,
-      },
-      {
-        date: "03/21/2024",
-        count: 5,
-      },
-      {
-        date: "03/22/2024",
-        count: 2,
-      },
-      {
-        date: "03/23/2024",
-        count: 1,
-      },
-      {
-        date: "03/24/2024",
-        count: 0,
-      },
-      {
-        date: "03/25/2024",
-        count: 3,
-      },
-      {
-        date: "03/26/2024",
-        count: 2,
-      },
-      {
-        date: "03/27/2024",
-        count: 3,
-      },
-      {
-        date: "03/28/2024",
-        count: 4,
-      },
-      {
-        date: "03/29/2024",
-        count: 5,
-      },
-      {
-        date: "03/30/2024",
-        count: 1,
-      },
-      {
-        date: "03/31/2024",
-        count: 5,
-      },
-      {
-        date: "04/01/2024",
-        count: 9,
-      },
-      {
-        date: "04/02/2024",
-        count: 2,
-      },
-      {
-        date: "04/03/2024",
-        count: 2,
-      },
-      {
-        date: "04/04/2024",
-        count: 0,
-      },
-      {
-        date: "04/05/2024",
-        count: 1,
-      },
-    ],
-    problems: {
-      easy: 70,
-      medium: 20,
-      hard: 20,
-    },
-    totalProblems: {
-      easy: 100,
-      medium: 50,
-      hard: 150,
-    },
-  };
 
   return (
     <>
@@ -238,9 +208,9 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               <Avatar className="mt-2 w-20 h-20">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={profile?.image} />
                 <AvatarFallback>
-                  {data.name.slice(0, 2).toUpperCase()}
+                  {profile?.firstName?.slice(0, 2)?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
 
@@ -297,10 +267,6 @@ const Profile = () => {
               </div>
             </CardContent>
           </Card>
-
-          <Button className="mt-5 w-full" onClick={() => setResumeOpen(true)}>
-            Update Resume
-          </Button>
         </div>
         <div>
           <Heatmap
@@ -323,7 +289,7 @@ const Profile = () => {
             rectRender={(props, data) => {
               // if (!data.count) return <rect {...props} />;
               return (
-                <Tooltip placement="top" content={`count: ${data.count || 0}`}>
+                <Tooltip placement="top" content={`count: ${data?.count || 0}`}>
                   <rect {...props} />
                 </Tooltip>
               );
@@ -340,23 +306,32 @@ const Profile = () => {
               <div className="w-[100%]">
                 <div className=" w-[100%] mb-4">
                   <div className="flex mb-1 items-end">
-                    <p className="text-sm">Easy: {data.problems.easy}</p>
-                    <p className="ml-auto text-xs">Top 5%</p>
+                    <p className="text-sm">Easy: {data?.problems?.easy}</p>
+                    <p className="ml-auto text-xs">
+                      Total&nbsp;
+                      {data?.totalProblems?.easy}
+                    </p>
                   </div>
                   <ProgressBar
-                    value={(data.problems.easy / data.totalProblems.easy) * 100}
+                    value={
+                      (data?.problems?.easy / data?.totalProblems?.easy) * 100
+                    }
                     color="green"
                   />
                 </div>
 
                 <div className=" w-[100%] mb-4">
                   <div className="flex mb-1 items-end">
-                    <p className="text-sm">Medium: {data.problems.medium}</p>
-                    <p className="ml-auto text-xs">Top 5%</p>
+                    <p className="text-sm">Medium: {data?.problems?.medium}</p>
+                    <p className="ml-auto text-xs">
+                      Total&nbsp;
+                      {data?.totalProblems?.medium}
+                    </p>
                   </div>
                   <ProgressBar
                     value={
-                      (data.problems.medium / data.totalProblems.medium) * 100
+                      (data?.problems?.medium / data?.totalProblems?.medium) *
+                      100
                     }
                     color="orange"
                   />
@@ -364,11 +339,16 @@ const Profile = () => {
 
                 <div className=" w-[100%]">
                   <div className="flex mb-1 items-end">
-                    <p className="text-sm">Hard: {data.problems.hard}</p>
-                    <p className="ml-auto text-xs">Top 5%</p>
+                    <p className="text-sm">Hard: {data?.problems?.hard}</p>
+                    <p className="ml-auto text-xs">
+                      Total &nbsp;
+                      {data?.totalProblems?.hard}
+                    </p>
                   </div>
                   <ProgressBar
-                    value={(data.problems.hard / data.totalProblems.hard) * 100}
+                    value={
+                      (data?.problems?.hard / data?.totalProblems?.hard) * 100
+                    }
                     color="red"
                   />
                 </div>
@@ -391,48 +371,92 @@ const Profile = () => {
               Edit your profile and make it look better
             </DialogDescription>
           </DialogHeader>
-          <Avatar className="mt-2 w-20 h-20 flex items-center justify-center group relative">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>
-              {data.name.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-            <div className="bg-white bg-opacity-50 rounded-full flex cursor-pointer h-20 w-20 absolute invisible group-hover:visible">
-              <EditIcon className="h-6 w-6 m-auto" />
+          <div className="flex w-full items-center flex-col justify-center gap-2">
+            <input type="file" hidden ref={ppRef} onChange={setPhotoInEditor} />
+            <Avatar
+              className="mt-2 w-20 h-20 flex items-center justify-center group relative"
+              onClick={selectPhoto}
+            >
+              <AvatarImage src={profile?.image} />
+              <AvatarFallback>
+                {profile?.firstName?.slice(0, 2)?.toUpperCase()}
+              </AvatarFallback>
+              <div className="bg-white bg-opacity-50 rounded-full flex cursor-pointer h-20 w-20 absolute invisible group-hover:visible">
+                <EditIcon className="h-6 w-6 m-auto" />
+              </div>
+            </Avatar>
+
+            <div className="flex gap-2 justify-center items-center w-full mt-5">
+              <div className="w-full">
+                <p>First Name</p>
+                <Input
+                  className="mt-1 w-full"
+                  placeholder={profile?.firstName}
+                  onChange={(e) => setNewFirstName(e.target.value)}
+                  value={newFirstName}
+                />
+              </div>
+
+              <div className="w-full">
+                <p>Last Name</p>
+                <Input
+                  className="mt-2 w-full"
+                  placeholder={profile?.lastName}
+                  onChange={(e) => setNewLastName(e.target.value)}
+                  value={newLastName}
+                />
+              </div>
             </div>
-          </Avatar>
 
-          <div>
-            <p>Name</p>
-            <Input className="mt-1" placeholder={data.name} />
-          </div>
+            <div className="mt-2 w-full">
+              <p>Bio</p>
+              <Textarea
+                className="mt-1 h-20 "
+                placeholder={profile?.bio}
+                onChange={(e) => setNewBio(e.target.value)}
+                value={newBio}
+              />
+            </div>
 
-          <div className="mt-2">
-            <p>Bio</p>
-            <Textarea className="mt-1 h-20" placeholder={data.bio} />
-          </div>
+            <div className="flex gap-5 items-center justify-center w-full mt-5">
+              <div className="w-full">
+                <p>Github</p>
+                <Input
+                  className="mt-2 w-full"
+                  placeholder={profile?.links?.github}
+                  onChange={(e) => setNewGithub(e.target.value)}
+                  value={newGithub}
+                />
+              </div>
+              <div className="w-full">
+                <p>Linkedin</p>
+                <Input
+                  className="mt-2 w-full"
+                  placeholder={profile?.links?.linkedin}
+                  onChange={(e) => setNewLinkedin(e.target.value)}
+                  value={newLinkedin}
+                />
+              </div>
+            </div>
+            <div className="w-full mt-2">
+              <p>Website</p>
+              <Input
+                className="mt-2 w-full"
+                placeholder={profile?.links?.website}
+                onChange={(e) => setNewWebsite(e.target.value)}
+                value={newWebsite}
+              />
+            </div>
 
-          <div>
-            <p>Github</p>
-            <Input className="mt-2" placeholder={data.links.github} />
+            <div className="flex gap-5 items-center justify-center w-full">
+              <Button className="mt-5" onClick={() => setEditOpen(false)}>
+                Cancel
+              </Button>
+              <Button className="mt-5" onClick={updateProfile}>
+                Save
+              </Button>
+            </div>
           </div>
-          <div>
-            <p>Linkedin</p>
-            <Input className="mt-2" placeholder={data.links.linkedin} />
-          </div>
-          <div>
-            <p>Website</p>
-            <Input className="mt-2" placeholder={data.links.website} />
-          </div>
-
-          <AvatarEditor
-            image="http://github.com/.jpg"
-            width={250}
-            height={250}
-            border={50}
-            color={[255, 255, 255, 0.6]} // RGBA
-            scale={1.2}
-            rotate={0}
-          />
         </DialogContent>
       </Dialog>
 
@@ -440,121 +464,35 @@ const Profile = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Change Profile Picture</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+            <DialogDescription className="flex items-center justify-center gap-5 py-5 flex-col">
+              <AvatarEditor
+                image={profileImage}
+                width={250}
+                height={250}
+                color={[255, 255, 255, 0.6]} // RGBA
+                scale={zoom[0]}
+                rotate={0}
+                borderRadius={125}
+                ref={editorRef}
+              />
+
+              <Slider
+                min={1}
+                max={2}
+                step={0.01}
+                className="w-1/2"
+                value={zoom}
+                onValueChange={(value) => setZoom(value)}
+              />
+
+              <Button onClick={updatePicture}>
+                {profilePictureLoading ? (
+                  <ReloadIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Update"
+                )}
+              </Button>
             </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={resumeOpen} onOpenChange={setResumeOpen}>
-        <DialogContent className="h-[90vh] min-w-[90vw]">
-          <DialogHeader>
-            <DialogTitle>Update Resume</DialogTitle>
-            <DialogDescription>
-              Enter your details to update your resume
-            </DialogDescription>
-            <div className="flex p-5 ">
-              <div className="w-[50%]">
-                <div className="border p-5 rounded-lg">
-                  <h2 className="mb-2">Skills</h2>
-                  {skills.map((skill) => (
-                    <Badge className="mt-2 ml-2">{skill}</Badge>
-                  ))}
-                </div>
-
-                <div className="mt-5 border p-5 rounded-lg">
-                  <h2 className="mb-2">Education</h2>
-                  {education.map((edu) => (
-                    <div>
-                      <p className="mt-2">{edu.degree}</p>
-                      <p className="text-xs text-gray-300">
-                        {edu.school} - <span>Graduated</span>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <div className="mt-5 border p-5 rounded-lg">
-                    <h2 className="mb-2">Experience</h2>
-                    {experience.map((exp) => (
-                      <div>
-                        <p className="mt-2">{exp.title}</p>
-                        <p className="text-xs text-gray-300">
-                          {exp.company} - <span>2 years</span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <Separator orientation="vertical" className="mx-10" />
-
-              <div className="w-[50%]">
-                <Input
-                  className="mt-5"
-                  placeholder="Add a skill"
-                  value={skillInp}
-                  onChange={(e) => setSkillInp(e.target.value)}
-                />
-                <Button className="mb-10 mt-3 float-right" onClick={addSkill}>
-                  Add Skill
-                </Button>
-
-                <Input
-                  className="mt-5"
-                  placeholder="Add Education"
-                  value={educationInp}
-                  onChange={(e) => setEducationInp(e.target.value)}
-                />
-                <Input
-                  className="mt-2"
-                  placeholder="School"
-                  value={eduSchool}
-                  onChange={(e) => setEduSchool(e.target.value)}
-                />
-                <Input
-                  className="mt-2"
-                  placeholder="Degree"
-                  value={eduDegree}
-                  onChange={(e) => setEduDegree(e.target.value)}
-                />
-                <Button
-                  className="mb-10 mt-3 float-right"
-                  onClick={addEducation}
-                >
-                  Add Education
-                </Button>
-
-                <Input
-                  className="mt-2"
-                  placeholder="Company"
-                  value={expCompany}
-                  onChange={(e) => setExpCompany(e.target.value)}
-                />
-                <Input
-                  className="mt-2"
-                  placeholder="Title"
-                  value={expTitle}
-                  onChange={(e) => setExpTitle(e.target.value)}
-                />
-                <Input
-                  className="mt-2"
-                  placeholder="Years"
-                  value={expYears}
-                  onChange={(e) => setExpYears(e.target.value)}
-                />
-                <Button
-                  className="mb-10 mt-3 float-right"
-                  onClick={addExperience}
-                >
-                  Add Experience
-                </Button>
-              </div>
-            </div>
           </DialogHeader>
         </DialogContent>
       </Dialog>
