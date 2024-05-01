@@ -55,7 +55,7 @@ const submissionSchema = new Schema({
             required: false,
           },
           input: {
-            type: String,
+            type: [String],
             required: false,
           },
           output: {
