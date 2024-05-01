@@ -37,7 +37,7 @@ const ProblemStatement = ({
   return (
     <div className="rounded-lg" style={glassFrost}>
       <div className="flex items-center justify-between bg-secondary rounded-t-lg sticky p-2.5 px-7 text-gray-400">
-        <div className="flex items-end justify-center">
+        <div className="flex items-center justify-center">
           <p className="truncate max-w-[80%]">{meta.title}</p>
           <p
             className="hover:underline hover:text-primary cursor-pointer text-[12px] ml-1"

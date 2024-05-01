@@ -22,10 +22,9 @@ router.post("/", verifyJWT, async (req, res) => {
       feedback,
     } = req.body;
 
-    const trimmedCandidates = candidates.map((candidate: string) => {
-      return candidate.trim();
+    const trimmedCandidates = candidates.map((candidate: { email: string }) => {
+      return candidate.email.trim();
     });
-
 
     const newScreen = await Screening.create({
       name: name,

@@ -156,6 +156,7 @@ const Profile = () => {
       })
       .then(() => {
         toast.success("Profile picture updated successfully");
+        localStorage.setItem("image", base64);
         setOpenProfilePicture(false);
 
         setTimeout(() => {

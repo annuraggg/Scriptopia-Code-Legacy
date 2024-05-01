@@ -86,7 +86,7 @@ export const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <AvatarImage src={localStorage.getItem("image") || ""} />
-              <AvatarFallback>SC</AvatarFallback>
+              <AvatarFallback>{user.firstName.slice(0,1).toUpperCase() + user.lastName.slice(0,1).toUpperCase()}</AvatarFallback>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[250px] mr-14">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
