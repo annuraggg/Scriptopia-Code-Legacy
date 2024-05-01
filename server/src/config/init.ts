@@ -21,6 +21,7 @@ export const io = new Server(server, {
       process.env.FRONTEND_URL!,
       "http://localhost:5173",
       "https://scriptopia-code.anuragsawant.tech",
+      "https://scriptopia-code.anuragsawant.in"
     ],
     credentials: true,
   },
