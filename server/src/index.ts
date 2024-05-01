@@ -27,7 +27,7 @@ app.use("/organization", organization)
 app.use("/redirects", redirects)
 
 app.get("/version", (_req, res) => {
-  res.json({ version: "0.1.61" });
+  res.json({ version: "0.1.62" });
 });
 
 app.listen(3000);
