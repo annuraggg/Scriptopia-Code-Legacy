@@ -18,6 +18,8 @@ const RedirectScreening = () => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_ADDRESS}/redirects/${screenCode}`)
       .then((res) => {
+        localStorage.setItem("vite-ui-theme", "dark")
+        localStorage.setItem("colorPalette", "blue")
         window.location.href = res.data.url;
       })
       .catch((err) => {
