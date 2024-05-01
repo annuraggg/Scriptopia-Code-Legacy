@@ -175,7 +175,7 @@ const Editor = () => {
         (timer?.minutes * 60 + timer?.seconds),
       runs,
       paste,
-      fullscreen: fullScreenExit,
+      fullScreenExit: fullScreenExit,
       tabChange,
       output,
       consoleOutput,

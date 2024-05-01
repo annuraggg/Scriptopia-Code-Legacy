@@ -88,8 +88,6 @@ router.post("/", async (req, res) => {
   const submissionResults = [];
   const screening = await Screening.findById(screeningID);
 
-  console.log("SESSION URL : ", sessionUrl);
-
   if (!screening) {
     return res.status(404).json({ message: "No screening found" });
   }
