@@ -4,7 +4,7 @@ interface TestCase {
   name: string;
   difficulty: string;
   score: number;
-  input: string;
+  input: string[];
   output: any;
   isSample: boolean;
 }
