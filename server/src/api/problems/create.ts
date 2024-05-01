@@ -37,7 +37,9 @@ router.post("/", async (req, res) => {
   }
 
   testCases.forEach((testCase: TestCase) => {
-    testCase.input.trim();
+    testCase.input.forEach((input) => {
+      input.trim();
+    });
   });
 
   try {
