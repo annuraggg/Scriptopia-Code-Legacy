@@ -1,9 +1,9 @@
 import express from "express";
 const router = express.Router();
 
-import citiesJson from "@/api/assets/cities.json";
-import verifyJWT from "@/middlewares/verifyJWT";
-import logger from "@/config/logger";
+import citiesJson from "@/api/assets/cities.json" with { type: "json" };
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import logger from "@/config/logger.js";
 
 router.post("/", verifyJWT, (req, res) => {
   try {

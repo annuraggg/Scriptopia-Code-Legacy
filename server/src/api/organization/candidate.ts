@@ -1,7 +1,7 @@
-import logger from "@/config/logger";
-import verifyJWT from "@/middlewares/verifyJWT";
-import Organization from "@/schemas/OrganizationSchema";
-import User from "@/schemas/UserSchema";
+import logger from "@/config/logger.js";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import Organization from "@/schemas/OrganizationSchema.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 const router = express.Router();
 

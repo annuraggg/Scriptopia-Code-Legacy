@@ -4,8 +4,8 @@ import UserToken from "@/Interfaces/UserToken.js";
 import Problem from "@/schemas/ProblemSchema.js";
 import User from "@/schemas/UserSchema.js";
 import ProblemType from "@/Interfaces/Problem.js";
-import logger from "@/config/logger";
-import generateRecommendation from "@/ml/apriori";
+import logger from "@/config/logger.js";
+import generateRecommendation from "@/ml/apriori.js";
 const router = express.Router();
 
 type Problem = {

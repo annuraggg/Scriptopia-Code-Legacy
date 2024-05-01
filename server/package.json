@@ -4,7 +4,8 @@
     "start": "tsx ./src/index.ts ",
     "build": "npm install && tsc && tsc-alias",
     "serve": "node dist/index.js",
-    "nodemon": "./node_modules/nodemon/bin/nodemon.js"
+    "nodemon": "./node_modules/nodemon/bin/nodemon.js",
+    "prod" : "npm run build && npm run serve"
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",

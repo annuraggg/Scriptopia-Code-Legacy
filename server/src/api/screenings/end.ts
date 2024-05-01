@@ -1,11 +1,11 @@
-import logger from "@/config/logger";
-import Case from "@/Interfaces/Case";
-import runJS from "@/languageTemplates/js";
-import Problem from "@/schemas/ProblemSchema";
-import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema";
-import ProblemType from "@/Interfaces/Problem";
+import logger from "@/config/logger.js";
+import Case from "@/Interfaces/Case.js";
+import runJS from "@/languageTemplates/js.js";
+import Problem from "@/schemas/ProblemSchema.js";
+import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema.js";
+import ProblemType from "@/Interfaces/Problem.js";
 import express from "express";
-import Screening from "@/schemas/ScreeningSchema";
+import Screening from "@/schemas/ScreeningSchema.js";
 const router = express.Router();
 
 const selectLangAndRun = async (

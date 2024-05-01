@@ -1,5 +1,5 @@
-import logger from "@/config/logger";
-import Redirect from "@/schemas/RedirectSchema";
+import logger from "@/config/logger.js";
+import Redirect from "@/schemas/RedirectSchema.js";
 import express from "express";
 const router = express.Router();
 

@@ -1,4 +1,3 @@
-import { error } from "console";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 

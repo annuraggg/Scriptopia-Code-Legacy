@@ -1,7 +1,5 @@
-import UserToken from "@/Interfaces/UserToken";
-import Problem from "@/schemas/ProblemSchema";
-import Submission from "@/schemas/SubmissionSchema";
-import processedData from "@/schemas/ProcessedDataSchema";
+import UserToken from "@/Interfaces/UserToken.js";
+import Problem from "@/schemas/ProblemSchema.js";
 
 const generateAssessment = async (
   _code: string,

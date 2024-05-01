@@ -1,8 +1,8 @@
 import express from "express";
-import verifyJWT from "@/middlewares/verifyJWT";
-import Organization from "@/schemas/OrganizationSchema";
-import logger from "@/config/logger";
-import User from "@/schemas/UserSchema";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import Organization from "@/schemas/OrganizationSchema.js";
+import logger from "@/config/logger.js";
+import User from "@/schemas/UserSchema.js";
 const router = express.Router();
 
 router.post("/remove", verifyJWT, async (req, res) => {

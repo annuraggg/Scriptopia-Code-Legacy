@@ -1,7 +1,7 @@
-import Problem from "@/schemas/ProblemSchema";
-import Submission from "@/schemas/SubmissionSchema";
-import User from "@/schemas/UserSchema";
-import ProblemType from "@/Interfaces/Problem";
+import Problem from "@/schemas/ProblemSchema.js";
+import Submission from "@/schemas/SubmissionSchema.js";
+import User from "@/schemas/UserSchema.js";
+import ProblemType from "@/Interfaces/Problem.js";
 
 const generateRecommendation = async (selectedUserID: string) => {
   try {

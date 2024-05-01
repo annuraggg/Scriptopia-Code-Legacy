@@ -1,7 +1,7 @@
-import { io } from "@/config/init";
-import logger from "@/config/logger";
-import Screening from "@/schemas/ScreeningSchema";
-import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema";
+import { io } from "@/config/init.js";
+import logger from "@/config/logger.js";
+import Screening from "@/schemas/ScreeningSchema.js";
+import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema.js";
 import express from "express";
 const router = express.Router();
 

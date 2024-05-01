@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { problemSchema as Problem } from "./ProblemSchema";
+import { problemSchema as Problem } from "./ProblemSchema.js";
 
 const screeningSchema = new Schema({
   name: String,

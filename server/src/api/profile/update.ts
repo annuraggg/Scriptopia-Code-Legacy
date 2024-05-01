@@ -1,5 +1,5 @@
-import verifyJWT from "@/middlewares/verifyJWT";
-import User from "@/schemas/UserSchema";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 const router = express.Router();
 

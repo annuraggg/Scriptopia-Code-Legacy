@@ -1,6 +1,6 @@
-import logger from "@/config/logger";
+import logger from "@/config/logger.js";
 import Case from "@/Interfaces/Case.js";
-import Problem from "@/Interfaces/Problem";
+import Problem from "@/Interfaces/Problem.js";
 
 const runJS = async (
   code: string,

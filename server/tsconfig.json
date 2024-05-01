@@ -2,7 +2,7 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "target": "es6",
-    "module": "ES2022",
+    "module": "ESNext",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,

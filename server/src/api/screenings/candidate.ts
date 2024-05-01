@@ -1,6 +1,6 @@
-import Problem from "@/schemas/ProblemSchema";
-import Screening from "@/schemas/ScreeningSchema";
-import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema";
+import Problem from "@/schemas/ProblemSchema.js";
+import Screening from "@/schemas/ScreeningSchema.js";
+import ScreeningSubmission from "@/schemas/screeningSubmissionsSchema.js";
 import express from "express";
 const router = express.Router();
 

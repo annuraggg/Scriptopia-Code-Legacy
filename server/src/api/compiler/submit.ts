@@ -5,11 +5,11 @@ import verifyJWT from "@/middlewares/verifyJWT.js";
 import Submission from "@/schemas/SubmissionSchema.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
-import ProblemType from "@/Interfaces/Problem";
-import generateRecommendation from "@/ml/apriori";
-import SubmissionType from "@/Interfaces/Submission";
-import generateAssessment from "./assess";
-import User from "@/schemas/UserSchema";
+import ProblemType from "@/Interfaces/Problem.js";
+import generateRecommendation from "@/ml/apriori.js";
+import SubmissionType from "@/Interfaces/Submission.js";
+import generateAssessment from "./assess.js";
+import User from "@/schemas/UserSchema.js";
 const router = express.Router();
 
 interface User {

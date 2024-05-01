@@ -1,7 +1,7 @@
-import sendMail from "@/api/settings/verify/sendMail";
-import verifyJWT from "@/middlewares/verifyJWT";
-import OTP from "@/schemas/OTPSchema";
-import User from "@/schemas/UserSchema";
+import sendMail from "@/api/settings/verify/sendMail.js";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import OTP from "@/schemas/OTPSchema.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 const router = express.Router();
 
