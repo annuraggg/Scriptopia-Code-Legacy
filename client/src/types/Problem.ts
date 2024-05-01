@@ -25,6 +25,7 @@ interface Problem {
   starterVarArgs: any[]; // Adjust this type according to the actual data type expected
   testCases: TestCase[];
   isPrivate: boolean;
+  allowInterview: boolean;
   lastUpdated: Date;
   chatId?: string;
 }

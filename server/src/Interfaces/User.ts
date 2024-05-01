@@ -65,6 +65,7 @@ interface User extends Document {
   firstName: string;
   lastName?: string;
   username: string;
+  image: string;
   email: string;
   phone?: string;
   password?: string;

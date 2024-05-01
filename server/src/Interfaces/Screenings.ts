@@ -23,6 +23,7 @@ interface SecurityOptions {
   gptDetection: boolean;
   copyPasteDetection: boolean;
   plagiarismDetection: boolean;
+  fullScreenExitDetection: boolean;
 }
 
 interface Feedback {
@@ -34,6 +35,7 @@ interface Screening extends Document {
   _id: ObjectId;
   name: string;
   desc: string;
+  passPercentage: number;
   instructions: string;
   languages: string[];
   duration: number;
@@ -41,6 +43,7 @@ interface Screening extends Document {
   createdBy: ObjectId;
   openRange: OpenRange;
   questions: Problem[];
+  access: string;
   candidates: Candidate[];
   takenBy: string[];
   editorOptions: EditorOptions;

@@ -21,7 +21,13 @@ const Logo = ({
 
   return (
     <svg
-      onClick={() => navigate("/")}
+      onClick={() => {
+        if(window.location.pathname !== "/") {
+          navigate("/");
+        } else {
+          window.location.reload();
+        }
+      }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0.04199999999999804 24 23.916"
       enableBackground="new 0 0 24 24"

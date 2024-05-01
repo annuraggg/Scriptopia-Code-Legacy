@@ -129,14 +129,14 @@ const DetailsComponent = ({
 
         <div className="flex flex-col gap-2 mt-3 w-full">
           <p className="text-xs">
-            Recommended Time <span className="text-red-500">*</span>
+            Recommended Time (In Minutes) <span className="text-red-500">*</span>
           </p>
           <Input
             placeholder="Enter Recommended Time"
             type="number"
             className="w-full"
             value={recommendedTime}
-            onChange={(e) => setRecommendedTime(+e.target.value)}
+            onChange={(e) => setRecommendedTime(parseInt(e.target.value))}
           />
         </div>
 

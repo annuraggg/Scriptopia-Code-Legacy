@@ -78,6 +78,8 @@ const Login = () => {
         }
 
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("image", res.data.image);
+
         Cookies.set("token", res.data.token, {
           secure: true,
           sameSite: "none",
@@ -113,6 +115,7 @@ const Login = () => {
           setIsTfa(true);
           setId(res.data.id);
           setTfaToken(res.data.token);
+          localStorage.setItem("image", res.data.image);
           return;
         }
 
@@ -154,6 +157,7 @@ const Login = () => {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("image", res.data.image);
         Cookies.set("token", res.data.token, {
           secure: true,
           sameSite: "none",
@@ -193,8 +197,10 @@ const Login = () => {
   const changeTheme = () => {
     if (theme === "dark") {
       setTheme("light");
+      return;
     } else {
       setTheme("dark");
+      return;
     }
   };
 

@@ -1,5 +1,6 @@
 import logger from "@/config/logger.js";
 import Problem from "@/schemas/ProblemSchema.js";
+import { TestCase } from "@/Interfaces/Problem.js";
 import express from "express";
 
 const router = express.Router();
@@ -17,9 +18,8 @@ router.post("/", async (req, res) => {
     args,
     testCases,
     isPrivate,
-    allowInterview
+    allowInterview,
   } = req.body;
-
 
   if (
     !name ||
@@ -35,6 +35,10 @@ router.post("/", async (req, res) => {
   ) {
     return res.status(400).json({ message: "Invalid Request" });
   }
+
+  testCases.forEach((testCase: TestCase) => {
+    testCase.input.trim();
+  });
 
   try {
     const prob = await Problem.create({

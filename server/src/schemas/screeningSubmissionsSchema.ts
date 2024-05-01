@@ -44,6 +44,11 @@ const screeningSubmissionSchema = new Schema({
               type: Number,
               required: true,
             },
+            fullScreenExit: {
+              type: Number,
+              required: true,
+            },
+          
             runs: {
               type: Number,
               required: true,

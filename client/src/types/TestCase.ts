@@ -2,8 +2,8 @@ type Case = {
   name: string;
   difficulty: string;
   score: number;
-  input: string[];
-  output: string;
+  input: string | number | boolean | string[] | number[] | boolean[];
+  output: string | number | boolean | string[] | number[] | boolean[];
   isSample: boolean;
 };
 

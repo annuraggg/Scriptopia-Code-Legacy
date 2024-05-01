@@ -64,6 +64,7 @@ const Signup = () => {
         toast.success("Account created successfully");
         window.location.href = "/?new=true";
         localStorage.setItem("token", token);
+        localStorage.setItem("image", res.data.image);
       })
       .catch((err) => {
         if (err.response.status === 409) {
@@ -150,6 +151,7 @@ const Signup = () => {
                 sameSite: "none",
               });
               localStorage.setItem("token", res.data.token);
+              localStorage.setItem("image", res.data.image);
               window.location.href = "/?new=true";
             }
           })

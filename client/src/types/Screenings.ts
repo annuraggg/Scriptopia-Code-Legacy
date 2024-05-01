@@ -22,6 +22,7 @@ interface SecurityOptions {
   gptDetection: boolean;
   copyPasteDetection: boolean;
   plagiarismDetection: boolean;
+  fullScreenDetection: boolean;
 }
 
 interface Feedback {
@@ -33,6 +34,7 @@ interface Screening extends Document {
   _id: string;
   name: string;
   desc: string;
+  passPercentage: number;
   instructions: string;
   languages: string[];
   duration: number;

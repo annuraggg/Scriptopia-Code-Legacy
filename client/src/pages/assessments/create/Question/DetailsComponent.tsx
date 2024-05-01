@@ -1,8 +1,4 @@
 import { Input } from "@/components/ui/input";
-import Quill from "quill";
-import "quill/dist/quill.core.css";
-import { ToolbarConfig } from "quill/modules/toolbar";
-import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -10,173 +6,163 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
-import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import Quill from "quill";
 import { Delta } from "quill/core";
+import { useEffect, useState } from "react";
+import TagsInput from "react-tagsinput";
 
 const DetailsComponent = ({
-  requestNext,
-  respondNext,
-  data,
+  questionName,
+  setQuestionName,
+  difficulty,
+  setDifficulty,
+  recommendedTime,
+  setRecommendedTime,
+  tags,
+  setTags,
+  description,
+  setDescription,
+  isPrivate,
+  useAllowed,
 }: {
-  requestNext: boolean;
-  respondNext: (allowed: boolean, data: unknown) => void;
-  data: {
-    name: string;
-    time: string;
-    difficulty: "easy" | "medium" | "hard";
-    tags: string[];
-    description: string;
-  };
+  questionName: string;
+  setQuestionName: (value: string) => void;
+  difficulty: "easy" | "medium" | "hard";
+  setDifficulty: (value: "easy" | "medium" | "hard") => void;
+  recommendedTime: number;
+  setRecommendedTime: (value: number) => void;
+  tags: string[];
+  setTags: (value: string[]) => void;
+  description: Delta;
+  setDescription: (value: Delta) => void;
+  isPrivate: boolean;
+  useAllowed: boolean;
 }) => {
-  const [name, setName] = useState<string>("");
-  const [time, setTime] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
-    "easy"
-  );
-  const [tags, setTags] = useState<string[]>([]);
-
+  let quill: Quill;
   useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setTime(data.time);
-      setDifficulty(data.difficulty);
-      setTags(data?.tags);
-      const quill = new Quill("#editor");
-      quill.setContents(data.description as unknown as Delta);
-    }
-  }, [data]);
+    if (description) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      quill = new Quill("#editor", {
+        theme: "snow",
+        placeholder: "Write your problem description here...",
+        modules: {
+          toolbar: [
+            [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
+            ["bold", "italic", "underline", "strike"], // toggled buttons
+            ["code-block"],
+            ["link", "image"],
 
-  useEffect(() => {
-    if (requestNext) goToNext();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestNext]);
+            [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+            ["clean"],
+          ],
+        },
+      });
 
-  const goToNext = (): boolean => {
-    if (verifyFields()) {
-      const desc = new Quill("#editor").getContents();
-      const data = {
-        name,
-        time,
-        difficulty,
-        tags,
-        description: desc,
+      console.log(description);
+      quill.setContents(description);
+
+      quill.on("text-change", () => {
+        console.log("text-change");
+        setDescription(quill.getContents());
+      });
+
+      return () => {
+        quill.off("text-change");
       };
-      respondNext(true, data);
-      return true;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
-
-    respondNext(false, null);
-    return false;
-  };
-
-  const verifyFields = (): boolean => {
-    if (!name || !time || !difficulty || !tags.length) return false;
-    const quill = new Quill("#editor");
-    const description: Delta = quill.getContents();
-    if (description.ops.length === 1 && description.ops[0].insert === "\n\n")
-      return false;
-
-    return true;
-  };
-
-  useEffect(() => {
-    const toolbarOptions: ToolbarConfig = [
-      [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
-      ["bold", "italic", "underline", "strike"], // toggled buttons
-      ["code-block"],
-      ["link", "image"],
-
-      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-      ["clean"], // remove formatting button
-    ];
-
-    new Quill("#editor", {
-      theme: "snow",
-      placeholder: "Write your problem description here...",
-      modules: {
-        toolbar: toolbarOptions,
-      },
-    });
   }, []);
 
   return (
-    <>
-      <div className="">
-        <h5>Problem Details</h5>
+    <div className="w-full">
+      <div className="flex flex-col gap-2 w-full">
+        <p className="text-xs">
+          Question Name <span className="text-red-500">*</span>
+        </p>
+        <Input
+          placeholder="Enter question name"
+          className="w-full"
+          value={questionName}
+          onChange={(e) => setQuestionName(e.target.value)}
+        />
+      </div>
 
-        <div className="mt-5">
-          <p>
-            Question Name <span className="text-red-500">*</span>
-            <Input
-              placeholder="Enter Question Name"
-              className="w-[60vw] mt-2"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-            />
+      <div className="flex gap-10">
+        <div className="flex flex-col gap-2 mt-5">
+          <p className="text-xs">
+            Is this a Private Question? <span className="text-red-500">*</span>
           </p>
+          <Switch disabled checked={isPrivate} />
         </div>
 
-        <div className="flex gap-5 items-center mt-10">
-          <div>
-            <p className="mb-3">
-              Difficulty <span className="text-red-500">*</span>
+        {isPrivate && (
+          <div className="flex flex-col gap-2 mt-5">
+            <p className="text-xs">
+              Allow to be used in interview?{" "}
+              <span className="text-red-500">*</span>
             </p>
-            <Select
-              onValueChange={(e: "easy" | "medium" | "hard") =>
-                setDifficulty(e)
-              }
-              value={difficulty}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Easy" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="easy" defaultChecked>
-                  Easy
-                </SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="hard">Hard</SelectItem>
-              </SelectContent>
-            </Select>
+            <Switch disabled checked={useAllowed} />
           </div>
+        )}
+      </div>
 
-          <div>
-            <p className="mb-3">
-              Time Limit <span className="text-red-500">*</span>
-            </p>
-            <Input
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              placeholder="Enter Recommended Time"
-              className="w-[200px] mt-2"
-            />
-          </div>
+      <div className="flex gap-5 mt-5">
+        <div className="flex flex-col gap-2 mt-3 w-full">
+          <p className="text-xs">
+            Difficulty <span className="text-red-500">*</span>
+          </p>
+          <Select
+            value={difficulty}
+            onValueChange={(value) =>
+              setDifficulty(value as "easy" | "medium" | "hard")
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Difficulty" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="easy">Easy</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="hard">Hard</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="mt-10">
+        <div className="flex flex-col gap-2 mt-3 w-full">
+          <p className="text-xs">
+            Recommended Time (In Minutes){" "}
+            <span className="text-red-500">*</span>
+          </p>
+          <Input
+            placeholder="Enter Recommended Time"
+            type="number"
+            className="w-full"
+            value={recommendedTime}
+            onChange={(e) => setRecommendedTime(parseInt(e.target.value))}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2 mt-3 w-full">
+          <p className="text-xs">
+            Tags <span className="text-red-500">*</span>
+          </p>
           <TagsInput value={tags} onChange={(tags) => setTags(tags)} />
           <em className="text-xs">
             Press enter to add a tag. Click on a tag to remove it.
           </em>
         </div>
+      </div>
 
-        <div className="mt-10">
-          <p>
-            Problem Description <span className="text-red-500">*</span>
-          </p>
-          <div className="border shadow-sm border-input h-[43vh] mt-2 rounded p-1 overflow-auto">
-            <div className=" h-min" id="editor"></div>
-          </div>
+      <div className="flex flex-col gap-2 mt-3 w-full">
+        <p className="text-xs">
+          Problem Statement <span className="text-red-500">*</span>
+        </p>
+        <div className="border shadow-sm border-input h-[43vh] mt-2 rounded p-1 overflow-auto">
+          <div className=" h-min" id="editor"></div>
         </div>
       </div>
-      <div className="w-full flex items-center justify-end mt-10">
-        <Button onClick={() => goToNext()} className="py-3">
-          Next
-        </Button>
-      </div>
-    </>
+    </div>
   );
 };
 

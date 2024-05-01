@@ -1,48 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import React, { useEffect } from "react";
 
 const SelectLanguage = ({
-  requestNext,
-  respondNext,
-  data,
-  goBack,
+  selectedLanguages,
+  setSelectedLanguages,
 }: {
-  requestNext: boolean;
-  respondNext: (allowed: boolean, data: string[]) => void;
-  data: string[];
-  goBack: () => void;
+  selectedLanguages: string[];
+  setSelectedLanguages: (value: string[]) => void;
 }) => {
-  const [selectedLanguages, setSelectedLanguages] = React.useState<string[]>(
-    []
-  );
-
-  useEffect(() => {
-    if (requestNext) {
-      goToNext();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestNext]);
-
-  useEffect(() => {
-    setSelectedLanguages(data);
-  }, [data]);
-
-  const goToNext = (): boolean => {
-    if (verifyFields()) {
-      respondNext(true, selectedLanguages);
-      return true;
-    }
-    respondNext(false, []);
-    return false;
-  };
-
-  const verifyFields = (): boolean => {
-    if (selectedLanguages.length === 0) return false;
-    return true;
-  };
-
   const languages: {
     name: string;
     value: string;
@@ -168,7 +132,6 @@ const SelectLanguage = ({
   return (
     <div>
       <h5>Select Languages</h5>
-      <Input placeholder="Search Languages" className="w-[60vw] mt-5" />
       <div className="mt-5 grid grid-cols-5">
         {languages.map((language) => (
           <div className="mb-5" key={language.value}>
@@ -196,12 +159,6 @@ const SelectLanguage = ({
           </div>
         ))}
       </div>
-      <Button onClick={() => goToNext()} className="float-right">
-        Next
-      </Button>
-      <Button className="mr-5 float-right" onClick={() => goBack()}>
-        Back
-      </Button>
     </div>
   );
 };

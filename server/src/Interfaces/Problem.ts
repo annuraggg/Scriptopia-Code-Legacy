@@ -4,7 +4,7 @@ interface TestCase {
   name: string;
   difficulty: string;
   score: number;
-  input: any;
+  input: string;
   output: any;
   isSample: boolean;
 }
@@ -30,3 +30,4 @@ interface Problem extends Document {
 }
 
 export default Problem;
+export { TestCase };

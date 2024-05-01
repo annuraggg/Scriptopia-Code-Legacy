@@ -47,6 +47,9 @@ const Editor = () => {
 
   const [code, setCode] = useState("");
 
+  const [fullScreenExit, setFullScreenExit] = useState(0);
+  const [fullScreenOpen, setFullScreenOpen] = useState(false);
+
   const [selectedLang, setSelectedLang] = useState(
     languages[0] || "javascript"
   );
@@ -61,6 +64,10 @@ const Editor = () => {
   const [output, setOutput] = useState<any>("" as any);
   const [consoleOutput, setConsoleOutput] = useState([]);
   const [error, setError] = useState("");
+
+  const [isTabChangeEnabled, setIsTabChangeEnabled] = useState(false);
+  const [isPasteEnabled, setIsPasteEnabled] = useState(false);
+  const [isFullScreenEnabled, setIsFullScreenEnabled] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,6 +86,14 @@ const Editor = () => {
           seconds: timer?.seconds - 1,
         });
       }
+
+      if (!isFullScreenEnabled) return;
+      const isFullScreen = window.innerHeight == screen.height;
+
+      if (!isFullScreen) {
+        setFullScreenExit((prev) => prev + 1);
+        setFullScreenOpen(true);
+      }
     }, 1000);
 
     localStorage?.setItem("timer", JSON?.stringify(timer));
@@ -87,12 +102,15 @@ const Editor = () => {
   }, [timer]);
 
   useEffect(() => {
+    if (!isPasteEnabled) return;
     if (paste > 1) {
       setPasteOpen(true);
     }
   }, [paste]);
 
   useEffect(() => {
+    if (!isTabChangeEnabled) return;
+
     if (tabChange > 0) {
       setTabChangeOpen(true);
     }
@@ -108,6 +126,9 @@ const Editor = () => {
     const questionID = window?.history?.state?.usr?.id;
     setScreening(window?.history?.state?.usr?.screening);
     setLanguages(window?.history?.state?.usr?.languages);
+    setIsTabChangeEnabled(window?.history?.state?.usr?.tabChange);
+    setIsPasteEnabled(window?.history?.state?.usr?.paste);
+    setIsFullScreenEnabled(window?.history?.state?.usr?.fullScreen);
 
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${questionID}`)
@@ -129,9 +150,7 @@ const Editor = () => {
   }, []);
 
   useEffect(() => {
-    console.log(selectedLang);
     if (question) {
-      console.log("setting code");
       setCode(
         returnStarter(
           selectedLang,
@@ -154,6 +173,7 @@ const Editor = () => {
         (timer?.minutes * 60 + timer?.seconds),
       runs,
       paste,
+      fullscreen: fullScreenExit,
       tabChange,
       output,
       consoleOutput,
@@ -186,7 +206,6 @@ const Editor = () => {
         probID: question?.meta?.id,
       })
       .then((res) => {
-        console.log(res?.data);
         setConsoleOutput(res?.data?.output?.consoleOP);
         setOutput(res?.data?.output);
         setError(res?.data?.output?.error);
@@ -245,7 +264,7 @@ const Editor = () => {
                 running={running}
                 runs={runs}
                 vars={question?.args}
-                output={output?.output ? output?.output : [] }
+                output={output?.output ? output?.output : []}
                 error={error}
                 failedCase={output?.failedCase}
                 failedCaseNumber={output?.failedCaseNumber}
@@ -276,6 +295,26 @@ const Editor = () => {
             You have switched tabs {tabChange} time(s). This may be considered
             suspicious behavior and may result in a disqualification.
           </DialogDescription>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={fullScreenOpen} onOpenChange={setFullScreenOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>We Detected a FullScreen Exit</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            You have exited the fullscreen {fullScreenExit} time(s). This may be
+            considered suspicious behavior and may result in a disqualification.
+          </DialogDescription>
+          <Button
+            onClick={() => {
+              document.body.requestFullscreen();
+              setFullScreenOpen(false);
+            }}
+          >
+            Go Fullscreen
+          </Button>
         </DialogContent>
       </Dialog>
 

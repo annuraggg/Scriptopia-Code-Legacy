@@ -1,218 +1,93 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { cloneElement, useEffect, useState } from "react";
 import DetailsComponent from "./DetailsComponent";
 import SelectLanguage from "./SelectLanguage";
-import StubComponenent from "./StubComponenent";
+import StubComponent from "./StubComponent";
 import AddCase from "./AddCase";
-import { toast } from "sonner";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Delta } from "quill/core";
+import { Case } from "@/types/TestCase";
+import QualityGate from "./QualityGate";
+import { z } from "zod";
+import Problem from "@/types/Problem";
 
-const CreateProblem = ({
-  addQuest,
-  currQuest,
-  allQuestions,
-}: {
-  addQuest: (question: any) => void;
-  currQuest: any;
-  allQuestions: any[];
-}) => {
-  useEffect(() => {
-    if (currQuest) {
-      setName(currQuest.title);
-      setTime(currQuest.recommendedTime);
-      setDifficulty(currQuest.difficulty);
-      setTags(currQuest.tags);
-      setDescription(currQuest.description);
-      setSelectedLanguages(currQuest.languageSupport);
-      setFunctionName(currQuest.starterFunction);
-      setReturnType(currQuest.functionReturn);
-      setArgs(currQuest.starterVarArgs);
-      setTestCases(currQuest.testCases);
-    }
-  }, [currQuest]);
-
+const CreateProblem = ({ question }: { question: Problem }) => {
   const [active, setActive] = useState(0);
-  const [requestNext, setRequestNext] = useState<boolean>(false);
 
-  const [name, setName] = useState<string>("");
-  const [time, setTime] = useState<string>("");
+  // * States for DetailsComponent
+  const [questionName, setQuestionName] = useState<string>("");
+  const [isPrivate] = useState<boolean>(true);
+  const [useAllowed] = useState<boolean>(true);
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
     "easy"
   );
+  const [recommendedTime, setRecommendedTime] = useState<number>(0);
   const [tags, setTags] = useState<string[]>([]);
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<Delta>({} as Delta);
 
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  // * States for SelectLanguage
+  const [languages, setLanguages] = useState<string[]>([]);
 
-  const [saving, setSaving] = useState<boolean>(false);
-
+  // * States for StubComponent
   const [functionName, setFunctionName] = useState<string>("");
-  const [returnType, setReturnType] = useState<
-    "int" | "string" | "float" | "double" | "char" | "boolean"
-  >("int");
-  const [args, setArgs] = useState<
-    {
-      key: string;
-      type: "int" | "string" | "float" | "double" | "char" | "boolean";
-    }[]
+  const [returnType, setReturnType] = useState<string>("");
+  const [functionArgs, setFunctionArgs] = useState<
+    { key: string; type: number | boolean | string | never[] }[]
   >([]);
 
-  const [testCases, setTestCases] = useState<
-    {
-      name: string;
-      difficulty: "easy" | "medium" | "hard";
-      score: number;
-      input: string[];
-      output: string;
-      isSample: boolean;
-    }[]
-  >([]);
+  // * States for AddCase
+  const [testCases, setTestCases] = useState<Case[]>([]);
 
   useEffect(() => {
-    const isEdit = window.location.pathname.includes("edit");
-    if (isEdit) {
-      axios
-        .post(
-          `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/edit/${
-            window.location.pathname.split("/")[2]
-          }`
-        )
-        .then((res) => {
-          const { desc, meta, cases, func, args } = res.data;
-          setName(meta.title);
-          setTime(meta.time);
-          setDifficulty(meta.difficulty);
-          setTags(meta.tags);
-          setDescription(desc);
-          setSelectedLanguages(meta.langs);
-          setFunctionName(func);
-          setReturnType("int");
-          setArgs(args);
-          setTestCases(cases);
-        });
+    if (question) {
+      setQuestionName(question.title);
+      setDifficulty(question.difficulty as "easy" | "medium" | "hard");
+      setRecommendedTime(question.recommendedTime);
+      setTags(question.tags);
+      setDescription(question.description as Delta);
+      setLanguages(question.languageSupport);
+      setFunctionName(question.starterFunction);
+      setReturnType(question.functionReturn);
+      setFunctionArgs(question.starterVarArgs);
+      setTestCases(question.testCases);
     }
-  }, []);
+  }, [question]);
 
-  const saveData = (data: any) => {
-    if (active === 0) {
-      setName(data.name);
-      setTime(data.time);
-      setDifficulty(data.difficulty);
-      setTags(data.tags);
-      setDescription(data.description);
-    } else if (active === 1) {
-      setSelectedLanguages(data);
-    } else if (active === 2) {
-      setFunctionName(data.functionName);
-      setReturnType(data.returnType);
-      setArgs(data.args);
-    } else if (active === 3) {
-      setTestCases(data);
-    }
-  };
+  const submit = () => {
+    const schema = z.object({
+      name: z.string(),
+      time: z.number(),
+      difficulty: z.string(),
+      tags: z.array(z.string()),
+      description: z.any(),
+      selectedLanguages: z.array(z.string()),
+      functionName: z.string(),
+      returnType: z.string(),
+      args: z.array(z.object({ key: z.string(), type: z.any() })),
+      testCases: z.array(z.any()),
+      isPrivate: z.boolean(),
+      allowInterview: z.boolean(),
+    });
 
-  const goToNext = (allowed?: boolean, data?: any) => {
-    setRequestNext(false);
-    if (allowed) {
-      saveData(data);
-      setActive(active + 1);
-    } else {
-      toast.error("Please fill all the fields", {
-        position: "top-center",
-      });
-    }
-  };
-
-  const goBack = () => {
-    setActive(active - 1);
-  };
-
-  const checkDuplicate = (allQuestions: any) => {
-    const currFields = {
-      title: name,
-      recommendedTime: time,
-      difficulty,
-      tags,
-      description,
-      languageSupport: selectedLanguages,
-      starterFunction: functionName,
-      functionReturn: returnType,
-      starterVarArgs: args,
-      testCases,
+    const data = {
+      name: questionName,
+      time: recommendedTime,
+      difficulty: difficulty,
+      tags: tags,
+      description: description,
+      selectedLanguages: languages,
+      functionName: functionName,
+      returnType: returnType,
+      args: functionArgs,
+      testCases: testCases,
+      isPrivate: isPrivate,
+      allowInterview: useAllowed,
     };
 
-    console.log(currFields);
-    console.log(allQuestions);
+    console.log(data);
 
-    // check if all fields are same
-    for (let i = 0; i < allQuestions.length; i++) {
-      const question = allQuestions[i];
-      if (
-        question.title === currFields.title &&
-        question.recommendedTime === currFields.recommendedTime &&
-        question.difficulty === currFields.difficulty &&
-        question.tags === currFields.tags &&
-        question.description === currFields.description &&
-        question.languageSupport === currFields.languageSupport &&
-        question.starterFunction === currFields.starterFunction &&
-        question.functionReturn === currFields.functionReturn &&
-        question.starterVarArgs === currFields.starterVarArgs &&
-        question.testCases === currFields.testCases
-      ) {
-        return true;
-      }
-    }
+    const validatedData = schema.parse(data);
 
-    return false;
-  };
-
-  const submit = (allowed: boolean, data: any) => {
-    setSaving(true);
-
-    if (allowed) {
-      saveData(data);
-
-      if (checkDuplicate(allQuestions)) {
-        toast.error("Duplicate question", {
-          position: "top-center",
-        });
-        setSaving(false);
-        return;
-      }
-
-      addQuest({
-        title: name,
-        _id: "",
-        difficulty,
-        tags,
-        time,
-        name,
-        description,
-        selectedLanguages,
-        functionName,
-        returnType,
-        args,
-        testCases: data,
-        isPrivate: true,
-      });
-
-      setName("");
-      setTime("");
-      setDifficulty("easy");
-      setTags([]);
-      setDescription("");
-      setSelectedLanguages([]);
-      setFunctionName("");
-      setReturnType("int");
-      setArgs([]);
-      setTestCases([]);
-
-      setActive(0);
-    } else {
-      toast.error("Please fill all the fields", {
-        position: "top-center",
-      });
-    }
+    console.log(validatedData);
   };
 
   const steps: { title: string; component?: JSX.Element }[] = [
@@ -220,9 +95,18 @@ const CreateProblem = ({
       title: "Question Details",
       component: (
         <DetailsComponent
-          respondNext={goToNext}
-          requestNext={requestNext}
-          data={{ name, time, difficulty, tags, description }}
+          questionName={questionName}
+          setQuestionName={setQuestionName}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          recommendedTime={recommendedTime}
+          setRecommendedTime={setRecommendedTime}
+          tags={tags}
+          setTags={setTags}
+          description={description}
+          setDescription={setDescription}
+          isPrivate={isPrivate}
+          useAllowed={useAllowed}
         />
       ),
     },
@@ -230,21 +114,21 @@ const CreateProblem = ({
       title: "Languages",
       component: (
         <SelectLanguage
-          respondNext={goToNext}
-          requestNext={requestNext}
-          data={selectedLanguages}
-          goBack={goBack}
+          selectedLanguages={languages}
+          setSelectedLanguages={setLanguages}
         />
       ),
     },
     {
       title: "Code Stub",
       component: (
-        <StubComponenent
-          respondNext={goToNext}
-          requestNext={requestNext}
-          data={{ functionName, returnType, args }}
-          goBack={goBack}
+        <StubComponent
+          functionName={functionName}
+          setFunctionName={setFunctionName}
+          returnType={returnType}
+          setReturnType={setReturnType}
+          args={functionArgs}
+          setArgs={setFunctionArgs}
         />
       ),
     },
@@ -252,23 +136,59 @@ const CreateProblem = ({
       title: "Test Cases",
       component: (
         <AddCase
-          respondNext={submit}
-          data={testCases}
-          args={args}
-          saving={saving}
-          goBack={goBack}
+          testCases={testCases}
+          setTestCases={setTestCases}
+          args={functionArgs}
+        />
+      ),
+    },
+    {
+      title: "Quality Gate",
+      component: (
+        <QualityGate
+          tags={tags}
+          statement={description}
+          testCases={testCases}
+          isPublic={!isPrivate}
+          submit={submit}
         />
       ),
     },
   ];
 
+  const goToTab = (index: number) => {
+    setActive(index);
+  };
+
+  const goToNext = () => {
+    if (active < steps.length - 1) {
+      setActive(active + 1);
+    }
+  };
+
   return (
     <>
-      <div className="px-5 h-[77vh] overflow-y-auto">
-        {cloneElement(steps[active].component!, {
-          requestNext: requestNext,
-          responseNext: goToNext,
-        })}
+      <div className="px-10">
+        <div className="w-full">
+          <div className="bg-background border rounded-t-lg p-2 px-5 flex items-center justify-between">
+            {steps[active].title}
+            <div className="flex gap-2">
+              {active > 0 && (
+                <Button variant="secondary" onClick={() => goToTab(active - 1)}>
+                  Previous
+                </Button>
+              )}
+              {active < steps.length - 1 && (
+                <Button variant="secondary" onClick={goToNext}>
+                  Next
+                </Button>
+              )}
+            </div>
+          </div>
+          <div className="border p-10 py-5 rounded-b-lg w-full overflow-y-auto h-[75vh]">
+            {steps[active].component}
+          </div>
+        </div>
       </div>
     </>
   );

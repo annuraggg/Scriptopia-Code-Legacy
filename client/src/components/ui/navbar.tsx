@@ -85,7 +85,7 @@ export const Navbar = () => {
         >
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={localStorage.getItem("image") || ""} />
               <AvatarFallback>SC</AvatarFallback>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[250px] mr-14">
@@ -136,7 +136,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("zinc")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "zinc" ? "border-[#53535B]" : "border-transparent"}`}
+                      ${
+                        selectedColor === "zinc"
+                          ? "border-[#53535B]"
+                          : "border-transparent"
+                      }`}
                     >
                       <div className="h-7 w-7 bg-[#53535B] rounded-full cursor-pointer"></div>
                     </div>
@@ -152,7 +156,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("rose")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "rose" ? "border-[#E01C48]" : "border-transparent"}
+                      ${
+                        selectedColor === "rose"
+                          ? "border-[#E01C48]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#E01C48] rounded-full cursor-pointer"></div>
@@ -169,7 +177,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("blue")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "blue" ? "border-[#3A82F7]" : "border-transparent"}
+                      ${
+                        selectedColor === "blue"
+                          ? "border-[#3A82F7]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#3A82F7] rounded-full cursor-pointer"></div>
@@ -186,7 +198,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("green")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "green" ? "border-[#23C45E]" : "border-transparent"}
+                      ${
+                        selectedColor === "green"
+                          ? "border-[#23C45E]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#23C45E] rounded-full cursor-pointer"></div>
@@ -203,7 +219,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("orange")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "orange" ? "border-[#EB590C]" : "border-transparent"}
+                      ${
+                        selectedColor === "orange"
+                          ? "border-[#EB590C]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#EB590C] rounded-full cursor-pointer"></div>
@@ -220,7 +240,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("yellow")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "yellow" ? "border-[#FBCC14]" : "border-transparent"}
+                      ${
+                        selectedColor === "yellow"
+                          ? "border-[#FBCC14]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#FBCC14] rounded-full cursor-pointer"></div>
@@ -237,7 +261,11 @@ export const Navbar = () => {
                   <TooltipTrigger onClick={() => setSelectedColor("purple")}>
                     <div
                       className={`rounded-full p-1 border-2 transition-all duration-300
-                      ${selectedColor === "purple" ? "border-[#6D29D8]" : "border-transparent"}
+                      ${
+                        selectedColor === "purple"
+                          ? "border-[#6D29D8]"
+                          : "border-transparent"
+                      }
                     `}
                     >
                       <div className="h-7 w-7 bg-[#6D29D8] rounded-full cursor-pointer"></div>

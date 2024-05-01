@@ -15,6 +15,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+
 .react-tagsinput {
   background-color: transparent;
   border: 1px solid #1e293b;
@@ -217,7 +218,6 @@ input[type="number"] {
   display: inline-block;
   margin: 0 16px;
 }
-
 /* width */
 ::-webkit-scrollbar {
   width: 3px;
@@ -235,4 +235,10 @@ input[type="number"] {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foregroundCHover);
+}
+
+:root {
+  --foregroundC: hsl(0, 0%, 100%);
+  --backgroundC: hsl(222.2, 84%, 4.9%);
+  --foregroundCHover: hsl(0, 3%, 77%);
 }

@@ -19,6 +19,9 @@ import "./App.css";
 import { selectTheme } from "./states/user/ThemeSlice";
 import { useTheme } from "./components/theme-provider";
 
+import "./dark.css";
+import "./light.css";
+
 const router = createBrowserRouter([
   {
     element: <ErrorBoundary />,
@@ -58,21 +61,14 @@ function fourOhFour() {
 }
 
 function App() {
-  /*  const isLoading = useIsFetching({
-    predicate: (query) => query.state === "loading",
-  });
-  
-  console.log(isLoading);*/
-
   const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
   ProtectedRoutesFunc();
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const token = Cookies.get("token");
     const colorPalette = localStorage.getItem("colorPalette");
-    const theme = localStorage.getItem("vite-ui-theme");
     if (token) {
       const decodedToken: UserToken = jwtDecode(token);
       dispatch(setUser(decodedToken));
@@ -81,7 +77,7 @@ function App() {
     }
 
     if (!theme) {
-      localStorage.setItem("vite-ui-theme", "dark");
+      setTheme("dark");
     }
 
     let color;
@@ -92,16 +88,6 @@ function App() {
       localStorage.setItem("colorPalette", "blue");
       selectThemeImport("blue");
       color = selectColor("blue");
-    }
-
-    if (theme === "dark") {
-      import("./dark.css");
-      console.log("imported dark theme");
-    }
-
-    if (theme === "light") {
-      import("./light.css");
-      console.log("imported light theme");
     }
 
     dispatch(
@@ -164,9 +150,9 @@ function App() {
   };
 
   return (
-    <>
+    <div className={theme}>
       <RouterProvider router={router} />
-    </>
+    </div>
   );
 }
 

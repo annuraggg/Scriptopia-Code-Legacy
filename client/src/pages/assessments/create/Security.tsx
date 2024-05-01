@@ -13,6 +13,8 @@ const Security = ({
   setCopyPasteDetection,
   plagiarismDetection,
   setPlagiarismDetection,
+  fullScreenExitDetection,
+  setFullScreenExitDetection,
 }: {
   codePlaybacks: boolean;
   setCodePlaybacks: (codePlaybacks: boolean) => void;
@@ -24,6 +26,8 @@ const Security = ({
   setCopyPasteDetection: (copyPasteDetection: boolean) => void;
   plagiarismDetection: boolean;
   setPlagiarismDetection: (plagiarismDetection: boolean) => void;
+  fullScreenExitDetection: boolean;
+  setFullScreenExitDetection: (fullScreenExitDetection: boolean) => void;
 }) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
@@ -34,6 +38,7 @@ const Security = ({
     setGptDetection(e);
     setCopyPasteDetection(e);
     setPlagiarismDetection(e);
+    setFullScreenExitDetection(e);
   };
 
   useEffect(() => {
@@ -89,14 +94,6 @@ const Security = ({
 
         <div className="mt-5 flex gap-5 items-center">
           <Checkbox
-            checked={gptDetection}
-            onCheckedChange={() => setGptDetection(!gptDetection)}
-          />
-          <p>Enable GPT Detection</p>
-        </div>
-
-        <div className="mt-5 flex gap-5 items-center">
-          <Checkbox
             checked={copyPasteDetection}
             onCheckedChange={() => setCopyPasteDetection(!copyPasteDetection)}
           />
@@ -105,10 +102,10 @@ const Security = ({
 
         <div className="mt-5 flex gap-5 items-center">
           <Checkbox
-            checked={plagiarismDetection}
-            onCheckedChange={() => setPlagiarismDetection(!plagiarismDetection)}
+            checked={fullScreenExitDetection}
+            onCheckedChange={() => setFullScreenExitDetection(!fullScreenExitDetection)}
           />
-          <p>Enable Plagarism Detection</p>
+          <p>Enable Fullscreen Exit Detection</p>
         </div>
       </div>
     </div>

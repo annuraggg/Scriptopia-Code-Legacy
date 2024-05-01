@@ -5,6 +5,8 @@ const pingEngines = async () => {
     ping();
   }, 1000 * 60 * 5);
 
+  if(process.env.NODE_ENV === "development") return console.log("Pinging engines disabled in development mode");
+
   const ping = async () => {
     const engines = [
       "https://excompiler.onrender.com",
@@ -13,7 +15,9 @@ const pingEngines = async () => {
 
     for (const engine of engines) {
       try {
-        fetch(engine);
+        fetch(engine).catch(() => {
+          console.log(`Error pinging ${engine}`);
+        });
       } catch (err) {
         console.log(`Error pinging ${engine}`);
       }

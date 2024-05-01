@@ -177,7 +177,13 @@ const Questions = ({
                         <div className="flex gap-5">
                           <p className="w-72 truncate ">{question?.title}</p>
                         </div>
-                        <Badge className="bg-green-500">Easy</Badge>
+                        {question?.difficulty === "easy" ? (
+                          <Badge className="bg-green-500">Easy</Badge>
+                        ) : question?.difficulty === "medium" ? (
+                          <Badge className="bg-yellow-500">Medium</Badge>
+                        ) : (
+                          <Badge className="bg-red-500">Hard</Badge>
+                        )}
                         <p className=" text-gray-500 text-xs w-32 truncate ">
                           By @
                           <u className="hover:text-primary cursor-pointer duration-100 transition-all">
@@ -234,30 +240,12 @@ const Questions = ({
       </Sheet>
 
       <Dialog open={questionEditorOpen} onOpenChange={setQuestionEditorOpen}>
-        <DialogContent className="h-[90vh] m min-w-[90vw]">
+        <DialogContent className="h-[90vh] m min-w-[90vw] min-h-[95vh]">
           <DialogHeader>
             <DialogTitle>Add Question</DialogTitle>
           </DialogHeader>
           <div className="">
-            <CreateProblem
-              addQuest={(q: Problem) => {
-                // @ts-expect-error - fix this
-                setSelectedQuestions((prev: Problem[]) => {
-                  const index = prev.findIndex(
-                    (quest: Problem) => quest._id === q._id
-                  );
-                  if (index !== -1) {
-                    prev[index] = q;
-                    return prev;
-                  }
-                  return [...prev, q];
-                });
-                setSelectedQuestions([...selectedQuestions, q]);
-                setQuestionEditorOpen(false);
-              }}
-              currQuest={currQuest}
-              allQuestions={questions}
-            />
+            <CreateProblem question={currQuest} />
           </div>
         </DialogContent>
       </Dialog>

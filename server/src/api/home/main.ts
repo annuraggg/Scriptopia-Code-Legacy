@@ -30,8 +30,8 @@ router.post("/", verifyJWT, async (req, res) => {
       "solvedProblems"
     );
 
-    const excludedProblemIDs: string[] = excludeIDs?.solvedProblems?.map((obj) =>
-      obj?.problemId?.toString()
+    const excludedProblemIDs: string[] = excludeIDs?.solvedProblems?.map(
+      (obj) => obj?.problemId?.toString()
     )!;
 
     const probs = await Problem?.find({
@@ -80,16 +80,15 @@ router.post("/", verifyJWT, async (req, res) => {
           id: obj?._id?.toString(),
           title: obj?.title,
           difficulty: obj?.difficulty,
-          tags: obj?.tags,  
+          tags: obj?.tags,
           lastUpdated: obj?.lastUpdated?.toDateString(),
         };
       });
     }
 
     const furtherExclude = problems?.map((obj) => obj?.id);
-    const evenFurtherExclude =  recc?.response?.next_problem?.map((prob) =>
-      prob?.slice(1)
-    ) || [];
+    const evenFurtherExclude =
+      recc?.response?.next_problem?.map((prob) => prob?.slice(1)) || [];
 
     const pages = Math?.ceil(totalProblems / limit);
     const userObj = await User?.findOne({ _id: user?.id });
@@ -190,22 +189,33 @@ router.post("/filter", verifyJWT, async (req, res) => {
     let probs: any = [];
     let totalProblems: number = 0;
 
-    if (search !== "") {
-      const regex = { $regex: search, $options: "i" };
-      probs = await Problem?.find({ title: regex })?.limit(limit);
-      totalProblems = await Problem?.countDocuments({ title: regex });
-    } else if (difficulty !== "all") {
-      probs = await Problem?.find({
-        difficulty: difficulty?.toLowerCase(),
-      })?.limit(limit);
-      totalProblems = await Problem?.countDocuments({
-        difficulty: difficulty?.toLowerCase(),
-      });
-    } else {
+    if(difficulty === "all" && search === "") {
       probs = await Problem?.find()?.limit(limit);
       totalProblems = await Problem?.countDocuments();
     }
 
+    else if(difficulty === "all" && search !== "") {
+      const regex = { $regex: search, $options: "i" };
+      probs = await Problem?.find({ title: regex })?.limit(limit);
+      totalProblems = await Problem?.countDocuments({ title: regex });
+    }
+
+    else if(difficulty !== "all" && search === "") {
+      probs = await Problem?.find({ difficulty: difficulty?.toLowerCase() })?.limit(limit);
+      totalProblems = await Problem?.countDocuments({ difficulty: difficulty?.toLowerCase() });
+    }
+
+    else if(difficulty !== "all" && search !== "") {
+      const regex = { $regex: search, $options: "i" };
+      probs = await Problem?.find({ title: regex, difficulty: difficulty?.toLowerCase() })?.limit(limit);
+      totalProblems = await Problem?.countDocuments({ title: regex, difficulty: difficulty?.toLowerCase() });
+    }
+
+    else {
+      probs = await Problem?.find()?.limit(limit);
+      totalProblems = await Problem?.countDocuments();
+    }
+    
     const problems: ProblemType[] = probs?.map((obj: ProblemType) => {
       return {
         id: obj?._id?.toString(),

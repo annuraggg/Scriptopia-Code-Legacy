@@ -66,6 +66,8 @@ const AddCase = ({
   const [inputCaseArray, setInputCaseArray] = useState<string>("");
   const [outputCaseArray, setOutputCaseArray] = useState<string>("");
 
+  const [isEditing, setIsEditing] = useState(false);
+
   const parseData = (inputString: string) => {
     try {
       inputString = inputString.substring(1, inputString.length - 2);
@@ -170,6 +172,7 @@ const AddCase = ({
   };
 
   const editCase = (index: number) => {
+    setIsEditing(true);
     const item = testCases[index];
     setCaseName(item.name);
     setDifficulty(item.difficulty);
@@ -177,7 +180,7 @@ const AddCase = ({
     setInput(item.input);
     setOutput(item.output);
     setIsSample(item.isSample);
-    deleteCase(index);
+    
     setOpen(true);
   };
 
@@ -192,6 +195,32 @@ const AddCase = ({
   };
 
   const saveCase = () => {
+    if(isEditing) {
+      const newCases = testCases.map((item, index) => {
+        if(index === testCases.length - 1) {
+          return {
+            name: caseName,
+            difficulty,
+            score,
+            input,
+            output,
+            isSample,
+          }
+        }
+        return item;
+      });
+      setTestCases(newCases);
+      setOpen(false);
+      setIsEditing(false);
+      setCaseName("");
+      setDifficulty("easy");
+      setScore(0);
+      setInput([]);
+      setOutput("");
+      setIsSample(false);
+      return;
+    }
+
     if (caseName && difficulty && score && input && output) {
       setTestCases([
         ...testCases,
@@ -271,7 +300,7 @@ const AddCase = ({
           <AlertDialogTrigger>
             <Button>Import From CSV</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="overflow-y-scroll max-h-screen">
             <AlertDialogHeader>
               <AlertDialogTitle>
                 The CSV should be in the following format
@@ -379,7 +408,7 @@ const AddCase = ({
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="overflow-y-scroll max-h-screen">
           <DialogHeader>
             <DialogTitle>Test Case</DialogTitle>
             <DialogDescription asChild>
@@ -492,7 +521,7 @@ const AddCase = ({
       </Dialog>
 
       <Dialog open={isBulkAddOpen} onOpenChange={setIsBulkAddOpen}>
-        <DialogContent>
+        <DialogContent className="overflow-y-scroll max-h-screen">
           <DialogHeader>
             <DialogTitle>
               Place the Array of cases as plain text here

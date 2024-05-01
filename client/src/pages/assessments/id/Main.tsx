@@ -184,6 +184,9 @@ const Main = () => {
                         id: question?._id,
                         languages: screening?.languages || ["javascript"],
                         screening: screening,
+                        tabChange: screening?.security?.tabChangeDetection,
+                        paste: screening?.security?.copyPasteDetection,
+                        fullscreen: screening?.security?.fullScreenDetection,
                       },
                     });
                   }}

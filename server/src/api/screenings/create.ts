@@ -5,11 +5,13 @@ import Screening from "@/schemas/ScreeningSchema.js";
 import express from "express";
 const router = express.Router();
 
-router.post("/", verifyJWT ,async (req, res) => {
+router.post("/", verifyJWT, async (req, res) => {
   try {
     const {
       name,
       desc,
+      access,
+      passingPercentage,
       instructions,
       duration,
       openRange,
@@ -20,9 +22,15 @@ router.post("/", verifyJWT ,async (req, res) => {
       feedback,
     } = req.body;
 
+    const trimmedCandidates = candidates.map((candidate: string) => {
+      return candidate.trim();
+    });
+
+
     const newScreen = await Screening.create({
       name: name,
       desc: desc,
+      passPercentage: passingPercentage,
       instructions: instructions,
       duration: duration,
       createdAt: new Date(),
@@ -30,7 +38,8 @@ router.post("/", verifyJWT ,async (req, res) => {
       createdBy: req.user.id,
       openRange: openRange,
       questions: questions,
-      candidates: candidates,
+      access: access,
+      candidates: trimmedCandidates,
       editorOptions: editorOptions,
       security: security,
       feedback: feedback,

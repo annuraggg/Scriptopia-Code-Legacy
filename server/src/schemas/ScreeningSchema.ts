@@ -4,6 +4,7 @@ import { problemSchema as Problem } from "./ProblemSchema.js";
 const screeningSchema = new Schema({
   name: String,
   desc: String,
+  passPercentage: Number,
   instructions: String,
   duration: Number,
   languages: [String],
@@ -15,6 +16,7 @@ const screeningSchema = new Schema({
   },
   questions: [Problem],
   qualifyingScore: Number,
+  access: String,
   candidates: [
     {
       name: String,
@@ -33,6 +35,7 @@ const screeningSchema = new Schema({
     gptDetection: Boolean,
     copyPasteDetection: Boolean,
     plagiarismDetection: Boolean,
+    fullScreenExitDetection: Boolean,
   },
   feedback: {
     email: String,

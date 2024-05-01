@@ -37,6 +37,7 @@ const CreateScreening = () => {
   const [toTime, setToTime] = useState<string>("");
 
   const [questions, setQuestions] = useState<any>([]);
+  const [passingPercentage, setPassingPercentage] = useState<number>(0);
 
   const [candidates, setCandidates] = useState<
     {
@@ -52,6 +53,8 @@ const CreateScreening = () => {
   const [tabChangeDetection, setTabChangeDetection] = useState<boolean>(false);
   const [gptDetection, setGptDetection] = useState<boolean>(false);
   const [copyPasteDetection, setCopyPasteDetection] = useState<boolean>(false);
+  const [fullScreenExitDetection, setFullScreenExitDetection] =
+    useState<boolean>(false);
   const [plagiarismDetection, setPlagiarismDetection] =
     useState<boolean>(false);
 
@@ -68,7 +71,6 @@ const CreateScreening = () => {
       "questions",
       "candidates",
       "instructions",
-      "scoring",
       "security",
       "feedback",
     ];
@@ -86,7 +88,6 @@ const CreateScreening = () => {
       "questions",
       "candidates",
       "instructions",
-      "scoring",
       "security",
       "feedback",
     ];
@@ -115,11 +116,40 @@ const CreateScreening = () => {
       return;
     }
 
+    const emailRe = /\S+@\S+\.\S+/;
+    if (!emailRe.test(feedbackEmail)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+
+    const phoneRe = /^[0-9]{10}$/;
+    if (!phoneRe.test(feedbackPhone)) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+
+    // generate new Date() start time from range.from and fromTime
+    const fromTimeSplit = fromTime.split(":");
+    const fromTimeDate = new Date(range.from?.toString());
+    fromTimeDate.setHours(parseInt(fromTimeSplit[0]));
+    fromTimeDate.setMinutes(parseInt(fromTimeSplit[1]));
+    fromTimeDate.setSeconds(0);
+    range.from = fromTimeDate;
+
+    // generate new Date() end time from range.to and toTime
+    const toTimeSplit = toTime.split(":");
+    const toTimeDate = new Date(range.to?.toString());
+    toTimeDate.setHours(parseInt(toTimeSplit[0]));
+    toTimeDate.setMinutes(parseInt(toTimeSplit[1]));
+    toTimeDate.setSeconds(0);
+    range.to = toTimeDate;
+
     setSaving(true);
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/create`, {
         name,
         desc: description,
+        passingPercentage: passingPercentage,
         instructions,
         duration: timeLimit,
         openRange: {
@@ -127,6 +157,7 @@ const CreateScreening = () => {
           end: range.to,
         },
         questions,
+        access,
         candidates,
         editorOptions: {
           autoComplete: allowAutocomplete,
@@ -139,6 +170,7 @@ const CreateScreening = () => {
           gptDetection,
           copyPasteDetection,
           plagiarismDetection,
+          fullScreenExitDetection,
         },
         feedback: {
           email: feedbackEmail,
@@ -210,6 +242,8 @@ const CreateScreening = () => {
               setFromTime={setFromTime}
               toTime={toTime}
               setToTime={setToTime}
+              passingPercentage={passingPercentage}
+              setPassingPercentage={setPassingPercentage}
             />
           </TabsContent>
           <TabsContent value="questions">
@@ -249,6 +283,8 @@ const CreateScreening = () => {
               setCopyPasteDetection={setCopyPasteDetection}
               plagiarismDetection={plagiarismDetection}
               setPlagiarismDetection={setPlagiarismDetection}
+              fullScreenExitDetection={fullScreenExitDetection}
+              setFullScreenExitDetection={setFullScreenExitDetection}
             />
           </TabsContent>
           <TabsContent value="feedback">
@@ -276,12 +312,17 @@ const CreateScreening = () => {
                   <MdContentCopy
                     className=" cursor-pointer"
                     onClick={() => {
-                      navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_ADDRESS}/r/${link}`);
+                      navigator.clipboard.writeText(
+                        `${import.meta.env.VITE_FRONTEND_ADDRESS}/r/${link}`
+                      );
                       toast.success("Link copied to clipboard");
                     }}
                   />
                 </p>
-                <Button onClick={() => setShowCode(false)} className="mt-5">
+                <Button
+                  onClick={() => (window.location.href = "/screenings")}
+                  className="mt-5"
+                >
                   Close
                 </Button>
               </div>

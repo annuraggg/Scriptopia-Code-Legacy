@@ -107,9 +107,11 @@ const createJWT = (user: UserType, sessID: string) => {
       sessionID: sessID,
     };
 
-    return jwt.sign(jwtObj, process.env.JWT_SECRET!, {
-      expiresIn: "48h",
+    const encToken = jwt.sign(jwtObj, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
     });
+
+    return encToken;
   } catch (error) {
     logger.error({ code: "AUTH-CREATEJWT", message: error });
     throw new Error("Error creating JWT");
@@ -157,7 +159,7 @@ router.post("/login", async (req, res) => {
                   sameSite: "none",
                   secure: true,
                 })
-                .json({ token: token });
+                .json({ token: token, image: user?.image});
             } else {
               const randomID = crypto.randomUUID();
               const idJwt = jwt.sign(
@@ -245,7 +247,7 @@ router.post("/google", async (req, res) => {
         const token = createJWT(u as unknown as UserType, sessID);
         performSecurityLogs(req, u as unknown as UserType, sessID);
 
-        res.status(200).json({ token });
+        res.status(200).json({ token, image: u?.image});
       } else {
         res.status(409).send();
       }
@@ -265,7 +267,7 @@ router.post("/google", async (req, res) => {
               sameSite: "none",
               secure: true,
             })
-            .json({ token });
+            .json({ token, image: user?.image});
         } else {
           const randomID = crypto.randomUUID();
           const idJwt = jwt.sign(
@@ -275,7 +277,7 @@ router.post("/google", async (req, res) => {
               expiresIn: "5m",
             }
           );
-          res.status(200).json({ tfa: true, id: user._id, token: idJwt });
+          res.status(200).json({ tfa: true, id: user._id, token: idJwt, image: user?.image});
         }
       } else {
         res.status(404).send();
@@ -302,7 +304,7 @@ router.post("/username", verifyJWT, async (req, res) => {
     const sessID = crypto.randomUUID();
     const token = createJWT(user as unknown as UserType, sessID);
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, image: user?.image});
   } catch (error: any) {
     if (error.code === 11000) {
       res.status(409).send();
@@ -345,7 +347,7 @@ router.post("/tfa/verify", async (req, res) => {
         const sessID = crypto.randomUUID();
         const newToken = createJWT(user as unknown as UserType, sessID);
         performSecurityLogs(req, user as unknown as UserType, sessID);
-        res.status(200).json({ token: newToken });
+        res.status(200).json({ token: newToken, image: user?.image});
       } else {
         res.status(400).send();
       }

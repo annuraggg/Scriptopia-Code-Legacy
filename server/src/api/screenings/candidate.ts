@@ -117,7 +117,7 @@ router.post("/", async (req, res) => {
     sessionRewind: candidate.sessionUrl,
     scores: {
       average: average,
-      qualifying: screening.qualifyingScore,
+      qualifying: screening.passPercentage,
       total: totalScore,
     },
     cheating: {

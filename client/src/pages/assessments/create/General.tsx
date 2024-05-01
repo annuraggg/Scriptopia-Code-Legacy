@@ -23,6 +23,8 @@ const General = ({
   setFromTime,
   toTime,
   setToTime,
+  passingPercentage,
+  setPassingPercentage,
 }: {
   name: string;
   setName: (name: string) => void;
@@ -42,6 +44,8 @@ const General = ({
   setFromTime: (fromTime: string) => void;
   toTime: string;
   setToTime: (toTime: string) => void;
+  passingPercentage: number;
+  setPassingPercentage: (passingPercentage: number) => void;
 }) => {
   return (
     <div className="mt-5 w-[95vw]">
@@ -67,8 +71,8 @@ const General = ({
             />
           </div>
 
-          <div className="flex gap-10 mt-10 items-center justify-between">
-            <div className="flex gap-3 items-center">
+          <div className="flex flex-col gap-10 mt-10 justify-between">
+            <div className="flex gap-10 items-center">
               <p>Time Limit (In Minutes) </p>
               <Input
                 placeholder="Limit"
@@ -76,6 +80,15 @@ const General = ({
                 className="w-20"
                 value={timeLimit}
                 onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              />
+
+              <p>Passing Percentage</p>
+              <Input
+                placeholder="Percentage"
+                type="number"
+                className="w-40"
+                value={passingPercentage}
+                onChange={(e) => setPassingPercentage(parseInt(e.target.value))}
               />
             </div>
 

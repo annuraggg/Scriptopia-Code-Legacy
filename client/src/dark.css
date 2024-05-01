@@ -1,23 +1,27 @@
-:root {
+.dark :root {
   --fontColor: #ffffff;
 }
 
-.ql-toolbar {
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+}
+
+.dark .ql-toolbar {
   border: none !important;
   color: white !important;
 }
 
-.ql-toolbar .ql-stroke {
+.dark .ql-toolbar .ql-stroke {
   fill: none;
   stroke: var(--fontColor) !important;
   background-color: var(--fontColor) !important;
 }
 
-.ql-placeholder {
+.dark .ql-placeholder {
   color: var(--fontColor) !important;
 }
 
-.ql-header > button {
+.dark .ql-header > button {
   fill: none;
   stroke: var(--fontColor) !important;
   background-color: var(--fontColor) !important;
@@ -25,19 +29,19 @@
   color: white !important;
 }
 
-.ql-editor.ql-blank::before {
+.dark .ql-editor.ql-blank::before {
   color: var(--fontColor) !important;
 }
-.ql-editor {
+.dark .ql-editor {
   font-family: "PT Sans" !important;
 }
 
-.ql-toolbar .ql-fill {
+.dark .ql-toolbar .ql-fill {
   fill: var(--fontColor) !important;
   stroke: none;
   background-color: var(--fontColor) !important;
 }
 
-.ql-container {
+.dark .ql-container {
   border: none !important;
 }

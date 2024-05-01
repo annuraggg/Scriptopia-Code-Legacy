@@ -107,6 +107,8 @@ const Screening = () => {
   };
 
   const beginAssess = () => {
+    document.body.requestFullscreen();
+
     const id = window.location.pathname.split("/").pop();
     localStorage.setItem(
       "timer",

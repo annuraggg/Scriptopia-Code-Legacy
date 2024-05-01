@@ -16,7 +16,7 @@ const MyAssessments = () => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/get/my`)
       .then((res) => {
-        setScreenings(res.data);
+        setScreenings(res.data.reverse());
         setLoading(false);
       })
       .catch((err) => {

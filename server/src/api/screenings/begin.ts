@@ -32,13 +32,15 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ message: "Screening not found" });
     }
 
-    if (
-      screening.candidates.filter((candidate) => candidate.email === email)
-        .length === 0
-    ) {
-      return res
-        .status(400)
-        .json({ message: "You are not allowed to take this screening" });
+    if (screening.access !== "all") {
+      if (
+        screening.candidates.filter((candidate) => candidate.email === email)
+          .length === 0
+      ) {
+        return res
+          .status(400)
+          .json({ message: "You are not allowed to take this screening" });
+      }
     }
 
     // Check if the screening is active
@@ -53,7 +55,9 @@ router.post("/", async (req, res) => {
 
     const submissions = await ScreeningSubmission.find({ userEmail: email });
     if (submissions.length !== 0) {
-      return res.status(400).json({ message: "You have already taken this screening" });
+      return res
+        .status(400)
+        .json({ message: "You have already taken this screening" });
     }
 
     // Check if the user has already taken the screening
