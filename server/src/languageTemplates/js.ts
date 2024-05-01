@@ -102,7 +102,7 @@ const createJSFunction = (
 
 const fetchOutput = async (code: string, cases: Case[]) => {
   try {
-    const response = await fetch("http://localhost:4000/", {
+    const response = await fetch(process.env.COMPILER_ADDRESS!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
