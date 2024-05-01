@@ -14,6 +14,9 @@ router.post("/", verifyJWT, async (req, res) => {
     user.firstName = firstName;
     user.lastName = lastName;
     user.bio = bio;
+
+    user.links = user.links || {};
+
     user.links.github = github;
     user.links.linkedin = linkedin;
     user.links.website = website;
