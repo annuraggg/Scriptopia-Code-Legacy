@@ -62,10 +62,10 @@ const Screening = () => {
         setInfoColor("green");
         setSubmitLoading(false);
 
-        socket.emit("join", {
+        /*        socket.emit("join", {
           room: email + id,
         });
-
+*/
         axios
           .post(
             `${
@@ -108,7 +108,10 @@ const Screening = () => {
 
   const beginAssess = () => {
     const id = window.location.pathname.split("/").pop();
-    localStorage.setItem("timer", JSON.stringify({ minutes: screening?.duration, seconds: 0 }))
+    localStorage.setItem(
+      "timer",
+      JSON.stringify({ minutes: screening?.duration, seconds: 0 })
+    );
     localStorage.removeItem("SessionRewindSessionData");
     navigate(`/screenings/current`, {
       state: { email, name, id, screening: screening },
