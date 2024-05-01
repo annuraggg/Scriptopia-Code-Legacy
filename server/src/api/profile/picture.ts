@@ -6,6 +6,8 @@ const router = express.Router();
 router.post("/", verifyJWT, async (req, res) => {
   try {
     const { newImage } = req.body;
+
+    // @ts-ignore
     const { id } = req.user;
 
     const user = await User.findById(id);

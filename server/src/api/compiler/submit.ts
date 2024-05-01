@@ -138,10 +138,12 @@ router.post("/", verifyJWT, async (req, res) => {
         const timeEfficiency: {
           avg: number;
           percent: number;
+          // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'submissions' implicitly has an 'any' type.
         } = await getTimeEfficiency(submissions, result.runtime);
         const spaceEfficiency: {
           avg: number;
           percent: number;
+          // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'submissions' implicitly has an 'any' type.
         } = await getSpaceEfficiency(submissions, result.memoryUsage);
 
         const scoreGet:
@@ -174,6 +176,7 @@ router.post("/", verifyJWT, async (req, res) => {
 
         const { _id } = await Submission.create(submission);
 
+        // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'user' implicitly has an 'any' type.
         const user = await User.findById(req.user.id);
         const score = {
           submissionID: _id,
@@ -203,6 +206,7 @@ router.post("/", verifyJWT, async (req, res) => {
           output: result,
         };
 
+        // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'user' implicitly has an 'any' type.
         const user = await User.findById(req.user.id);
         user?.score.push({
           submissionID: probID,

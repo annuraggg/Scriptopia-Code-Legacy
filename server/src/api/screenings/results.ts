@@ -34,7 +34,6 @@ router.post("/", verifyJWT, async (req, res) => {
     // @ts-ignore
     cand.submission.forEach((sub) => {
       totalTime += sub.submission.totalTime;
-      score += sub.submission.totalScore;
       cheats += sub.submission.tabChange;
       cheats += sub.submission.paste;
     });
