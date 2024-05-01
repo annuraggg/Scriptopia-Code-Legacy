@@ -2,7 +2,7 @@ import express from "express";
 import runJS from "@/languageTemplates/js.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
-import Problem from "@/schemas/ProblemSchema";
+import Problem from "@/schemas/ProblemSchema.js";
 import ProblemType from "@/Interfaces/Problem.js";
 const router = express.Router();
 

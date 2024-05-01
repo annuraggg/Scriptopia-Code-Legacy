@@ -1,6 +1,6 @@
-import logger from "@/config/logger";
-import verifyJWT from "@/middlewares/verifyJWT";
-import Screening from "@/schemas/ScreeningSchema";
+import logger from "@/config/logger.js";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import Screening from "@/schemas/ScreeningSchema.js";
 import express from "express";
 const router = express.Router();
 

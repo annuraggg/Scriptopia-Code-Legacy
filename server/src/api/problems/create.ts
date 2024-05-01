@@ -1,4 +1,4 @@
-import logger from "@/config/logger";
+import logger from "@/config/logger.js";
 import Problem from "@/schemas/ProblemSchema.js";
 import express from "express";
 

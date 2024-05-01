@@ -1,4 +1,4 @@
-import { IEducation } from "@/Interfaces/Resume";
+import { IEducation } from "@/Interfaces/Resume.js";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
@@ -14,7 +14,7 @@ const resume = new Schema({
   email: {
     type: String,
     required: true,
-    match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
   },
   phone: {
     type: String,

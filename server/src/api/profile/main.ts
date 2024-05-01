@@ -1,10 +1,10 @@
-import verifyJWT from "@/middlewares/verifyJWT";
-import Problem from "@/schemas/ProblemSchema";
-import User from "@/schemas/UserSchema";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import Problem from "@/schemas/ProblemSchema.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 const router = express.Router();
-import picture from "./picture";
-import update from "./update";
+import picture from "./picture.js";
+import update from "./update.js";
 
 router.post("/", verifyJWT, async (req, res) => {
   // @ts-ignore

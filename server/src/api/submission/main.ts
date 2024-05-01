@@ -1,8 +1,8 @@
-import logger from "@/config/logger";
-import verifyJWT from "@/middlewares/verifyJWT";
-import Problem from "@/schemas/ProblemSchema";
-import Submission from "@/schemas/SubmissionSchema";
-import User from "@/schemas/UserSchema";
+import logger from "@/config/logger.js";
+import verifyJWT from "@/middlewares/verifyJWT.js";
+import Problem from "@/schemas/ProblemSchema.js";
+import Submission from "@/schemas/SubmissionSchema.js";
+import User from "@/schemas/UserSchema.js";
 import express from "express";
 const router = express.Router();
 

@@ -1,14 +1,14 @@
 import express from "express";
 const router = express.Router();
 
-import getStatus from "./getStatus";
-import enable from "./enable";
-import create from "./create";
-import get from "./get";
-import begin from "./begin";
-import end from "./end";
-import result from "./results";
-import candidate from "./candidate";
+import getStatus from "./getStatus.js";
+import enable from "./enable.js";
+import create from "./create.js";
+import get from "./get.js";
+import begin from "./begin.js";
+import end from "./end.js";
+import result from "./results.js";
+import candidate from "./candidate.js";
 
 router.use("/getStatus", getStatus);
 router.use("/enable", enable);
