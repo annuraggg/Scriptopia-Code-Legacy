@@ -282,11 +282,11 @@ function App() {
         } flex items-center justify-center text-white text-2xl font-bold transition-all duration-500 ease-in-out h-[100vh] absolute w-full z-[-5]`}
         style={{
           background:
-            bgOverlay === 2
+            bgOverlay === 1
               ? `radial-gradient(circle, ${
                   theme === "dark" ? "rgba(0,45,0,1)" : "rgba(0,200,0,.2)"
                 } 0%, rgba(244,8,23,0) 100%)`
-              : bgOverlay === 1
+              : bgOverlay === 2
               ? `radial-gradient(circle, rgba(45,1,1, ${
                   theme === "dark" ? "1" : ".2"
                 }) 0%, rgba(244,8,23,0) 100%)`
