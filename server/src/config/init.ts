@@ -50,6 +50,7 @@ app.use(
       process.env.FRONTEND_URL!,
       "http://localhost:5173",
       "https://scriptopia-code.anuragsawant.tech",
+      "https://scriptopia-code.anuragsawant.in"
     ],
     credentials: true,
   })
