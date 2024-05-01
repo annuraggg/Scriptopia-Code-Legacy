@@ -72,6 +72,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("token");
     const colorPalette = localStorage.getItem("colorPalette");
+    const theme = localStorage.getItem("vite-ui-theme");
     if (token) {
       const decodedToken: UserToken = jwtDecode(token);
       dispatch(setUser(decodedToken));
@@ -79,25 +80,28 @@ function App() {
       dispatch(clearUser());
     }
 
+    if (!theme) {
+      localStorage.setItem("vite-ui-theme", "dark");
+    }
+
     let color;
     if (colorPalette) {
       selectThemeImport(colorPalette);
       color = selectColor(colorPalette);
     } else {
+      localStorage.setItem("colorPalette", "blue");
       selectThemeImport("blue");
       color = selectColor("blue");
     }
 
-    console.log("theme", theme)
-
     if (theme === "dark") {
       import("./dark.css");
-      console.log("imported dark theme")
+      console.log("imported dark theme");
     }
 
     if (theme === "light") {
       import("./light.css");
-      console.log("imported light theme")
+      console.log("imported light theme");
     }
 
     dispatch(
