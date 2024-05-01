@@ -77,17 +77,21 @@ const Results = () => {
   }, []);
 
   const convertToDate = (date: string) => {
+    if (!date) return "";
     const d = new Date(date);
     return d?.toDateString();
   };
 
   const convertToMinsSecs = (time: number) => {
+    if (time === 0) return "0m 0s";
     const mins = Math?.floor(time / 60);
     const secs = time % 60;
     return `${mins}m ${secs}s`;
   };
 
   const calcPercentage = (score: number, total: number) => {
+    if (total === 0) return 0;
+    if (score === 0) return 0;
     return (score / total) * 100;
   };
 
