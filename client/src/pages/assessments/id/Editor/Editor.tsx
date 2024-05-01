@@ -88,10 +88,9 @@ const Editor = () => {
       }
 
       if (!isFullScreenEnabled) return;
-      const isFullScreen = window.innerHeight == screen.height;
+      const isFullScreen = window.screenTop && window.screenY;
 
       if (!isFullScreen) {
-        setFullScreenExit((prev) => prev + 1);
         setFullScreenOpen(true);
       }
     }, 1000);
@@ -129,8 +128,6 @@ const Editor = () => {
     setIsTabChangeEnabled(window?.history?.state?.usr?.tabChange);
     setIsPasteEnabled(window?.history?.state?.usr?.paste);
     setIsFullScreenEnabled(window?.history?.state?.usr?.fullScreen);
-
-    console.log("FS STATE: " + window?.history?.state?.usr?.fullScreen)
 
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${questionID}`)
@@ -306,13 +303,14 @@ const Editor = () => {
             <DialogTitle>We Detected a FullScreen Exit</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            You have exited the fullscreen {fullScreenExit} time(s). This may be
+            You have exited the fullscreen. This may be
             considered suspicious behavior and may result in a disqualification.
           </DialogDescription>
           <Button
             onClick={() => {
               document.body.requestFullscreen();
               setFullScreenOpen(false);
+              setFullScreenExit(fullScreenExit + 1);
             }}
           >
             Go Fullscreen
