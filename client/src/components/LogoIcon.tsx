@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Logo = ({
   width = 24,
@@ -8,6 +9,7 @@ const Logo = ({
   width?: number;
   height?: number;
 }) => {
+  const navigate = useNavigate();
   const [fillColor, setFillColor] = useState<string>("black");
   const sel = useSelector(
     (state: { theme: { colorPalette: string; color: string } }) => state.theme
@@ -19,6 +21,7 @@ const Logo = ({
 
   return (
     <svg
+      onClick={() => navigate("/")}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0.04199999999999804 24 23.916"
       enableBackground="new 0 0 24 24"

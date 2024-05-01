@@ -101,7 +101,7 @@ const Descriptor = ({
           ) : (
             <Tabs defaultValue="case1" className="bg-secondary rounded-t-lg">
               <TabsList className=" bg-secondary ">
-                {cases?.map((c, i) => {
+                {cases?.map((_c, i) => {
                   if (i < 3) {
                     return (
                       <TabsTrigger key={i} value={`case${i + 1}`}>

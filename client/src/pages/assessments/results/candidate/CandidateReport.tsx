@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaScissors } from "react-icons/fa6";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IoExit } from "react-icons/io5";
-import { Separator } from "@/components/ui/Separator";
+import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { FaPlay } from "react-icons/fa";
 import { Button } from "@/components/ui/button";

@@ -59,7 +59,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/Separator";
+import { Separator } from "@/components/ui/separator";
 import { useSelector } from "react-redux";
 import UserToken from "@/types/UserToken";
 import { z } from "zod";

@@ -78,7 +78,7 @@ const Profile = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   const [zoom, setZoom] = useState<number[]>([1]);
-  const [profileImage, setProfileImage] = useState<any>(null);
+  const [profileImage, setProfileImage] = useState<string | File>("");
   const [openProfilePicture, setOpenProfilePicture] = useState(false);
   const [profilePictureLoading, setProfilePictureLoading] = useState(false);
 
@@ -94,7 +94,7 @@ const Profile = () => {
   const [newWebsite, setNewWebsite] = useState<string>("");
 
   const ppRef = useRef<HTMLInputElement>(null);
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<AvatarEditor | null>(null);
 
   Chart.register(ArcElement, TooltipChartjs, Legend);
 
@@ -146,7 +146,8 @@ const Profile = () => {
 
   const updatePicture = () => {
     setProfilePictureLoading(true);
-    const canvas = editorRef.current.getImageScaledToCanvas();
+    const canvas = editorRef?.current?.getImageScaledToCanvas();
+    if (!canvas) return;
     const base64 = canvas.toDataURL("image/png");
 
     axios
