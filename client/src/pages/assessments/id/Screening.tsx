@@ -5,14 +5,14 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { io } from "socket.io-client";
+
 import { useNavigate } from "react-router-dom";
-const socket = io(import.meta.env.VITE_SOCKET_ADDRESS);
+/*const socket = io(import.meta.env.VITE_SOCKET_ADDRESS);
 
 socket.on("begin", (data) => {
   console.log(data);
 });
-
+*/
 const Screening = () => {
   const navigate = useNavigate();
   const [screening, setScreening] = useState<ScreeningType | null>(
