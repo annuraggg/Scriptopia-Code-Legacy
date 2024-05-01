@@ -1,57 +1,106 @@
+import logger from "@/config/logger";
 import Case from "@/Interfaces/Case.js";
+import Problem from "@/Interfaces/Problem";
 
-const runJS = async (code: string, fnName: string, cases: Case[]) => {
-  const jsCode = createJSFunction(code, fnName, cases);
-  const result = await fetchOutput(jsCode, cases.length);
+const runJS = async (
+  code: string,
+  fnName: string,
+  cases: Case[],
+  problem: Problem
+) => {
+  const jsCode = createJSFunction(code, fnName, cases, problem);
+  const result = await fetchOutput(jsCode, cases);
 
+  /*
+  console.log("RESULT FROM COMPILER")
+  console.log(result);*/
   return result;
 };
 
-const createJSFunction = (code: string, fnName: string, cases: Case[]) => {
-  let jsCodeString: string = "";
-  // Calculate Runtime
-  jsCodeString += `const start = process.hrtime();\n\n`;
-  jsCodeString += `${code}\n\n`;
-  jsCodeString += `let passed = false;\n\n`;
-  jsCodeString += `let failedCaseNumber = -1;\n\n`;
-  jsCodeString += `const resultArr = [];\n`;
-  jsCodeString += `const cases = ${JSON.stringify(cases)};\n\n`;
-  jsCodeString += `for (let i = 0; i < cases.length; i++) {\n`;
-  jsCodeString += `const input = cases[i].input;\n`;
-  jsCodeString += `const output = cases[i].output;\n`;
-  jsCodeString += `const result = ${fnName}(...input);\n`;
-  jsCodeString += `if (result === output) {\n`;
-  jsCodeString += `resultArr.push(result);\n passed = true;\n`;
-  jsCodeString += `} else {\n`;
-  jsCodeString += `resultArr.push(result);\n`;
-  jsCodeString += `passed = false;\n`;
-  jsCodeString += `failedCaseNumber = i;\n`;
-  jsCodeString += `if (i >= 2) break;\n`;
-  jsCodeString += `}\n`;
-  jsCodeString += `}\n`;
+const createJSFunction = (
+  code: string,
+  fnName: string,
+  cases: Case[],
+  problem: Problem
+) => {
+  const onlyCaseInputs = cases.map((c) => c.input);
 
-  jsCodeString += `if (passed) {\n`;
-  jsCodeString += `console.log(JSON.stringify({
-    status: "PASSED", op: resultArr, failedCaseNumber
-  }));\n`;
-  jsCodeString += `} else {\n`;
-  jsCodeString += `console.log(JSON.stringify({
-    status: "FAILED", op: resultArr, failedCaseNumber
-  }));\n`;
-  jsCodeString += `}\n`;
+  let jsCodeString: string = ``;
+  jsCodeString += `
+  const vanillaLog = console.log;
 
-  // Calculate Runtime
-  jsCodeString += `const end = process.hrtime(start);\n`;
-  jsCodeString += `console.log(end);\n\n`;
+  console.log = function (...args) {
+  consoleOP.push(args.join(" "));
+  };
+`;
+  jsCodeString += code;
+  jsCodeString += `
+  const cases = ${JSON.stringify(cases)};
+  const argTypes = ${JSON.stringify(problem.starterVarArgs)};
+  const returnType = "${problem.functionReturn}";
 
-  // Get Memory Usage
-  jsCodeString += `const used = process.memoryUsage();\n`;
-  jsCodeString += `console.log(JSON.stringify(used));\n`;
+  function parseArgument(arg, type) {
+    switch (type) {
+      case "array":
+        return JSON.parse(arg);
+      case "number":
+        return parseFloat(arg);
+      case "string":
+        return arg;
+      case "bool":
+        return arg === "true";
+      default:
+        return arg;
+    }
+  }
+  
+  let passed = false;
+  let failedCase = -1;
+  let consoleOP = [];
+  const output = [];
+  const start = process.hrtime();
+
+  for (let i = 0; i < cases.length; i++) {
+    const args = cases[i].input.map((value, index) => {
+      return parseArgument(value, argTypes[index].type);
+    });
+    let result = ${fnName}(...args);
+
+    if (typeof result === "object" || typeof result === "array") {
+      result = JSON.stringify(result);
+    }
+
+    console.log(result);
+    console.log(cases[i].output);
+  
+    if (result == cases[i].output) {
+      output.push(result);
+      passed = true;
+    } else {
+      passed = false;
+      failedCase = i;
+      break;
+    }
+  }
+  
+  const end = process.hrtime(start);
+  
+  const outputObj = {
+    output,
+    executionTime: end[1] / 1000000,
+    memoryUsed: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2),
+    passed: passed,
+    consoleOP: consoleOP,
+    failedCase: failedCase,
+  };
+  
+  vanillaLog(JSON.stringify(outputObj));
+  `;
 
   return jsCodeString;
 };
 
-const fetchOutput = async (code: string, casesLength: number) => {
+const fetchOutput = async (code: string, cases: Case[]) => {
   try {
     const response = await fetch("http://localhost:4000/", {
       method: "POST",
@@ -70,22 +119,16 @@ const fetchOutput = async (code: string, casesLength: number) => {
     }
 
     const data = await response.json();
-    const splitOutput = data.output.split("\n");
+    const output = JSON.parse(data.output);
 
-    console.log(splitOutput);
-
-    const output: { status: string; op: string[]; failedCaseNumber: number } =
-      getOutput(splitOutput);
-    const consoleOP: string[] = getConsole(splitOutput, casesLength);
-    const runtime: number = getRuntime(splitOutput);
-    const memoryUsage: number = getMemoryUsage(splitOutput);
-
-    const dataObj: {
+    const dataobj: {
       timeStamp: string;
       status: string;
       output: string[];
+      expectedOutput: string[];
       internalStatus: string;
       failedCaseNumber: number;
+      failedCase: Case;
       error: string;
       language: string;
       info: string;
@@ -95,83 +138,23 @@ const fetchOutput = async (code: string, casesLength: number) => {
     } = {
       timeStamp: data.timeStamp,
       status: data.status,
-      output: output.op ? output.op : [],
-      internalStatus: output.status ? output.status : "FAILED",
-      failedCaseNumber: output.failedCaseNumber ? output.failedCaseNumber : -1,
+      output: output.output,
+      expectedOutput: cases.map((c) => c.output),
+      internalStatus: output.passed ? "PASSED" : "FAILED",
+      failedCaseNumber: output.failedCase,
+      failedCase:
+        output.failedCase === -1 ? ({} as Case) : cases[output.failedCase],
       error: data.error,
       language: data.language,
       info: data.info,
-      consoleOP: consoleOP.length > 0 ? consoleOP : [],
-      runtime: runtime ? runtime : 0,
-      memoryUsage: memoryUsage ? memoryUsage : 0,
+      consoleOP: output.consoleOP,
+      runtime: parseFloat(output.executionTime),
+      memoryUsage: parseFloat(output.memoryUsed),
     };
 
-    console.log(dataObj);
-
-    return dataObj;
+    return dataobj;
   } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-const getConsole = (output: string[], totalCases: number): string[] => {
-  return output.slice(0, output.length - 4);
-};
-
-const getOutput = (
-  output: string
-): { status: string; op: string[]; failedCaseNumber: number } => {
-  try {
-    let op: { status: string; op: string[]; failedCaseNumber: number } = {
-      status: "",
-      op: [],
-      failedCaseNumber: 0
-    };
-    if (output && output.length > 3) {
-      op = JSON.parse(output[output.length - 4]);
-    }
-    return op;
-  } catch (error) {
-    console.error(error);
-
-    throw error;
-  }
-};
-
-const getRuntime = (output: []): number => {
-  try {
-    let runtime = [];
-    let actualRuntime = 0;
-    if (output && output.length > 3) {
-      runtime = JSON.parse(output[output.length - 3]);
-      actualRuntime = runtime[0] + runtime[1] / 1e9;
-      actualRuntime = actualRuntime * 1000;
-    }
-    return actualRuntime;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-const getMemoryUsage = (output: []): number => {
-  try {
-    let memoryUsage: {
-      rss?: number;
-      heapTotal?: number;
-      heapUsed?: number;
-      external?: number;
-    } = {};
-    let actualMemoryUsage = 0;
-    if (output && output.length > 3) {
-      memoryUsage = JSON.parse(output[output.length - 2]);
-      actualMemoryUsage = memoryUsage.rss! / (1024 * 1024);
-    }
-    return actualMemoryUsage;
-  } catch (error) {
-    console.error(error);
-    throw error;
+    logger.error({ code: "LANGTEMP_JS_001", message: error });
   }
 };
 

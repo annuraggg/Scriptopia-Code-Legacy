@@ -2,18 +2,21 @@ import express from "express";
 import runJS from "@/languageTemplates/js.js";
 import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
+import Problem from "@/schemas/ProblemSchema";
+import ProblemType from "@/Interfaces/Problem.js";
 const router = express.Router();
 
 const selectLangAndRun = async (
   code: string,
   fn: string,
   cases: Case[],
-  language: string
+  language: string,
+  prob: ProblemType
 ) => {
   try {
     switch (language) {
       case "javascript":
-        return await runJS(code, fn, cases);
+        return await runJS(code, fn, cases, prob);
       default:
         return "Language not supported yet!";
     }
@@ -25,8 +28,16 @@ const selectLangAndRun = async (
 
 router.post("/", async (req, res) => {
   try {
-    const { code, language, cases, fn } = req.body;
-    const result = await selectLangAndRun(code, fn, cases, language);
+    const { code, language, cases, fn, probID } = req.body;
+    const prob = await Problem.findById(probID);
+    if (!prob) {
+      res.status(404).send("Problem not found");
+      return;
+    }
+
+    const sampleCases = cases.filter((c: any) => c?.isSample);
+
+    const result = await selectLangAndRun(code, fn, sampleCases, language, prob);
 
     if (!result) {
       res.status(500).send("Failed to fetch output");

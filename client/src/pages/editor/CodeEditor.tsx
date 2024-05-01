@@ -1,10 +1,11 @@
-import CodeMirror, { oneDark } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { Button } from "@/components/ui/button";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { BsStars } from "react-icons/bs";
+import { useTheme } from "@/components/theme-provider";
 
 const CodeEditor = ({
   runCode,
@@ -12,19 +13,33 @@ const CodeEditor = ({
   submitCode,
   explainCode,
 }: {
-  runCode: Function;
+  runCode: (code: string, language: string) => Promise<unknown>;
   code: string;
-  submitCode: Function;
-  explainCode: Function;
+  submitCode: (
+    code: string,
+    language: string,
+    time: number
+  ) => Promise<unknown>;
+  explainCode: (code: string) => void;
 }) => {
   const [value, setValue] = useState("");
   const [running, setRunning] = useState(false);
+  const [codeStarted, setCodeStarted] = useState(false);
+  const [timer, setTimer] = useState(0);
   const language = "javascript";
 
   useEffect(() => {
     // fetch data
     setValue(code);
   }, [code]);
+
+  useEffect(() => {
+    if (codeStarted) {
+      setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+    }
+  }, [codeStarted]);
 
   const onChange = useCallback((val: SetStateAction<string>) => {
     setValue(val);
@@ -43,18 +58,22 @@ const CodeEditor = ({
 
   const submitOnParent = async () => {
     setRunning(true);
-    submitCode(value, language)
+    submitCode(value, language, timer)
       .catch(() => {
         toast.error("Something went wrong!");
       })
       .finally(() => {
         setRunning(false);
+        setTimer(0);
+        setCodeStarted(false);
       });
   };
 
   const generateSummary = () => {
     explainCode(value);
   };
+
+  const { theme } = useTheme();
 
   return (
     <div className="overflow-y-auto rounded ">
@@ -92,7 +111,8 @@ const CodeEditor = ({
         height="70vh"
         extensions={[javascript({ jsx: true })]}
         onChange={onChange}
-        theme={oneDark}
+        onClick={() => setCodeStarted(true)}
+        theme={theme as "dark" | "light"}
       />
     </div>
   );

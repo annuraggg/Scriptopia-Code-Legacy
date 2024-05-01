@@ -19,14 +19,18 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-
-const divStyle = {
-  backgroundImage: "url(/assets/wave-bg.png)",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-};
+import { useHotkeys } from "react-hotkeys-hook";
+import { z } from "zod";
+import Logo from "@/components/LogoIcon";
+import { useSelector } from "react-redux";
+import { useTheme } from "@/components/theme-provider";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
+  useHotkeys("enter", () => {
+    handleLogin();
+  });
+
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -45,13 +49,27 @@ const Login = () => {
 
   const handleLogin = (): void => {
     setSignInLoading(true);
+
+    const schema = z.object({
+      username: z.string(),
+      password: z.string(),
+    });
+
+    try {
+      schema.parse({ username, password });
+    } catch (err) {
+      console.log(err);
+      toast.error("Please fill in all the fields");
+      setSignInLoading(false);
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/login`, {
         username: username,
         password: password,
       })
       .then((res) => {
-        console.log(res.data);
         if (res.data.tfa) {
           setIsTfa(true);
           setId(res.data.id);
@@ -67,6 +85,7 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
+        console.log(err);
         if (
           err.response.status === 401 ||
           err.response.status === 400 ||
@@ -103,6 +122,7 @@ const Login = () => {
         localStorage.setItem("token", token);
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 404) {
           toast.error("Account does not exist. Please sign up.");
           return;
@@ -114,7 +134,18 @@ const Login = () => {
   };
 
   const verifyCode = () => {
-    console.log(code);
+    const schema = z.object({
+      code: z.string(),
+    });
+
+    try {
+      schema.parse({ code });
+    } catch (err) {
+      console.log(err);
+      toast.error("Please fill in all the fields");
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/auth/tfa/verify`, {
         code,
@@ -130,6 +161,7 @@ const Login = () => {
         window.location.href = "/";
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 400) {
           toast.error("Invalid Code");
         } else {
@@ -142,71 +174,147 @@ const Login = () => {
     setIsTfa(!isTfa);
   };
 
+  const listenEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setPassword(target.value);
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
+  const color = useSelector(
+    (state: {
+      theme: { colorPalette: string; color: string; theme: string };
+    }) => state.theme
+  );
+
+  const { theme, setTheme } = useTheme();
+
+  const changeTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+
+  const [show, setShow] = useState<boolean>(false);
+  const toggleShow = () => {
+    setShow(!show);
+  };
+
   return (
-    <div
-      className="h-[100vh] flex flex-col items-center justify-center gap-3"
-      style={divStyle}
-    >
-      <img srcSet="assets/img/logo.svg" width="100px" alt="logo" />
-      <h2 className=" mt-5 mb-5 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Welcome, Please Login.
-      </h2>
+    <div>
+      <div className="h-[100vh] flex flex-col items-center justify-center gap-3">
+        <div
+          className="border p-5 flex items-center justify-center rounded-full cursor-pointer"
+          onClick={changeTheme}
+          style={{
+            boxShadow: `0 0 140px 0 ${color.color}`,
+          }}
+        >
+          <Logo height={30} width={30} />
+        </div>
 
-      <Input
-        placeholder="Username"
-        type="text"
-        className="w-[250px]"
-        onChange={(e) => setUsername(e.target.value)}
-        value={username}
-      />
-      <Input
-        placeholder="Password"
-        type="password"
-        className="w-[250px]"
-        onChange={(e) => setPassword(e.target.value)}
-        value={password}
-      />
+        <div className="text-center">
+          <h2 className=" font-semibold">Welcome back</h2>
+          <p className="text-sm mt-1 text-gray-400">
+            Please enter your details to sign in.
+          </p>
+        </div>
 
-      <Button
-        className="mt-5 w-[250px]"
-        variant="default"
-        disabled={signInLoading}
-        onClick={handleLogin}
-      >
-        {signInLoading ? (
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <div>Login</div>
-        )}
-      </Button>
+        <div>
+          <div
+            className="w-full flex items-center justify-center py-2"
+            id="btn"
+          >
+            <GoogleLogin
+              onSuccess={continueGoogle}
+              onError={() => toast.error("Something went wrong")}
+              type="standard"
+              theme={color.theme === "dark" ? "filled_black" : "outline"}
+              useOneTap={true}
+              text="continue_with"
+              shape="circle"
+              logo_alignment="left"
+              context="signin"
+              itp_support={true}
+            />
+          </div>
+          <Button className="mt-2 w-[300px] py-5 hidden" variant="outline">
+            Sign in with
+            <img
+              src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-icon-png-transparent-background-osteopathy-16.png"
+              alt="Sign in With Google"
+              className="ml-2 w-5 h-5"
+            />
+          </Button>
+        </div>
 
-      <div>
-        <GoogleLogin
-          onSuccess={continueGoogle}
-          onError={() => toast.error("Something went wrong")}
-          type="standard"
-          theme="filled_black"
-          useOneTap={true}
-          text="continue_with"
-          shape="pill"
-          logo_alignment="left"
-          context="signup"
-          itp_support={true}
-        />
+        <div className="flex gap-5 items-center my-2">
+          <div className="w-[120px] h-0 border"></div>
+          <p>OR</p>
+          <div className="w-[120px] h-0 border"></div>
+        </div>
+
+        <div>
+          <b className="text-sm font-semibold">Username</b>
+          <Input
+            placeholder="Username"
+            className="w-[300px] mt-1"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+        </div>
+
+        <div>
+          <b className="text-sm font-semibold">Password</b>
+          <div className="flex gap-2 items-center justify-center mt-1">
+            <Input
+              placeholder="Password"
+              type={show ? "text" : "password"}
+              className="w-[244px]"
+              onKeyUp={(e) => listenEnter(e)}
+            />
+            <Button variant="outline" onClick={toggleShow}>
+              {show ? <FaEyeSlash /> : <FaEye />}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end w-[300px]">
+          <a
+            href="/forgot"
+            className="text-xs underline underline-offset-[4px]"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <Button
+          className="mt-2 w-[300px] py-5"
+          disabled={signInLoading}
+          onClick={handleLogin}
+        >
+          {signInLoading ? (
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <div>Login</div>
+          )}
+        </Button>
+
+        <p className="text-xs">
+          Dont have an account yet?{" "}
+          <b>
+            <a href="/signup">Sign Up.</a>
+          </b>
+        </p>
       </div>
-
-      <a href="/forgot" className=" text-gray-400 mt-5">
-        Forgot Password?
-      </a>
-
-      <a href="/signup" className="justify-self-end bottom-10 absolute">
-        Create a new <span className="text-blue-500 underline">Account</span>
-      </a>
 
       <Dialog open={isTfa} onOpenChange={setChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="mb-5 font-semibold tracking-normal">
               Enter the 2FA code generated by your app or use a backup code
             </DialogTitle>
             <DialogDescription className="flex flex-col items-center justify-center">
@@ -216,23 +324,20 @@ const Login = () => {
                 value={code}
                 className="mt-5 mb-5"
                 onComplete={verifyCode}
-                render={({ slots }) => (
-                  <>
-                    <InputOTPGroup>
-                      {slots.slice(0, 3).map((slot, index) => (
-                        <InputOTPSlot key={index} {...slot} />
-                      ))}{" "}
-                    </InputOTPGroup>
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
 
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      {slots.slice(3).map((slot, index) => (
-                        <InputOTPSlot key={index} {...slot} />
-                      ))}
-                    </InputOTPGroup>
-                  </>
-                )}
-              />
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
 
               <Button
                 variant="default"

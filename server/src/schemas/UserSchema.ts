@@ -11,11 +11,29 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  image: {
+    type: String,
+    required: false,
+  },
   username: {
     type: String,
     required: true,
     default: generateUsername("-", 5),
     unique: true,
+  },
+  links: {
+    github: {
+      type: String,
+      required: false,
+    },
+    website: {
+      type: String,
+      required: false,
+    },
+    linkedin: {
+      type: String,
+      required: false,
+    },
   },
   email: {
     type: String,
@@ -23,6 +41,10 @@ const userSchema = new Schema({
     unique: true,
     // Regular expression for basic email validation
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  },
+  phone: {
+    type: String,
+    required: false,
   },
   password: {
     type: String,
@@ -36,6 +58,36 @@ const userSchema = new Schema({
   googleId: {
     type: String,
     required: false,
+  },
+  organization: {
+    type: Schema.Types.ObjectId,
+    required: false,
+  },
+  profilePicture: {
+    type: String,
+    required: false,
+  },
+  enabledScreening: {
+    type: Boolean,
+    default: false,
+  },
+  experience: {
+    type: Number,
+    default: 0,
+  },
+  bio: {
+    type: String,
+    required: false,
+  },
+  jobPreferences: {
+    location: {
+      type: [String],
+      required: false,
+    },
+    role: {
+      type: [String],
+      required: false,
+    },
   },
   tfa: {
     enabled: Boolean,
@@ -77,10 +129,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
       },
-      title: {
-        type: String,
-        required: true,
-      },
       solvedOn: Date,
       score: Number,
       internalScore: Number,
@@ -97,30 +145,24 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  learningPath: [
+  score: [
     {
-      moduleTitle: String,
-      moduleDescription: String,
-      tutorials: [String],
-      problems: [
-        {
-          problemId: {
-            type: Schema.Types.ObjectId,
-            required: true,
-          },
-          title: {
-            type: String,
-            required: true,
-          },
-          solved: Boolean,
-          solvedOn: Date,
-          score: Number,
-        },
-      ],
-      quizzes: [Schema.Types.ObjectId],
+      submissionID: {
+        type: Schema.Types.ObjectId,
+        required: true,
+      },
+      problemID: {
+        type: Schema.Types.ObjectId,
+        required: true,
+      },
+      timerScore: Number,
+      testCaseScore: Number,
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
-  tagsSolved: [String],
   loginHistory: [
     {
       date: {
@@ -135,6 +177,18 @@ const userSchema = new Schema({
       expires: Date,
     },
   ],
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  phoneVerified: {
+    type: Boolean,
+    default: false,
+  },
+  streak: {
+    type: [String],
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema);

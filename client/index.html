@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/assets/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Quill CSS -->
+
     <link
       href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
       rel="stylesheet"
@@ -15,10 +32,34 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link
+      rel="stylesheet"
+      href="node_modules/react-github-contribution-calendar/default.css"
+      type="text/css"
+    />
     <title>Scriptopia</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      !(function (o) {
+        var w = window;
+
+        w.SessionRewindConfig = o;
+
+        var f = document.createElement("script");
+
+        (f.async = 1),
+          (f.crossOrigin = "anonymous"),
+          (f.src = "https://rec.sessionrewind.com/srloader.js");
+
+        var g = document.getElementsByTagName("head")[0];
+        g.insertBefore(f, g.firstChild);
+      })({
+        apiKey: "YEfQWpLrG24OsxeBjkFZ79xBAXW7f1OS7PLQRaJo",
+        startRecording: false,
+      });
+    </script>
   </body>
 </html>

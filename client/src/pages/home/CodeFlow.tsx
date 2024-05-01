@@ -1,31 +1,21 @@
-const CodeFlow = () => {
-  const codeFlow = [
-    "completed",
-    "completed",
-    "missed",
-    "missed",
-    "completed",
-    "inprogress",
-    "not",
-  ];
-
+const CodeFlow = ({ codeFlow, tsp }: { codeFlow: number[], tsp: number }) => {
   const daysIndex = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  const getStatusClassName = (status: string) => {
+  const getStatusClassName = (status: number) => {
     switch (status) {
-      case "completed":
+      case 1:
         return "bg-[#15B8A7]";
-      case "missed":
+      case 0:
         return "bg-[#EE4445]";
-      case "inprogress":
-        return "bg-[#EAB209]";
+      case -1:
+        return "bg-background border-primary border";
       default:
         return "bg-background border-primary border";
     }
   };
 
   return (
-    <div className="bg-primary-foreground w-[25vw] p-5 rounded shadow-md">
+    <div className="bg-card w-[25vw] p-5 rounded shadow-md border">
       <h3>Your Codeflow</h3>
       <div className="flex gap-2 mt-5">
         {codeFlow.map((status, index) => (
@@ -35,22 +25,17 @@ const CodeFlow = () => {
             h-20 w-full rounded-sm flex items-center justify-around flex-col            `}
           >
             <p>{daysIndex[index]}</p>
-            {status === "completed" ? (
+            {status === 1 ? (
               <i className="fa-regular fa-circle-check"></i>
-            ) : status === "missed" ? (
+            ) : status === 0 ? (
               <i className="fa-regular fa-circle-xmark"></i>
-            ) : status === "inprogress" ? (
-              <i className="fa-regular fa-clock"></i>
-            ) : status === "not" ? (
-              <i className="fa-regular fa-circle"></i>
             ) : null}
           </div>
         ))}
       </div>
 
       <div className="flex text-xs mt-5 justify-between">
-        <p>Problem Solved: 50</p>
-        <p>Time Taken: 360 mins.</p>
+        <p>Problem Solved: {tsp}</p>
       </div>
     </div>
   );

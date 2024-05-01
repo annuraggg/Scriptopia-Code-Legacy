@@ -2,72 +2,59 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect } from "react";
 import ReportButton from "./ReportButton";
 import Meta from "@/types/ProblemMeta";
-import EditorJS from "@editorjs/editorjs";
-// @ts-expect-error
-import Header from "@editorjs/header";
-// @ts-expect-error
-import List from "@editorjs/list";
-// @ts-expect-error
-import CodeTool from "@editorjs/code";
-// @ts-expect-error
-import Table from "@editorjs/table";
-// @ts-expect-error
-import Warning from "@editorjs/warning";
+import Quill from "quill";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Delta } from "quill/core";
+import UserToken from "@/types/UserToken";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",
   backgroundColor: "rgba(40,44,52, 0.95)",
 };
 
-const tools = {
-  header: {
-    class: Header,
-    inlineToolbar: true,
-  },
-  list: {
-    class: List,
-    inlineToolbar: true,
-  },
-  code: {
-    class: CodeTool,
-    config: {
-      placeholder: "Enter code",
-      inlineToolbar: true,
-    },
-  },
-  table: {
-    class: Table,
-    inlineToolbar: true,
-  },
-  warning: {
-    class: Warning,
-    inlineToolbar: true,
-  },
-};
-
 const ProblemStatement = ({
   statement,
   meta,
 }: {
-  statement: any;
+  statement: Delta;
   meta: Meta;
 }) => {
+  const navigate = useNavigate();
+  const user = useSelector((state: { user: UserToken }) => state.user);
+
   useEffect(() => {
-    if (statement?.blocks?.length != undefined) {
-      new EditorJS({
-        holder: "statement",
-        data: statement,
-        readOnly: true,
-        tools,
-      });
-    }
+    const q = new Quill("#statement", {
+      modules: {
+        toolbar: false,
+      },
+      readOnly: true,
+      theme: "snow",
+    });
+    q.setContents(statement);
   }, [statement]);
 
   return (
-    <div className="md:w-[50%] w-[100%] rounded-t" style={glassFrost}>
+    <div className="rounded-lg" style={glassFrost}>
       <div className="flex items-center justify-between bg-secondary rounded-t-lg sticky p-2.5 px-7 text-gray-400">
-        <p>Problem Statement</p>
+        <p>
+          Problem Statement{" "}
+          <sub
+            className="hover:underline hover:text-primary cursor-pointer"
+            onClick={() => navigate(`/u/${meta.author}`)}
+          >
+            by @{meta.author}
+          </sub>
+        </p>
         <div className="flex items-center justify-between gap-5">
+          {meta.authorid === user?.id && (
+            <a
+              className=" cursor-pointer hover:text-primary"
+              onClick={() => navigate(`/problems/${meta.id}/edit`)}
+            >
+              Edit
+            </a>
+          )}
           <Badge
             className={`ml-5 ${
               meta?.difficulty === "easy"
@@ -82,16 +69,9 @@ const ProblemStatement = ({
           <ReportButton />
         </div>
       </div>
-      <div className=" overflow-y-auto h-[82vh]">
-        <div className="rounded-lg bg-accent overflow-y-auto gap-5 flex px-10 py-0">
-          {meta.tags?.map((tag, index) => (
-            <Badge variant="outline" className="border border-blue-500" key={index}>
-              {tag}
-            </Badge>
-          ))}
-        </div>
+      <div className=" overflow-y-auto h-[77vh] rounded-b-lg bg-secondary">
         <div
-          className="rounded-lg bg-accent mt-[-20px]"
+          className="rounded-lg bg-accent"
           id="statement"
           style={{ border: "none" }}
         ></div>

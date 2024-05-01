@@ -1,140 +1,229 @@
 import { Navbar } from "@/components/ui/navbar";
-import StatementComponent from "./StatementComponent";
+import DetailsComponent from "./DetailsComponent";
+import SelectLanguage from "./SelectLanguage";
+import StubComponent from "./StubComponent";
+import AddCase from "./AddCase";
 import { useState } from "react";
-import ProblemMetaComponent from "./ProblemMetaComponent";
-import TestCaseComponent from "./TestCaseComponent";
-import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-} from "@/components/ui/alert-dialog";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+import { Delta } from "quill/core";
+import { Case } from "@/types/TestCase";
+import QualityGate from "./QualityGate";
+import { z } from "zod";
 import axios from "axios";
+import { toast } from "sonner";
 
 const CreateProblem = () => {
-  const [currPage, setCurrPage] = useState<number>(0);
-  const [statement, setStatement] = useState<any>(null);
-  const [meta, setMeta] = useState<{
-    title: string;
-    difficulty: string;
-    tags: string[];
-    functionName: string;
-    args: { key: string; type: string }[];
-  } | null>(null);
-  const [cases, setCases] = useState<{ input: string; output: string }[]>([]);
+  const [active, setActive] = useState(0);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  // * States for DetailsComponent
+  const [questionName, setQuestionName] = useState<string>("");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [useAllowed, setUseAllowed] = useState<boolean>(false);
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy"
+  );
+  const [recommendedTime, setRecommendedTime] = useState<number>(0);
+  const [tags, setTags] = useState<string[]>([]);
+  const [description, setDescription] = useState<Delta>({} as Delta);
 
-  const getStatement = (statement: any) => {
-    setStatement(statement);
-    setCurrPage(1);
-  };
+  // * States for SelectLanguage
+  const [languages, setLanguages] = useState<string[]>([]);
 
-  const goBack = (current: number) => {
-    setCurrPage(current - 1);
-  };
+  // * States for StubComponent
+  const [functionName, setFunctionName] = useState<string>("");
+  const [returnType, setReturnType] = useState<string>("");
+  const [functionArgs, setFunctionArgs] = useState<
+    { key: string; type: number | boolean | string | never[] }[]
+  >([]);
 
-  const getMeta = (meta: {
-    title: string;
-    difficulty: string;
-    tags: string[];
-    functionName: string;
-    args: { key: string; type: string }[];
-  }) => {
-    setMeta(meta);
-    setCurrPage(2);
-  };
+  // * States for AddCase
+  const [testCases, setTestCases] = useState<Case[]>([]);
 
-  const getCases = (casesArr: { input: string; output: string }[]) => {
-    setCases(casesArr);
-    if (statement.blocks.length === 0) {
-      toast.error("Please enter the problem statement");
-      return;
-    }
+  const submit = () => {
+    const schema = z.object({
+      name: z.string(),
+      time: z.number(),
+      difficulty: z.string(),
+      tags: z.array(z.string()),
+      description: z.any(),
+      selectedLanguages: z.array(z.string()),
+      functionName: z.string(),
+      returnType: z.string(),
+      args: z.array(z.object({ key: z.string(), type: z.any() })),
+      testCases: z.array(z.any()),
+      isPrivate: z.boolean(),
+      allowInterview: z.boolean(),
+    });
 
-    if (
-      !meta?.title ||
-      !meta?.difficulty ||
-      !meta?.tags ||
-      !meta?.functionName ||
-      !meta?.args
-    ) {
-      toast.error("Please enter the problem meta");
-      return;
-    }
+    const data = {
+      name: questionName,
+      time: recommendedTime,
+      difficulty: difficulty,
+      tags: tags,
+      description: description,
+      selectedLanguages: languages,
+      functionName: functionName,
+      returnType: returnType,
+      args: functionArgs,
+      testCases: testCases,
+      isPrivate: isPrivate,
+      allowInterview: useAllowed,
+    };
 
-    if (casesArr.length === 0) {
-      toast.error("Please enter at least one test case");
-      return;
-    }
+    console.log(data);
 
-    setLoading(true);
+    const validatedData = schema.parse(data);
+
+    console.log(validatedData);
+
     axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/create`, {
-        statement,
-        meta,
-        cases: casesArr,
-      })
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/problems/create`,
+        validatedData
+      )
       .then((res) => {
-        toast.success("Problem Created Successfully");
-        window.location.href = "/editor/" + res.data.id;
+        toast.success(res.data.message);
+        setTimeout(() => {
+          window.location.href = `/editor/${res.data.id}`;
+        }, 500);
       })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          toast.error("Please login to create a problem");
-          return;
-        }
-        if (err.res.data.status === 400) {
-          toast.error("Please fill all the fields");
-          return;
-        }
-
-        toast.error("Error Creating Problem");
-      })
-      .finally(() => {
-        setLoading(false);
+      .catch(() => {
+        toast.error("Something went Wrong");
       });
+  };
+
+  const steps: { title: string; component?: JSX.Element }[] = [
+    {
+      title: "Question Details",
+      component: (
+        <DetailsComponent
+          questionName={questionName}
+          setQuestionName={setQuestionName}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          recommendedTime={recommendedTime}
+          setRecommendedTime={setRecommendedTime}
+          tags={tags}
+          setTags={setTags}
+          description={description}
+          setDescription={setDescription}
+          isPrivate={isPrivate}
+          setIsPrivate={setIsPrivate}
+          useAllowed={useAllowed}
+          setUseAllowed={setUseAllowed}
+        />
+      ),
+    },
+    {
+      title: "Languages",
+      component: (
+        <SelectLanguage
+          selectedLanguages={languages}
+          setSelectedLanguages={setLanguages}
+        />
+      ),
+    },
+    {
+      title: "Code Stub",
+      component: (
+        <StubComponent
+          functionName={functionName}
+          setFunctionName={setFunctionName}
+          returnType={returnType}
+          setReturnType={setReturnType}
+          args={functionArgs}
+          setArgs={setFunctionArgs}
+        />
+      ),
+    },
+    {
+      title: "Test Cases",
+      component: (
+        <AddCase
+          testCases={testCases}
+          setTestCases={setTestCases}
+          args={functionArgs}
+        />
+      ),
+    },
+    {
+      title: "Quality Gate",
+      component: (
+        <QualityGate
+          tags={tags}
+          statement={description}
+          testCases={testCases}
+          isPublic={!isPrivate}
+          submit={submit}
+        />
+      ),
+    },
+  ];
+
+  const goToTab = (index: number) => {
+    setActive(index);
+  };
+
+  const goToNext = () => {
+    if (active < steps.length - 1) {
+      setActive(active + 1);
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div>
-        {currPage === 0 ? (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <StatementComponent getStatement={getStatement} data={statement} />
+      <div className="px-10 py-5">
+        <h2>Create Problem</h2>
+        <div className="flex gap-10">
+          <div className="flex flex-col justify-center gap-3">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                onClick={() => goToTab(index)}
+                className={`cursor-pointer flex items-center gap-5 p-5 rounded-sm bg-secondary bg-opacity-20 w-[250px] border-8 ${
+                  active == index
+                    ? "border-l-primary opacity-100"
+                    : active > index
+                    ? "border-l-green-500 opacity-75"
+                    : "border-l-secondary opacity-50"
+                }`}
+              >
+                <div className="h-10 w-10 flex items-center justify-center rounded-full border border-white">
+                  {index + 1}
+                </div>
+                <div>
+                  <p className="text-xs">Step {index + 1}</p>
+                  <p className="mt-2">{step.title}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ) : currPage === 1 ? (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <ProblemMetaComponent
-              getMeta={getMeta}
-              goBack={goBack}
-              data={meta}
-            />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-5 px-5 h-[90vh] overflow-y-auto items-center justify-center">
-            <TestCaseComponent
-              getCases={getCases}
-              goBack={goBack}
-              data={cases}
-            />
-            <div className="flex gap-5"></div>
-          </div>
-        )}
 
-        <AlertDialog open={loading}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogDescription className="flex items-center justify-center flex-col gap-5">
-                <p>Please Wait</p>
-                <ReloadIcon className="animate-spin" />
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-          </AlertDialogContent>
-        </AlertDialog>
+          <div className="w-full">
+            <div className="bg-background border rounded-t-lg p-2 px-5 flex items-center justify-between">
+              {steps[active].title}
+              <div className="flex gap-2">
+                {active > 0 && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => goToTab(active - 1)}
+                  >
+                    Previous
+                  </Button>
+                )}
+                {active < steps.length - 1 && (
+                  <Button variant="secondary" onClick={goToNext}>
+                    Next
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div className="border p-10 py-5 rounded-b-lg w-full overflow-y-auto h-[75vh]">
+              {steps[active].component}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

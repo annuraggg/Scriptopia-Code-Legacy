@@ -3,15 +3,14 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
-import { MdMemory, MdAccessTime } from "react-icons/md";
-
+import { MdAccessTime, MdMemory } from "react-icons/md";
+import Problem from "@/types/Problem";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 /*import { AxisOptions, Chart } from "react-charts";
 
 import {
@@ -26,12 +25,31 @@ import {
 import { Bar } from "react-chartjs-2";
 */
 
-const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: number}) => {
+const SuccessDrawer = ({
+  memoryUsed,
+  timeTaken,
+  open,
+  setOpen,
+  recommendation,
+  memoryData,
+  timeData,
+}: {
+  memoryUsed: number;
+  timeTaken: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  recommendation: Problem;
+  memoryData: {
+    percent: number;
+    avg: number;
+  };
+  timeData: {
+    percent: number;
+    avg: number;
+  };
+}) => {
   const dateAndTime = new Date().toLocaleString();
 
-  useEffect(() => {
-    document.getElementById("trig")?.click();
-  }, []);
   // ! UNCOMMENT THIS TO USE CHARTJS
   /* 
   ChartJS.register(
@@ -87,9 +105,9 @@ const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: 
     ],
   };
 */
+
   return (
-    <Drawer shouldScaleBackground>
-      <DrawerTrigger id="trig">Open</DrawerTrigger>
+    <Drawer shouldScaleBackground open={open}>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Solution Accepted!</DrawerTitle>
@@ -104,30 +122,86 @@ const SuccessDrawer = ({memoryUsed, timeTaken}: {memoryUsed: number, timeTaken: 
               </div>
             {*/}
               <div className="flex gap-5">
-                <div className="flex gap-5 items-center justify-center border p-5 rounded-lg w-[230px]">
+                <div
+                  className={`flex gap-5 items-center justify-center p-5 rounded-lg w-[400px] border-2 ${
+                    memoryData?.percent < 30
+                      ? "border-red-800"
+                      : memoryData?.percent < 60
+                      ? "border-yellow-800"
+                      : "border-green-800"
+                  } `}
+                >
                   <MdMemory size="40px" />
                   <div>
                     <h5>Memory Usage</h5>
-                    <p>{parseFloat(memoryUsed.toFixed(2))} MB</p>
+                    <p>{parseFloat(memoryUsed?.toFixed(2))} MB</p>
+                    {memoryData?.percent && (
+                      <p className="text-xs">
+                        Your Solution is {memoryData?.percent?.toFixed(2)}% more
+                        efficient than others
+                      </p>
+                    )}
+                    {memoryData?.avg && (
+                      <p className="text-xs">
+                        Average Memory Usage: {memoryData?.avg?.toFixed(2)}MB
+                      </p>
+                    )}
                   </div>
                 </div>
-                <div className="flex gap-5 items-center justify-center border p-5 rounded-lg w-[230px]">
+                <div
+                  className={`flex gap-5 items-center justify-center p-5 rounded-lg w-[400px] border-2 ${
+                    timeData?.percent < 30
+                      ? "border-red-800"
+                      : timeData?.percent < 60
+                      ? "border-yellow-800"
+                      : "border-green-800"
+                  }`}
+                >
                   <MdAccessTime size="40px" />
                   <div>
                     <h5>Time Taken</h5>
                     <p>{parseFloat(timeTaken.toFixed(2))}ms</p>
+                    {timeData?.percent && (
+                      <p className="text-xs">
+                        Your Solution is {timeData?.percent?.toFixed(2)}% more
+                        efficient than others
+                      </p>
+                    )}
+                    {timeData?.avg && (
+                      <p className="text-xs">
+                        Average Time Taken: {timeData?.avg?.toFixed(2)}ms
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
-            </div>
+            </div>{" "}
+            {recommendation && (
+              <>
+                <Separator />
+                <div
+                  className="flex gap-5"
+                  onClick={() => {
+                    window.location.href = `/editor/${recommendation?._id}`;
+                  }}
+                >
+                  <div className="flex flex-col gap-5 items-center justify-center border p-5 rounded-lg w-[30vw] hover:bg-primary-foreground transition-all duration-300 cursor-pointer">
+                    <h4>Recommended Problem</h4>
+                    <div className="flex gap-5 items-center">
+                      <p>{recommendation?.title}</p>
+                      <Badge>{recommendation?.difficulty}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </DrawerHeader>
-        <DrawerFooter className="flex items-center justify-center">
-          <Button className=" w-fit">Submit</Button>
-          <DrawerClose className="border py-2 px-4 rounded-lg">
-            Cancel
-          </DrawerClose>
-        </DrawerFooter>
+        <DrawerClose className="flex items-center justify-center mb-8 mt-5">
+          <Button className=" w-fit" onClick={() => setOpen(false)}>
+            Done
+          </Button>
+        </DrawerClose>
       </DrawerContent>
     </Drawer>
   );

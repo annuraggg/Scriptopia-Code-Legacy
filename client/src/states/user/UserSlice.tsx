@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import User from "@/types/User";
+import User from "@/types/UserToken";
 
 export const UserSlice = createSlice({
   name: "user",
@@ -40,5 +40,6 @@ export const UserSlice = createSlice({
   },
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const { setUser, clearUser } = UserSlice.actions;
 export default UserSlice.reducer;

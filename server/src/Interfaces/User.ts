@@ -10,7 +10,6 @@ interface AchievementReceivables {
 interface SolvedProblem {
   problemId: Types.ObjectId;
   title: string;
-  solvedOn?: Date;
   score?: number;
   internalScore?: number;
 }
@@ -51,15 +50,33 @@ interface tfa {
   ];
 }
 
+interface jobPreferences {
+  location: [string];
+  role: [string];
+}
+
+interface Score {
+  submissionID: number;
+  timerScore: number;
+  testCaseScore: number;
+}
+
 interface User extends Document {
   firstName: string;
   lastName?: string;
   username: string;
   email: string;
+  phone?: string;
   password?: string;
   accountType: string;
   tfa: tfa;
   googleId?: string;
+  organization?: string;
+  profilePicture?: string;
+  bio?: string;
+  enabledScreening: boolean;
+  experience: number;
+  jobPreferences: jobPreferences;
   achievements: AchievementReceivables[];
   solvedProblems: SolvedProblem[];
   userLevel?: number;
@@ -67,9 +84,13 @@ interface User extends Document {
   moderator: boolean;
   createdAt: Date;
   updatedAt: Date;
+  score: Score[];
   learningPath: LearningPathModule[];
   tagsSolved: string[];
   loginHistory: LoginHistory[];
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  streak: string[];
 }
 
 export default User;

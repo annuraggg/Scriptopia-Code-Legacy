@@ -17,6 +17,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import Logo from "@/components/LogoIcon";
+import { useTheme } from "@/components/theme-provider";
+import { useSelector } from "react-redux";
 
 const glassFrost = {
   backdropFilter: "blur(30px)",
@@ -43,6 +46,9 @@ const Signup = () => {
     useState<boolean>(false);
 
   const [show, setShow] = useState<boolean>(false);
+  const toggleShow = () => {
+    setShow(!show);
+  };
 
   const continueGoogle = (creds: GoogleCredentialResponse) => {
     setGoogleSignUpLoading(true);
@@ -85,7 +91,7 @@ const Signup = () => {
   }, []);
 
   const signUp = () => {
-    const nameSchema = z.string().nonempty().min(2).max(50);
+    const nameSchema = z.string().min(2).max(50);
     const emailSchema = z.string().email();
     const passwordSchema = z
       .string()
@@ -166,6 +172,152 @@ const Signup = () => {
       setSignUpLoading(false);
     }
   };
+
+  const { theme, setTheme } = useTheme();
+  const color = useSelector(
+    (state: {
+      theme: { colorPalette: string; color: string; theme: string };
+    }) => state.theme
+  );
+
+  const changeTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-[100vh] p-5">
+      <div
+        className="border p-5 flex items-center justify-center rounded-full cursor-pointer"
+        onClick={changeTheme}
+        style={{
+          boxShadow: `0 0 140px 0 ${color.color}`,
+        }}
+      >
+        <Logo height={30} width={30} />
+      </div>
+      <div className="text-center mt-2">
+        <h2 className=" font-semibold">Welcome to Scriptopia</h2>
+        <p className="text-sm mt-1 text-gray-400">Let's get you started</p>
+      </div>
+
+      <div className="p-2 rounded-lg w-[40%] mt-3">
+        <div className="flex gap-2">
+          <div className="w-full">
+            <b className="text-sm font-semibold">First Name</b>
+            <Input
+              placeholder="First Name"
+              className="w-full mt-1"
+              onChange={(e) => setFName(e.target.value)}
+              value={fName}
+            />
+          </div>
+
+          <div className="w-full">
+            <b className="text-sm font-semibold">Last Name</b>
+            <Input
+              placeholder="Last Name"
+              className="w-full mt-1"
+              onChange={(e) => setLName(e.target.value)}
+              value={lName}
+            />
+          </div>
+        </div>
+
+        <div className="w-full mt-3 mb-3">
+          <b className="text-sm font-semibold">Email</b>
+          <Input
+            placeholder="Email"
+            className="w-full mt-1"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+        </div>
+        <b className="text-sm font-semibold">Password</b>
+        <div className="flex gap-2 items-center mt-1">
+          <div className="w-full">
+            <Input
+              placeholder="Password"
+              type={show ? "text" : "password"}
+              className="w-full"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+          </div>
+
+          <div className="w-full">
+            <Input
+              placeholder="Confirm Password"
+              type={show ? "text" : "password"}
+              className="w-full"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+            />
+          </div>
+
+          <div>
+            <Button variant="outline" onClick={toggleShow}>
+              {show ? <FaEyeSlash /> : <FaEye />}
+            </Button>
+          </div>
+        </div>
+        <p className=" text-center text-xs text-gray-400 mt-3">
+          Password must be at least 8 characters long and contain at least one
+          letter and one number.
+        </p>
+
+        <div className="flex gap-2 mt-5">
+          <Checkbox
+            id="terms"
+            checked={terms}
+            onCheckedChange={(e: boolean) => setTerms(e)}
+          />
+          <p className="text-xs">
+            I agree to the{" "}
+            <span
+              className="underline cursor-pointer"
+              onClick={() => navigate("/terms")}
+            >
+              terms and conditions
+            </span>
+          </p>
+        </div>
+
+        <Button className="w-full mt-5" onClick={signUp}>
+          Sign Up
+        </Button>
+        <p className="text-xs mt-4 text-center">
+          Already have an account?{" "}
+          <b>
+            <a href="/signin">Sign In.</a>
+          </b>
+        </p>
+      </div>
+
+      <div className="flex gap-5 items-center mb-2">
+        <div className="w-[120px] h-0 border"></div>
+        <p>OR</p>
+        <div className="w-[120px] h-0 border"></div>
+      </div>
+
+      <div>
+        <GoogleLogin
+          onSuccess={continueGoogle}
+          onError={() => toast.error("Something went wrong")}
+          type="standard"
+          theme={color.theme === "dark" ? "filled_black" : "outline"}
+          useOneTap={true}
+          text="continue_with"
+          shape="pill"
+          logo_alignment="left"
+          context="signup"
+        />
+      </div>
+    </div>
+  );
 
   return (
     <div
