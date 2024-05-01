@@ -22,8 +22,12 @@ router.post("/", verifyJWT, async (req, res) => {
       feedback,
     } = req.body;
 
-    const trimmedCandidates = []
-    candidates.forEach((candidate) => {
+    const trimmedCandidates: {
+      name: string;
+      email: string;
+    }[] = [];
+
+    candidates.forEach((candidate: { name: string; email: string }) => {
       trimmedCandidates.push({
         name: candidate.name,
         email: candidate.email.trim(),
