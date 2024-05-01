@@ -130,6 +130,8 @@ const Editor = () => {
     setIsPasteEnabled(window?.history?.state?.usr?.paste);
     setIsFullScreenEnabled(window?.history?.state?.usr?.fullScreen);
 
+    console.log("FS STATE: " + window?.history?.state?.usr?.fullScreen)
+
     axios
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${questionID}`)
       .then((res) => {

@@ -72,6 +72,8 @@ export default function ProtectedRoutes() {
       "/screenings/",
       "/screenings",
       "/r/",
+      "/screenings/current",
+      "screening/current/editor"
     ];
     const token = Cookies.get("token");
     if (token) {

@@ -13,7 +13,7 @@ import edit from "./edit.js";
 router.use("/create", verifyJWT, create);
 router.use("/edit", verifyJWT, edit);
 
-router.post("/:probID", verifyJWT, async (req, res) => {
+router.post("/:probID", async (req, res) => {
   try {
     const problem: ProblemType | any = await Problem.findById(
       req.params.probID

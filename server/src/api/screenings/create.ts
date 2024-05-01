@@ -11,6 +11,7 @@ router.post("/", verifyJWT, async (req, res) => {
       name,
       desc,
       access,
+      languages,
       passingPercentage,
       instructions,
       duration,
@@ -40,6 +41,7 @@ router.post("/", verifyJWT, async (req, res) => {
       passPercentage: passingPercentage,
       instructions: instructions,
       duration: duration,
+      languages: languages,
       createdAt: new Date(),
       // @ts-expect-error
       createdBy: req.user.id,

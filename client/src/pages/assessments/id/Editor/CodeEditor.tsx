@@ -8,7 +8,6 @@ import {
 import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
 import { python, pythonLanguage } from "@codemirror/lang-python";
 import { java, javaLanguage } from "@codemirror/lang-java";
-import { useTheme } from "@/components/theme-provider";
 import ReactCodeMirror from "@uiw/react-codemirror";
 
 const CodeEditor = ({
@@ -60,7 +59,6 @@ const CodeEditor = ({
     }
   };
 
-  const { theme } = useTheme();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const detectPaste = (event: any) => {
@@ -104,7 +102,7 @@ const CodeEditor = ({
       <div className=" h-full bg-[#282C34] ">
         <ReactCodeMirror
           value={code}
-          theme={theme as "dark" | "light"}
+          theme={"dark"}
           // @ts-expect-error - CodeMirror types are not up to date
           extensions={syntaxHighlighting ? extension(selectedLang) : []}
           onPasteCapture={

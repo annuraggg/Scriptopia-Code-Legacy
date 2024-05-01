@@ -59,7 +59,7 @@ const Descriptor = ({
               ? " bg-red-950 bg-opacity-50"
               : theme === "dark"
               ? "bg-black"
-              : "bg-white"
+              : "bg-black"
           } mx-5 my-2 rounded min-h-[35vh]`}
         >
           {running ? (

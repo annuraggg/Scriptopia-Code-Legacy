@@ -179,6 +179,7 @@ const Main = () => {
                 <Button
                   variant="link"
                   onClick={() => {
+                    console.log(screening.security);
                     navigate(`/screening/current/editor`, {
                       state: {
                         id: question?._id,
@@ -186,7 +187,7 @@ const Main = () => {
                         screening: screening,
                         tabChange: screening?.security?.tabChangeDetection,
                         paste: screening?.security?.copyPasteDetection,
-                        fullscreen: screening?.security?.fullScreenDetection,
+                        fullScreen: screening?.security?.fullScreenExitDetection,
                       },
                     });
                   }}

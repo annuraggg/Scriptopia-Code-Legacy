@@ -39,6 +39,8 @@ const CreateScreening = () => {
   const [questions, setQuestions] = useState<any>([]);
   const [passingPercentage, setPassingPercentage] = useState<number>(0);
 
+  const [languages, setLanguages] = useState<string[]>([]);
+
   const [candidates, setCandidates] = useState<
     {
       name: string;
@@ -150,6 +152,7 @@ const CreateScreening = () => {
         name,
         desc: description,
         passingPercentage: passingPercentage,
+        languages: languages,
         instructions,
         duration: timeLimit,
         openRange: {
@@ -285,6 +288,8 @@ const CreateScreening = () => {
               setPlagiarismDetection={setPlagiarismDetection}
               fullScreenExitDetection={fullScreenExitDetection}
               setFullScreenExitDetection={setFullScreenExitDetection}
+              selectedLanguages={languages}
+              setSelectedLanguages={setLanguages}
             />
           </TabsContent>
           <TabsContent value="feedback">

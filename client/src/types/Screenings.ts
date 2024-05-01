@@ -22,7 +22,7 @@ interface SecurityOptions {
   gptDetection: boolean;
   copyPasteDetection: boolean;
   plagiarismDetection: boolean;
-  fullScreenDetection: boolean;
+  fullScreenExitDetection: boolean;
 }
 
 interface Feedback {
