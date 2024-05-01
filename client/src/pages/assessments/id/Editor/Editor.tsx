@@ -87,12 +87,12 @@ const Editor = () => {
         });
       }
 
-      if (!isFullScreenEnabled) return;
+     /* if (!isFullScreenEnabled) return;
       const isFullScreen = window.screenTop && window.screenY;
 
       if (!isFullScreen) {
         setFullScreenOpen(true);
-      }
+      }*/
     }, 1000);
 
     localStorage?.setItem("timer", JSON?.stringify(timer));
