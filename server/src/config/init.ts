@@ -12,6 +12,7 @@ import "./mongoose.js";
 import helmet from "helmet";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import pingEngines from "./pingEngines.js";
 
 const app = express();
 export const server = createServer(app);
@@ -42,6 +43,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
 app.set("io", io);
+
+pingEngines();
 
 process.env.NODE_ENV === "production" //&& app.use(limiter);
 app.use(
