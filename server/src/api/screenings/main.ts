@@ -9,6 +9,7 @@ import begin from "./begin.js";
 import end from "./end.js";
 import result from "./results.js";
 import candidate from "./candidate.js";
+import update from "./update.js";
 
 router.use("/getStatus", getStatus);
 router.use("/enable", enable);
@@ -18,5 +19,6 @@ router.use("/begin", begin);
 router.use("/end", end)
 router.use("/results", result)
 router.use("/candidate", candidate)
+router.use("/update", update)
 
 export default router;

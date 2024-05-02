@@ -13,33 +13,25 @@
 
 .dark .ql-toolbar .ql-stroke {
   fill: none;
-  stroke: var(--fontColor) !important;
-  background-color: var(--fontColor) !important;
+  stroke: #ffffff !important;
+  background-color: #ffffff !important;
 }
 
 .dark .ql-placeholder {
-  color: var(--fontColor) !important;
-}
-
-.dark .ql-header > button {
-  fill: none;
-  stroke: var(--fontColor) !important;
-  background-color: var(--fontColor) !important;
-  border: none !important;
-  color: white !important;
+  color: #ffffff !important;
 }
 
 .dark .ql-editor.ql-blank::before {
-  color: var(--fontColor) !important;
+  color: #ffffff !important;
 }
 .dark .ql-editor {
   font-family: "PT Sans" !important;
 }
 
 .dark .ql-toolbar .ql-fill {
-  fill: var(--fontColor) !important;
+  fill: #ffffff !important;
   stroke: none;
-  background-color: var(--fontColor) !important;
+  background-color: #ffffff !important;
 }
 
 .dark .ql-container {

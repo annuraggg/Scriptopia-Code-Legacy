@@ -6,13 +6,6 @@ import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ReloadIcon, RocketIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaLink } from "react-icons/fa";
@@ -40,7 +33,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CiSettings } from "react-icons/ci";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -63,6 +55,13 @@ import { Separator } from "@/components/ui/separator";
 import { useSelector } from "react-redux";
 import UserToken from "@/types/UserToken";
 import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Organization {
   name: string;
@@ -100,6 +99,12 @@ interface Organization {
 
 const Organization = () => {
   const navigate = useNavigate();
+
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editWebsite, setEditWebsite] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPhone, setEditPhone] = useState("");
 
   const user = useSelector((state: { user: UserToken }) => state.user);
 
@@ -341,6 +346,29 @@ const Organization = () => {
       });
   };
 
+  const saveEdits = () => {
+    setEditLoading(true);
+
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/organization/edit`, {
+        website: editWebsite,
+        email: editEmail,
+        phone: editPhone,
+      })
+      .then(() => {
+        toast.success("Details Updated Successfully");
+        setOpenEdit(false);
+        setReload(!reload);
+      })
+      .catch((err) => {
+        toast.error(err);
+        console.log(err);
+      })
+      .finally(() => {
+        setEditLoading(false);
+      });
+  };
+
   if (!loading) {
     return (
       <>
@@ -377,19 +405,6 @@ const Organization = () => {
                           </Tooltip>
                         </TooltipProvider>
                       )}
-
-                    {organization?.isAdmin && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <CiSettings size={25} className=" cursor-pointer" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Settings</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
                   </div>
                 </div>
                 <p className="mt-3 text-gray-400 border rounded-lg p-5">
@@ -427,7 +442,17 @@ const Organization = () => {
                     <div className="flex justify-between items-center">
                       <CardTitle>Organization Details</CardTitle>
                       {organization?.isAdmin && (
-                        <Button variant="link">Edit</Button>
+                        <Button
+                          variant="link"
+                          onClick={() => {
+                            setEditEmail(organization?.email);
+                            setEditPhone(organization?.phone);
+                            setEditWebsite(organization?.website);
+                            setOpenEdit(true)
+                          }}
+                        >
+                          Edit
+                        </Button>
                       )}
                     </div>
                   </CardHeader>
@@ -976,6 +1001,44 @@ const Organization = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Details</DialogTitle>
+              <DialogDescription>
+                <p className="mt-5 mb-2">Website</p>
+                <Input
+                  type="text"
+                  onChange={(e) => setEditWebsite(e.target.value)}
+                  value={editWebsite}
+                />
+
+                <p className="mt-5 mb-2">Email</p>
+                <Input
+                  type="email"
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  value={editEmail}
+                />
+
+                <p className="mt-5 mb-2">Phone</p>
+                <Input
+                  type="number"
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  value={editPhone}
+                />
+
+                <Button className="w-full mt-5" onClick={saveEdits}>
+                  {editLoading ? (
+                    <ReloadIcon className="animate-spin h-4 w-4" />
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </>
     );
   } else return <Loader />;

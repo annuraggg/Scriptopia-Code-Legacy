@@ -20,6 +20,7 @@ import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
+import axios from "axios";
 
 interface Data {
   candidateName: string;
@@ -44,49 +45,22 @@ const Submission = () => {
   const [complexityClass, setComplexityClass] = useState("");
 
   useEffect(() => {
-    const sampledata = {
-      candidateName: "Anurag Sawant",
-      candidateEmail: "anuragsawant@duck.com",
-      codeLanguage: "javascript",
-      question: {
-        id: 1,
-        name: "Two Sums",
-        cases: [
-          {
-            input: "[2, 7, 11, 15]",
-            output: "[0, 1]",
-            expected: "[0, 1]",
-            score: 5,
-          },
-          {
-            input: "[3, 2, 4]",
-            output: "6",
-            expected: "6",
-            score: 1,
-          },
-          {
-            input: "[3, 3]",
-            output: "6",
-            expected: "8",
-            score: 0,
-          },
-        ],
-        complexity: "O(n)",
-        code: `function twoSum(nums, target) {
-                const map = new Map();
-                for (let i = 0; i < nums.length; i++) {
-                    const complement = target - nums[i];
-                    if (map.has(complement)) {
-                        return [map.get(complement), i];
-                    }
-                    map.set(nums[i], i);
-                }
-            }`,
-      },
-    };
+    const solutionID = window.location.pathname.split("/").pop();
+    const candidateID = window.location.pathname.split("/")[2];
+    if (!solutionID) return;
 
-    setData(sampledata);
-    setComplexityClass(genComplexityClass(sampledata.question.complexity));
+    axios
+      .post(
+        `${
+          import.meta.env.VITE_BACKEND_ADDRESS
+        }/screenings/candidate/${candidateID}/solution/${solutionID}`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data.problem);
+        setComplexityClass(genComplexityClass(res.data.problem.complexity));
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const genComplexityClass = (complexity: string) => {
@@ -132,7 +106,14 @@ const Submission = () => {
 
         <div className="flex border p-3 mt-5 items-center justify-between rounded-lg">
           {data?.question?.name}
-          <Button variant="link">View Question</Button>
+          <Button
+            variant="link"
+            onClick={() =>
+              (window.location.href = `/editor/${data?.question?.id}`)
+            }
+          >
+            View Question
+          </Button>
         </div>
 
         <Accordion type="single" collapsible className="mt-5">
@@ -145,7 +126,6 @@ const Submission = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Input</TableHead>
-                    <TableHead>Output</TableHead>
                     <TableHead>Expected</TableHead>
                     <TableHead>Score</TableHead>
                   </TableRow>
@@ -155,7 +135,6 @@ const Submission = () => {
                     <TableRow key={index}>
                       <TableCell className="py-3">{testCase.input}</TableCell>
                       <TableCell>{testCase.output}</TableCell>
-                      <TableCell>{testCase.expected}</TableCell>
                       <TableCell>{testCase.score}</TableCell>
                     </TableRow>
                   ))}

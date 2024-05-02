@@ -43,6 +43,7 @@ export const Routes = [
 
       { path: "/screenings", Component: Assessments },
       { path: "/screenings/create", Component: CreateScreening },
+      { path: "/screenings/:id/edit", Component: CreateScreening },
       { path: "/screenings/:id/results", Component: Results },
       { path: "/screenings/:screenId/results/c/:candidateId", Component: CandidateReport},
       { path: "/screenings/:screenId/results/c/:candidateId/s/:sid", Component: SubmissionReport},

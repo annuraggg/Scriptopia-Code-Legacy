@@ -23,6 +23,7 @@ const CreateProblem = ({ question }: { question: Problem }) => {
   const [recommendedTime, setRecommendedTime] = useState<number>(0);
   const [tags, setTags] = useState<string[]>([]);
   const [description, setDescription] = useState<Delta>({} as Delta);
+  const [initialDescription, setInitialDescription] = useState<Delta>({} as Delta);
 
   // * States for SelectLanguage
   const [languages, setLanguages] = useState<string[]>([]);
@@ -44,6 +45,7 @@ const CreateProblem = ({ question }: { question: Problem }) => {
       setRecommendedTime(question.recommendedTime);
       setTags(question.tags);
       setDescription(question.description as Delta);
+      setInitialDescription(question.description);
       setLanguages(question.languageSupport);
       setFunctionName(question.starterFunction);
       setReturnType(question.functionReturn);
@@ -51,6 +53,10 @@ const CreateProblem = ({ question }: { question: Problem }) => {
       setTestCases(question.testCases);
     }
   }, [question]);
+
+  useEffect(() => {
+    console.log(description);
+  }, [description]);
 
   const submit = () => {
     const schema = z.object({
@@ -107,6 +113,7 @@ const CreateProblem = ({ question }: { question: Problem }) => {
           setDescription={setDescription}
           isPrivate={isPrivate}
           useAllowed={useAllowed}
+          initialDescription={initialDescription}
         />
       ),
     },

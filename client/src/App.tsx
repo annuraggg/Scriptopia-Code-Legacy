@@ -97,7 +97,7 @@ function App() {
         theme: theme || "light",
       })
     );
-  }, [dispatch, theme]);
+  }, [dispatch, setTheme, theme]);
 
   const selectThemeImport = (color: string) => {
     switch (color) {

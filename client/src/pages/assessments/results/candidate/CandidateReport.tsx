@@ -108,10 +108,6 @@ const CandidateReport = () => {
                   <CardTitle className="text-4xl">Scores</CardTitle>
 
                   <div className="flex gap-10 items-center justify-center text-md">
-                    <div className="flex flex-col justify-center items-end">
-                      <p>Average</p>
-                      {candidate?.scores?.average}%
-                    </div>
                     <p className="flex flex-col justify-center items-end">
                       <p>Qualifying</p>
                       {candidate?.scores?.qualifying}%
@@ -244,7 +240,10 @@ const CandidateReport = () => {
                     <Button
                       variant="link"
                       onClick={() =>
-                        navigate(window.location.pathname + "/s/" + solution.id)
+                        navigate(
+                          window.location.pathname + "/s/" + solution.id,
+                          { state: { solution } }
+                        )
                       }
                     >
                       View Solution

@@ -7,7 +7,7 @@ import Candidates from "./Candidates";
 import Instructions from "./Instructions";
 import Security from "./Security";
 import Feedback from "./Feedback";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "sonner";
@@ -21,8 +21,12 @@ import {
 } from "@/components/ui/dialog";
 import { MdContentCopy } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const CreateScreening = () => {
+  const navigate = useNavigate();
+  const [updateID, setUpdateID] = useState<string>("");
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [tab, setTab] = useState("general");
 
   const [name, setName] = useState<string>("");
@@ -66,6 +70,67 @@ const CreateScreening = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const [showCode, setShowCode] = useState<boolean>(false);
   const [link, setLink] = useState<string>("" as any);
+
+  useEffect(() => {
+    const editKeyword = window.location.pathname.split("/").pop();
+    const isUpdate = editKeyword === "edit";
+
+    const padZero = (num: number) => (num < 10 ? "0" + num : num);
+
+    setIsUpdate(isUpdate);
+
+    if (isUpdate) {
+      const updateID = window.location.pathname.split("/")[2];
+      setUpdateID(updateID);
+      axios
+        .post(
+          `${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/get/${updateID}`
+        )
+        .then((res) => {
+          const updateData = res.data;
+          const toTime = `${padZero(
+            new Date(updateData.openRange.end).getHours()
+          )}:${padZero(new Date(updateData.openRange.end).getMinutes())}`;
+          const fromTime = `${padZero(
+            new Date(updateData.openRange.start).getHours()
+          )}:${padZero(new Date(updateData.openRange.start).getMinutes())}`;
+
+          setName(updateData.name);
+          setDescription(updateData.desc);
+          setTimeLimit(updateData.duration);
+          setAllowAutocomplete(updateData.editorOptions.autoComplete);
+          setAllowRunCode(updateData.editorOptions.runCode);
+          setAllowSyntaxHighlighting(
+            updateData.editorOptions.syntaxHighlighting
+          );
+          setRange({
+            from: new Date(updateData.openRange.start),
+            to: new Date(updateData.openRange.end),
+          });
+          setFromTime(fromTime);
+          setToTime(toTime);
+          setQuestions(updateData.questions);
+          setPassingPercentage(updateData.passPercentage);
+          setLanguages(updateData.languages);
+          setCandidates(updateData.candidates);
+          setAccess(updateData.access);
+          setInstructions(updateData.instructions);
+          setCodePlaybacks(updateData.security.codePlayback);
+          setTabChangeDetection(updateData.security.tabChangeDetection);
+          setGptDetection(updateData.security.gptDetection);
+          setCopyPasteDetection(updateData.security.copyPasteDetection);
+          setPlagiarismDetection(updateData.security.plagiarismDetection);
+          setFullScreenExitDetection(
+            updateData.security.fullScreenExitDetection
+          );
+          setFeedbackEmail(updateData.feedback.email);
+          setFeedbackPhone(updateData.feedback.phone);
+        })
+        .catch(() => {
+          toast.error("Error fetching screening data");
+        });
+    }
+  }, []);
 
   const goBack = () => {
     const tabs = [
@@ -148,46 +213,59 @@ const CreateScreening = () => {
 
     setSaving(true);
     axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/create`, {
-        name,
-        desc: description,
-        passingPercentage: passingPercentage,
-        languages: languages,
-        instructions,
-        duration: timeLimit,
-        openRange: {
-          start: range.from,
-          end: range.to,
-        },
-        questions,
-        access,
-        candidates,
-        editorOptions: {
-          autoComplete: allowAutocomplete,
-          runCode: allowRunCode,
-          syntaxHighlighting: allowSyntaxHighlighting,
-        },
-        security: {
-          codePlayback: codePlaybacks,
-          tabChangeDetection,
-          gptDetection,
-          copyPasteDetection,
-          plagiarismDetection,
-          fullScreenExitDetection,
-        },
-        feedback: {
-          email: feedbackEmail,
-          phone: feedbackPhone,
-        },
-      })
+      .post(
+        `${import.meta.env.VITE_BACKEND_ADDRESS}/screenings/${
+          isUpdate ? "update" : "create"
+        }`,
+        {
+          id: isUpdate ? updateID : "",
+          name,
+          desc: description,
+          passingPercentage: passingPercentage,
+          languages: languages,
+          instructions,
+          duration: timeLimit,
+          openRange: {
+            start: range.from,
+            end: range.to,
+          },
+          questions,
+          access,
+          candidates,
+          editorOptions: {
+            autoComplete: allowAutocomplete,
+            runCode: allowRunCode,
+            syntaxHighlighting: allowSyntaxHighlighting,
+          },
+          security: {
+            codePlayback: codePlaybacks,
+            tabChangeDetection,
+            gptDetection,
+            copyPasteDetection,
+            plagiarismDetection,
+            fullScreenExitDetection,
+          },
+          feedback: {
+            email: feedbackEmail,
+            phone: feedbackPhone,
+          },
+        }
+      )
       .then((res) => {
-        setLink(res.data.link);
-        setShowCode(true);
-        toast.success("Screening created successfully");
+        toast.success(
+          `Screening ${isUpdate ? "updated" : "created"} successfully`
+        );
         setSaving(false);
+
+        if (!isUpdate) {
+          setLink(res.data.link);
+          setShowCode(true);
+        } else {
+          navigate("/screenings");
+        }
       })
       .catch(() => {
-        toast.error("Error creating screening");
+        toast.error(`Error ${isUpdate ? "updating" : "creating"} screening`);
         setSaving(false);
       });
   };

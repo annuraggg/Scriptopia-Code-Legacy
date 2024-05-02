@@ -25,6 +25,7 @@ const DetailsComponent = ({
   setDescription,
   isPrivate,
   useAllowed,
+  initialDescription,
 }: {
   questionName: string;
   setQuestionName: (value: string) => void;
@@ -38,14 +39,16 @@ const DetailsComponent = ({
   setDescription: (value: Delta) => void;
   isPrivate: boolean;
   useAllowed: boolean;
+  initialDescription: Delta;
 }) => {
   let quill: Quill;
+
   useEffect(() => {
     if (description) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       quill = new Quill("#editor", {
         theme: "snow",
-        placeholder: "Write your problem description here...",
+        placeholder: "Enter problem statement...",
         modules: {
           toolbar: [
             [{ header: 1 }, { header: 2 }, { header: 3 }], // custom button values
@@ -59,7 +62,6 @@ const DetailsComponent = ({
         },
       });
 
-      console.log(description);
       quill.setContents(description);
 
       quill.on("text-change", () => {

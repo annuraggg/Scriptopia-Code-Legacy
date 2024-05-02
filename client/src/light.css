@@ -11,35 +11,35 @@
   color: white !important;
 }
 
-.light .ql-header {
+.light .ql-toolbar .ql-stroke {
   fill: none;
-  stroke: var(--fontColor) !important;
-  background-color: var(--fontColor) !important;
+  stroke: #000000!important;
+  background-color: #000000!important;
+}
+
+.light .ql-placeholder {
+  color: #000000!important;
+}
+
+.light .ql-header > button {
+  fill: none;
+  stroke: #000000!important;
+  background-color: #000000!important;
   border: none !important;
   color: white !important;
 }
 
-.light .ql-toolbar .ql-stroke {
-  fill: none;
-  stroke: var(--fontColor) !important;
-  background-color: var(--fontColor) !important;
-}
-
-.light .ql-placeholder {
-  color: var(--fontColor) !important;
-}
-
 .light .ql-editor.ql-blank::before {
-  color: var(--fontColor) !important;
+  color: #000000!important;
 }
 .light .ql-editor {
   font-family: "PT Sans" !important;
 }
 
 .light .ql-toolbar .ql-fill {
-  fill: var(--fontColor) !important;
+  fill: #000000!important;
   stroke: none;
-  background-color: var(--fontColor) !important;
+  background-color: #000000!important;
 }
 
 .light .ql-container {
