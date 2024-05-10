@@ -74,9 +74,9 @@ export const Navbar = () => {
             <Button variant="link" onClick={() => navigate("/problems/create")}>
               Create a Problem
             </Button>
-            <Button variant="link" onClick={() => navigate("/leaderboards")}>
+           {/* <Button variant="link" onClick={() => navigate("/leaderboards")}>
               Leaderboards
-            </Button>
+  </Button>*/}
           </div>
         </div>
         <Avatar

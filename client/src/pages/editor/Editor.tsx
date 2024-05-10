@@ -72,6 +72,8 @@ function App() {
   const [explainResponse, setExplainResponse] = useState("");
   const [explainCodeStr, setExplainCodeStr] = useState<string>("");
   const [sheetError, setSheetError] = useState(false);
+  const [language, setLanguage] = useState("javascript" as string);
+  const [returnType, setReturnType] = useState("number" as string);
 
   const [totalRuns, setTotalRuns] = useState<number>(0);
 
@@ -103,19 +105,23 @@ function App() {
       .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/problems/${probId}`)
       .then((res) => {
         const response = res.data;
+        console.log(response);
         setStatement(response.desc);
         setMeta(response.meta);
         setCases(response.cases);
         setFn(response.func);
         const starter = returnStarter(
-          "javascript",
+          language,
           response.func,
           response.returnType,
           response.args
         );
+        setReturnType(response.returnType);
         setCode(starter);
         setVars(response.args);
         setSubmissions(response.submissions);
+
+        document.title = response.meta.title;
       })
       .catch((err) => {
         console.log(err);
@@ -270,6 +276,10 @@ function App() {
     }
   }, [output, runs, running, cases]);
 
+  useEffect(() => {
+    setCode(returnStarter(language, fn, returnType, vars));
+  }, [fn, language, returnType, vars]);
+
   if (loading) {
     return <PageLoading />;
   }
@@ -323,6 +333,8 @@ function App() {
             code={code}
             submitCode={submitCode}
             explainCode={explainCode}
+            language={language}
+            setLanguage={setLanguage}
           />
           <Descriptor
             cases={cases}

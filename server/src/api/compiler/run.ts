@@ -4,6 +4,7 @@ import Case from "@/Interfaces/Case.js";
 import logger from "@/config/logger.js";
 import Problem from "@/schemas/ProblemSchema.js";
 import ProblemType from "@/Interfaces/Problem.js";
+import runJava from "@/languageTemplates/java.js";
 const router = express.Router();
 
 const selectLangAndRun = async (
@@ -17,6 +18,8 @@ const selectLangAndRun = async (
     switch (language) {
       case "javascript":
         return await runJS(code, fn, cases, prob);
+      case "java":
+        return await runJava(code, fn, cases, prob);
       default:
         return "Language not supported yet!";
     }

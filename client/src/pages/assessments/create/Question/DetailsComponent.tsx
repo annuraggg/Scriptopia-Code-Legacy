@@ -9,7 +9,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import Quill from "quill";
 import { Delta } from "quill/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TagsInput from "react-tagsinput";
 
 const DetailsComponent = ({

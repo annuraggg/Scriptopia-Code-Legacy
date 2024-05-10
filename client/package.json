@@ -46,6 +46,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/react-avatar-editor": "^13.0.2",
     "@types/react-tagsinput": "^3.20.6",
+    "@uiw/codemirror-extensions-langs": "^4.22.0",
     "@uiw/codemirror-theme-atomone": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",
     "@uiw/react-heat-map": "^2.2.2",

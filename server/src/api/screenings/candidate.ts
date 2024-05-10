@@ -35,6 +35,9 @@ router.post("/", async (req, res) => {
     pastedCode += s.submission.paste;
   });
 
+  console.log("PASTED CODE", pastedCode);
+  console.log("WINDOW SWITCH", windowSwitch);
+
   const challengeArr = [];
   for (const submission of candidate.submission) {
     const challenge = await Problem.findOne({ _id: submission.problemId });
@@ -52,7 +55,7 @@ router.post("/", async (req, res) => {
       language: submission.result.language,
       cheating: {
         detected:
-          submission.submission.paste + submission.submission.tabChange > 2,
+          submission.submission.paste + submission.submission.tabChange > 1,
         pastedCode: submission.submission.paste,
         windowSwitch: submission.submission.tabChange,
       },

@@ -15,7 +15,7 @@ router.use("/edit", verifyJWT, edit);
 
 router.post("/:probID", async (req, res) => {
   try {
-    const problem: ProblemType | any = await Problem.findById(
+    const problem = await Problem.findById(
       req.params.probID
     ).exec();
 
@@ -45,7 +45,7 @@ router.post("/:probID", async (req, res) => {
       });
 
 
-      res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.returnType});
+      res.status(200).json({ desc, meta, cases, func, args, submissions, returnType: problem.functionReturn});
     }
   } catch (err) {
     logger.error({ code: "HOM_MAI_001", message: err });

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Mongoose, Schema, Types } from "mongoose";
 
 const screeningSubmissionSchema = new Schema({
   screeningId: {
@@ -73,11 +73,11 @@ const screeningSubmissionSchema = new Schema({
           type: {
             timeStamp: {
               type: Number,
-              required: true,
+              required: false,
             },
             status: {
-              type: Number,
-              required: true,
+              type: Schema.Types.Mixed,
+              required: false,
             },
             output: {
               type: [Schema.Types.Mixed], // Allow any type
@@ -85,11 +85,11 @@ const screeningSubmissionSchema = new Schema({
             },
             internalStatus: {
               type: String,
-              required: true,
+              required: false,
             },
             failedCaseNumber: {
               type: Number,
-              required: true,
+              required: false,
             },
             error: {
               type: String,
@@ -97,23 +97,23 @@ const screeningSubmissionSchema = new Schema({
             },
             language: {
               type: String,
-              required: true,
+              required: false,
             },
             info: {
               type: String,
-              required: true,
+              required: false,
             },
             consoleOP: {
               type: [String],
-              required: true,
+              required: false,
             },
             runtime: {
               type: Number,
-              required: true,
+              required: false,
             },
             memoryUsage: {
               type: Number,
-              required: true,
+              required: false,
             },
             failedCase: {
               type: {

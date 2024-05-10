@@ -127,7 +127,7 @@ const Main = () => {
       .then(() => {
         toast.success("Screening ended successfully");
         setTimeout(() => {
-          navigate("/");
+          navigate("/signin");
         }, 1000);
       })
       .catch(() => {

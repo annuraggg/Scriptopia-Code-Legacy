@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 const router = express.Router();
 
 router.post("/", verifyJWT, async (req, res) => {
-  console.log("HELLO");
   const { screeningId } = req.body;
   
   const screening = await Screening.findById(screeningId);
@@ -50,8 +49,6 @@ router.post("/", verifyJWT, async (req, res) => {
       score: totalScore,
       cheating: cheats,
     };
-
-    console.log(cheats);
 
     resArr.push(resObj);
   });

@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import Screening from "@/types/Screenings";
-import returnStarter from "@/functions/StarterGenerator";
+import returnStarter from "@/functions/starterGenerator";
 
 const Editor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

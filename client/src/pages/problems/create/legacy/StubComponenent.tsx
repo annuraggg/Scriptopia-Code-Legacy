@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import starterGenerator from "@/functions/StarterGenerator";
+import starterGenerator from "@/functions/starterGenerator";
 import CodeMirror, { oneDark } from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
