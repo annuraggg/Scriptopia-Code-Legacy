@@ -68,6 +68,7 @@ router.post("/", async (req, res) => {
 
   const languages: string[] = [];
   candidate.submission.forEach((s) => {
+    if (!s.result.language) return;
     if (!languages.includes(s.result.language)) {
       languages.push(s.result.language);
     }
