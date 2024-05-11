@@ -70,7 +70,7 @@ const generateRecommendation = async (selectedUserID: string) => {
     df.userID = newUIDs;
     let response: unknown = null;
 
-    await fetch("http://localhost:5000/api/recommend", {
+    await fetch(`${process.env.ML_ENGINE_ADDRESS}/api/recommend`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
