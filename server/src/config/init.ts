@@ -22,7 +22,7 @@ export const io = new Server(server, {
       process.env.FRONTEND_URL!,
       "http://localhost:5173",
       "https://scriptopia-code.anuragsawant.tech",
-      "https://scriptopia-code.anuragsawant.in"
+      "https://scriptopia-code.anuragsawant.in",
     ],
     credentials: true,
   },
@@ -41,19 +41,23 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(useragent.express());
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 app.set("io", io);
 
 pingEngines();
 
-process.env.NODE_ENV === "production" //&& app.use(limiter);
+process.env.NODE_ENV === "production"; //&& app.use(limiter);
 app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL!,
       "http://localhost:5173",
       "https://scriptopia-code.anuragsawant.tech",
-      "https://scriptopia-code.anuragsawant.in"
+      "https://scriptopia-code.anuragsawant.in",
     ],
     credentials: true,
   })
