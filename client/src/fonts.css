@@ -1,0 +1,64 @@
+
+@font-face {
+  font-family: "neue-montreal";
+  src: url("/fonts/neue/NeueMontreal-Regular.otf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "neue-montreal";
+  src: url("/fonts/neue/NeueMontreal-Bold.otf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "neue-montreal";
+  src: url("/fonts/neue/NeueMontreal-Light.otf");
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: "neue-montreal";
+  src: url("/fonts/neue/NeueMontreal-Medium.otf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "neue-montreal-italic";
+  src: url("/fonts/neue/NeueMontreal-Italic.otf");
+  font-style: italic;
+}
+
+/* GEIST */
+
+@font-face {
+  font-family: "geist";
+  src: url("/fonts/geist/Geist-Regular.otf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "geist";
+  src: url("/fonts/geist/Geist-Bold.otf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "geist";
+  src: url("/fonts/geist/Geist-Light.otf");
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: "geist";
+  src: url("/fonts/geist/Geist-Medium.otf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "geist-italic";
+  src: url("/fonts/geist/Geist-Italic.otf");
+  font-style: italic;
+}
+
+

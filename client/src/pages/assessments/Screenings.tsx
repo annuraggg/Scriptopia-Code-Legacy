@@ -2,7 +2,6 @@ import { Navbar } from "@/components/ui/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MyAssessments from "./MyScreenings";
 import GivenAssessments from "./GivenScreenings";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
@@ -131,7 +130,7 @@ const Screenings = () => {
       return (
         <>
           <Navbar />
-          <div className="px-10 py-5">
+          <div className="px-10 py-5 animate__animated animate__fadeIn">
             <Alert>
               <AlertTitle>Screenings are disabled</AlertTitle>
               <AlertDescription>
@@ -274,14 +273,9 @@ const Screenings = () => {
       return (
         <>
           <Navbar />
-          <div className="py-5 px-10">
+          <div className="py-5 px-10 animate__animated animate__fadeIn  animate__faster">
             <div className="flex">
-              <h1>Screenings</h1>
-              <IoMdInformationCircleOutline
-                size="12"
-                className="cursor-pointer"
-                onClick={() => navigate("docs/screening")}
-              />
+              <h1 className=" drop-shadow-glow">Screenings</h1>
             </div>
             <Alert className=" my-3">
               <RocketIcon className="h-4 w-4" />

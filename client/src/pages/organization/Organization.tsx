@@ -373,7 +373,293 @@ const Organization = () => {
     return (
       <>
         <Navbar />
-        <div className="py-5 px-10">
+
+        <div className="flex items-center my-2 mx-10 rounded-xl h-[85vh] p-10 flex-col">
+          <h1 className="drop-shadow-glow text-3xl">{organization.name}</h1>
+          <p className="mt-5 text-gray-500">{organization.description}</p>
+
+          <div className="flex w-full gap-10 mt-10 h-full items-center justify-center">
+            <div className="w-full h-full">
+              <div className="flex gap-5 w-full flex-wrap h-full">
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <MdEmail size={20} />
+                  <p>{organization.email}</p>
+                </div>
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <MdPhone size={25} />
+                  <p>{organization.phone}</p>
+                </div>
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <FaLink size={18} />
+                  <a
+                    href={
+                      organization?.website?.startsWith("http")
+                        ? organization?.website
+                        : `http://${organization?.website}`
+                    }
+                    target="_blank"
+                    className="hover:text-primary"
+                  >
+                    {organization.website}
+                  </a>
+                </div>
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <p>Total Organization Screenings:</p>
+                  <p>{organization.screenings || 0}</p>
+                </div>
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <p>Total Organization Candidates:</p>
+                  <p>{organization.candidates || 0}</p>
+                </div>
+                <div className="bg-card p-5 rounded-xl flex items-center gap-5 justify-center py-5 w-[48%] h-[29%]">
+                  <p>Rating:</p>
+                  <p>{calculateRating() || "Not Rated Yet"}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-card w-full rounded-xl p-8 h-full">
+              <h3>Organization Admins</h3>
+              <div className="flex gap-5">
+                {organization?.admins?.map((admin) => (
+                  <div
+                    key={admin?.id}
+                    className="flex justify-around w-full items-center p-5 rounded-lg mt-2"
+                  >
+                    <h3>{admin?.name}</h3>
+                    <p>{admin?.email}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Sheet open={requestsOpen} onOpenChange={setRequestsOpen}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Requests</SheetTitle>
+              <SheetDescription>
+                {organization?.requesters?.map((requester) => (
+                  <div
+                    key={requester?.id}
+                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
+                  >
+                    <h3>{requester?.name}</h3>
+                    <p>{requester?.email}</p>
+                    <Separator className="my-4" />
+                    <div className="self-center gap-5 flex items-center justify-center">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          navigate(`/profile/${requester?.username}`)
+                        }
+                      >
+                        View
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => rejectCandidate(requester?.id)}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => acceptCandidate(requester?.id)}
+                      >
+                        Accept
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+
+        <Sheet open={adminSheetOpen} onOpenChange={setAdminSheetOpen}>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Add Admin</SheetTitle>
+              <SheetDescription>
+                Select a screener to add as an admin
+              </SheetDescription>
+              <div>
+                {organization?.screeners?.map((screener) => (
+                  <div
+                    key={screener?.id}
+                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
+                  >
+                    <h3>{screener?.name}</h3>
+                    <p>{screener?.email}</p>
+                    <Separator className="my-4" />
+                    <div className="self-center gap-5 flex items-center justify-center">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          navigate(`/profile/${screener?.username}`)
+                        }
+                      >
+                        View
+                      </Button>
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => {
+                          setCurrentSelectedAdmin(screener?.id);
+                          setConfirmAdminAdd(true);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+
+        <AlertDialog
+          open={confirmScreenerRemove}
+          onOpenChange={setConfirmScreenerRemove}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to remove this screener from the
+                organization?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  removeScreener(currentSelectedScreener);
+                  setConfirmScreenerRemove(false);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog
+          open={confirmAdminRemove}
+          onOpenChange={setConfirmAdminRemove}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to remove this admin from the organization?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminRemove(false);
+                  removeAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog
+          open={confirmAdminDemote}
+          onOpenChange={setConfirmAdminDemote}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to demote this admin to a screener?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminDemote(false);
+                  demoteAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog open={confirmAdminAdd} onOpenChange={setConfirmAdminAdd}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you really want to add this user as an admin?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>No</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setConfirmAdminAdd(false);
+                  addAsAdmin(currentSelectedAdmin);
+                }}
+              >
+                Yes
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Details</DialogTitle>
+              <DialogDescription>
+                <p className="mt-5 mb-2">Website</p>
+                <Input
+                  type="text"
+                  onChange={(e) => setEditWebsite(e.target.value)}
+                  value={editWebsite}
+                />
+
+                <p className="mt-5 mb-2">Email</p>
+                <Input
+                  type="email"
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  value={editEmail}
+                />
+
+                <p className="mt-5 mb-2">Phone</p>
+                <Input
+                  type="number"
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  value={editPhone}
+                />
+
+                <Button className="w-full mt-5" onClick={saveEdits}>
+                  {editLoading ? (
+                    <ReloadIcon className="animate-spin h-4 w-4" />
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  } else return <Loader />;
+};
+
+export default Organization; /* <div className="py-5 px-10">
           {organization ? (
             <div className="flex gap-10">
               <div className="w-[140%]">
@@ -818,230 +1104,4 @@ const Organization = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
-
-        <Sheet open={requestsOpen} onOpenChange={setRequestsOpen}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Requests</SheetTitle>
-              <SheetDescription>
-                {organization?.requesters?.map((requester) => (
-                  <div
-                    key={requester?.id}
-                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
-                  >
-                    <h3>{requester?.name}</h3>
-                    <p>{requester?.email}</p>
-                    <Separator className="my-4" />
-                    <div className="self-center gap-5 flex items-center justify-center">
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          navigate(`/profile/${requester?.username}`)
-                        }
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        onClick={() => rejectCandidate(requester?.id)}
-                      >
-                        Reject
-                      </Button>
-                      <Button
-                        className="bg-green-500"
-                        onClick={() => acceptCandidate(requester?.id)}
-                      >
-                        Accept
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
-
-        <Sheet open={adminSheetOpen} onOpenChange={setAdminSheetOpen}>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Add Admin</SheetTitle>
-              <SheetDescription>
-                Select a screener to add as an admin
-              </SheetDescription>
-              <div>
-                {organization?.screeners?.map((screener) => (
-                  <div
-                    key={screener?.id}
-                    className="flex justify-center items-center flex-col border p-5 rounded-lg mt-2"
-                  >
-                    <h3>{screener?.name}</h3>
-                    <p>{screener?.email}</p>
-                    <Separator className="my-4" />
-                    <div className="self-center gap-5 flex items-center justify-center">
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          navigate(`/profile/${screener?.username}`)
-                        }
-                      >
-                        View
-                      </Button>
-                      <Button
-                        className="bg-green-500"
-                        onClick={() => {
-                          setCurrentSelectedAdmin(screener?.id);
-                          setConfirmAdminAdd(true);
-                        }}
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
-
-        <AlertDialog
-          open={confirmScreenerRemove}
-          onOpenChange={setConfirmScreenerRemove}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Do you really want to remove this screener from the
-                organization?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>No</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  removeScreener(currentSelectedScreener);
-                  setConfirmScreenerRemove(false);
-                }}
-              >
-                Yes
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <AlertDialog
-          open={confirmAdminRemove}
-          onOpenChange={setConfirmAdminRemove}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Do you really want to remove this admin from the organization?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>No</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  setConfirmAdminRemove(false);
-                  removeAdmin(currentSelectedAdmin);
-                }}
-              >
-                Yes
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <AlertDialog
-          open={confirmAdminDemote}
-          onOpenChange={setConfirmAdminDemote}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Do you really want to demote this admin to a screener?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>No</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  setConfirmAdminDemote(false);
-                  demoteAdmin(currentSelectedAdmin);
-                }}
-              >
-                Yes
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <AlertDialog open={confirmAdminAdd} onOpenChange={setConfirmAdminAdd}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Do you really want to add this user as an admin?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>No</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  setConfirmAdminAdd(false);
-                  addAsAdmin(currentSelectedAdmin);
-                }}
-              >
-                Yes
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <Dialog open={openEdit} onOpenChange={setOpenEdit}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Details</DialogTitle>
-              <DialogDescription>
-                <p className="mt-5 mb-2">Website</p>
-                <Input
-                  type="text"
-                  onChange={(e) => setEditWebsite(e.target.value)}
-                  value={editWebsite}
-                />
-
-                <p className="mt-5 mb-2">Email</p>
-                <Input
-                  type="email"
-                  onChange={(e) => setEditEmail(e.target.value)}
-                  value={editEmail}
-                />
-
-                <p className="mt-5 mb-2">Phone</p>
-                <Input
-                  type="number"
-                  onChange={(e) => setEditPhone(e.target.value)}
-                  value={editPhone}
-                />
-
-                <Button className="w-full mt-5" onClick={saveEdits}>
-                  {editLoading ? (
-                    <ReloadIcon className="animate-spin h-4 w-4" />
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      </>
-    );
-  } else return <Loader />;
-};
-
-export default Organization;
+        </div>*/

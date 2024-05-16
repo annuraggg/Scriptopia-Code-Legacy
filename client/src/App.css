@@ -1,6 +1,4 @@
-body {
-  font-family: "Inter", sans-serif;
-}
+@import url("./fonts.css");
 
 /* Select the add block button */
 /* Chrome, Safari, Edge, Opera */
@@ -15,6 +13,9 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+body {
+  font-family: "geist", sans-serif;
+}
 
 .react-tagsinput {
   background-color: transparent;

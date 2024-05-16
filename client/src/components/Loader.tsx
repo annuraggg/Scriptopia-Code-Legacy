@@ -1,6 +1,6 @@
 const Loader = () => {
   return (
-    <div className="h-[100vh] flex items-center justify-center">
+    <div className="h-[100vh] flex items-center justify-center animate__animated animate__fadeIn animate__faster">
       <div className="loader">
         <svg viewBox="0 0 80 80">
           <circle id="test" cx="40" cy="40" r="32"></circle>

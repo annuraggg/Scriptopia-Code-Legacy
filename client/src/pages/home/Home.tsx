@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import Loader from "@/components/Loader";
 import { z } from "zod";
-import { useQuery } from "@tanstack/react-query";
+import Tags from "./Tags";
 
 type Problem = {
   id: string;
@@ -21,67 +21,25 @@ type Problem = {
 const Home = () => {
   const [searchParams] = useSearchParams();
   const [modal, setModal] = useState<boolean>(false);
-  const [problems, setProblems] = useState<Problem[][]>([]);
-  const [pages, setPages] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [prevPage, setPrevPage] = useState<number>(1);
+  const [problems, setProblems] = useState<Problem[]>([]);
   const [excludedIDs, setExcludedIDs] = useState<string[]>([]);
   const [streak, setStreak] = useState<number[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [codeFlowTSP, setCodeFlowTSP] = useState<number>(0);
+  const [allTags, setAllTags] = useState<string[]>([]);
 
-  const [triggerPage, setTriggerPage] = useState<boolean>(false);
-
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["home"],
-    queryFn: () =>
-      axios.post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home`).then((res) => {
-        return res.data;
-      }),
-  });
+  const [problemLoading, setProblemLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (error) {
-      toast.error("Failed to fetch data");
-      return;
-    }
-
-    if (data) {
-      const prob = problems;
-      prob[currentPage - 1] = data.problems;
-      setProblems(prob);
-      setPages(data.pages);
-      setExcludedIDs(data.exclude);
-      setStreak(data.streak);
-      setCodeFlowTSP(data.tsp);
-    }
-  }, [currentPage, data, error, problems]);
-
-  useEffect(() => {
-    if (
-      currentPage < prevPage ||
-      problems[currentPage - 1]?.length == undefined
-    ) {
-      console.log("Page changed but not fetching data");
-      console.log("Current page", currentPage);
-      console.log("Prev page", prevPage);
-      console.log("Problems", problems[currentPage - 1]?.length);
-      return;
-    }
-
-    console.log("Fetching data for page", currentPage);
-
-    setLoading(true);
     axios
-      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home/page`, {
-        exclude: excludedIDs,
-      })
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home`)
       .then((res) => {
-        const prob = problems;
-        prob[currentPage - 1] = res.data.problems;
-        setProblems(prob);
+        setProblems(res.data.problems);
+        setStreak(res.data.streak);
+        setCodeFlowTSP(res.data.tsp);
         setExcludedIDs(res.data.exclude);
+        setAllTags(res.data.tags);
       })
       .catch((err) => {
         toast.error("Failed to fetch data");
@@ -90,7 +48,7 @@ const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [triggerPage]);
+  }, []);
 
   useEffect(() => {
     const newAcc = searchParams.get("new");
@@ -101,6 +59,29 @@ const Home = () => {
 
   const setOpen = (value: boolean) => {
     setModal(value);
+  };
+
+  const loadMore = () => {
+    setProblemLoading(true);
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_ADDRESS}/home/page`, {
+        exclude: excludedIDs,
+      })
+      .then((res) => {
+        if (res.data.problems.length === 0) {
+          toast("No more problems to load");
+          return;
+        }
+        setProblems((prev) => [...prev, ...res.data.problems]);
+        setExcludedIDs(res.data.exclude);
+      })
+      .catch((err) => {
+        toast.error("Failed to fetch data");
+        console.log(err);
+      })
+      .finally(() => {
+        setProblemLoading(false);
+      });
   };
 
   const filterProblems = (difficulty?: string, search?: string) => {
@@ -125,10 +106,7 @@ const Home = () => {
         exclude: excludedIDs,
       })
       .then((res) => {
-        const prob = problems;
-        prob[currentPage - 1] = res.data.problems;
-        setProblems(prob);
-        setPages(res.data.pages);
+        setProblems(res.data.problems);
       })
       .catch((err) => {
         toast.error("Failed to fetch data");
@@ -138,12 +116,8 @@ const Home = () => {
         setLoading(false);
       });
   };
-  useEffect(() => {
-    console.log("Problems");
-    console.log(problems);
-  }, [currentPage, problems]);
 
-  if (isLoading) {
+  if (loading) {
     return <Loader />;
   }
 
@@ -155,19 +129,15 @@ const Home = () => {
           {/*}<LearningPath />
             <PopularCourses />{*/}
           <ChallengeCompass
-            problems={problems[currentPage - 1] || []}
-            pages={pages}
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
-            setPrevPage={setPrevPage}
-            loading={loading}
+            problems={problems}
             filter={filterProblems}
-            triggerPage={triggerPage}
-            setTriggerPage={setTriggerPage}
+            problemsLoading={problemLoading}
+            loadMore={loadMore}
           />
         </div>
         <div>
           <CodeFlow codeFlow={streak} tsp={codeFlowTSP} />
+          <Tags tags={allTags} />
         </div>
       </div>
       {modal && <SetUsername setOpen={setOpen} />}

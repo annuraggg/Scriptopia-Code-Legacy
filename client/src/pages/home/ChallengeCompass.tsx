@@ -21,18 +21,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 type Problem = {
   id: string;
@@ -44,23 +36,14 @@ type Problem = {
 
 const ChallengeCompass = ({
   problems,
-  pages,
-  currentPage,
-  setCurrentPage,
-  setPrevPage,
   filter,
-  triggerPage,
-  setTriggerPage,
+  problemsLoading,
+  loadMore,
 }: {
   problems: Problem[];
-  pages: number;
-  currentPage: number;
-  setCurrentPage: (value: number) => void;
-  setPrevPage: (value: number) => void;
-  loading: boolean;
   filter: (difficulty: string, search: string) => void;
-  triggerPage: boolean;
-  setTriggerPage: (value: boolean) => void;
+  problemsLoading: boolean;
+  loadMore: () => void;
 }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
@@ -71,7 +54,7 @@ const ChallengeCompass = ({
   };
 
   return (
-    <div className="mt-5 w-[65vw]">
+    <div className="mt-5 w-[65vw] animate__animated animate__fadeIn">
       <div className="flex justify-between">
         <div>
           <h2>Challenge Compass</h2>
@@ -106,8 +89,7 @@ const ChallengeCompass = ({
           </Button>
         </div>
       </div>
-
-      <div className="mt-5 bg-card p-5 rounded shadow-md border">
+      <div className="mt-5 bg-card p-5 rounded-xl shadow-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -156,51 +138,13 @@ const ChallengeCompass = ({
           </TableBody>
         </Table>
       </div>
-
-      <Pagination className="mt-5">
-        <PaginationContent className="cursor-pointer">
-          <PaginationPrevious
-            onClick={() => {
-              console.log("CURRENTPAGEFROMCOMPASS", currentPage);
-              if (currentPage === 1) {
-                toast.error("You are already on the first page");
-                return;
-              }
-              setCurrentPage(currentPage - 1);
-              setPrevPage(currentPage);
-            }}
-          >
-            Previous
-          </PaginationPrevious>
-          {Array.from({ length: pages }, (_, i) => i + 1).map((page) => (
-            <PaginationItem
-              className="cursor-pointer"
-              key={page}
-              onClick={() => {
-                setPrevPage(currentPage - 1);
-                setCurrentPage(page);
-              }}
-            >
-              <PaginationLink isActive={currentPage === page}>
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationNext
-            onClick={() => {
-              if (currentPage === pages) {
-                toast.error("You are already on the last page");
-                return;
-              }
-              setPrevPage(currentPage);
-              setCurrentPage(currentPage + 1);
-              setTriggerPage(!triggerPage);
-            }}
-          >
-            Next
-          </PaginationNext>
-        </PaginationContent>
-      </Pagination>
+      <div className="text-gray-500 float-right mt-5 cursor-pointer">
+        {problemsLoading ? (
+          <ReloadIcon className="animate-spin" />
+        ) : (
+          <p onClick={loadMore}>Load More</p>
+        )}
+      </div>
     </div>
   );
 };

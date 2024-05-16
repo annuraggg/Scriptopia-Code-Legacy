@@ -18,9 +18,11 @@ import ProtectedRoutesFunc from "./ProtectedRoutes";
 import "./App.css";
 import { selectTheme } from "./states/user/ThemeSlice";
 import { useTheme } from "./components/theme-provider";
+import 'animate.css';
 
 import "./dark.css";
 import "./light.css";
+import GlowEffect from "./components/GlowEffect";
 
 const router = createBrowserRouter([
   {
@@ -151,6 +153,7 @@ function App() {
 
   return (
     <div className={theme}>
+      <GlowEffect />
       <RouterProvider router={router} />
     </div>
   );

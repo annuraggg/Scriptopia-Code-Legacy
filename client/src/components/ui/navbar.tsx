@@ -71,8 +71,8 @@ export const Navbar = () => {
             <Button variant="link" onClick={() => navigate("/screenings")}>
               Screenings
             </Button>
-            <Button variant="link" onClick={() => navigate("/problems/create")}>
-              Create a Problem
+            <Button variant="link" onClick={() => navigate("/problems/")}>
+              My Problems
             </Button>
            {/* <Button variant="link" onClick={() => navigate("/leaderboards")}>
               Leaderboards
